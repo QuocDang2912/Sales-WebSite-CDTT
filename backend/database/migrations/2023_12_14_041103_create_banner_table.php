@@ -11,18 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('post', function (Blueprint $table) {
+        Schema::create('banner', function (Blueprint $table) {
             $table->id(); //id
-            $table->unsignedInteger('topic_id')->nullable();
-            $table->string('title', 1000);
-            $table->string('slug', 1000);
-            $table->text('detail');
-            $table->string('description', 255);
-            $table->string('image', 255);
-            $table->string('type', 255);
-            $table->timestamps(); //created_at, updated_at
+            $table->string('name', 255);
+            $table->string('link', 1000);
+            $table->string('image', 1000)->nullable();
+            $table->string('position', 255);
+            $table->string('description', 1000);
             $table->unsignedInteger('created_by')->default(1);
             $table->unsignedInteger('updated_by')->nullable();
+            $table->timestamps();
             $table->unsignedTinyInteger('status')->default(2);
         });
     }
@@ -32,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('post');
+        Schema::dropIfExists('banner');
     }
 };
