@@ -152,4 +152,36 @@ class UserController extends Controller
         ];
         return response()->json($result, 200);
     }
+    function status($id)
+    {
+        $user = User::find($id);
+        if ($user == null) {
+            $result = [
+                'status' => false,
+                'user' => null,
+                'message' => 'Khong tim thay du lieu'
+            ];
+            return response()->json($result, 404);
+        }
+
+        $user->status = ($user->status == 1) ? 2 : 1;
+        $user->updated_at = date('Y-m-d H:i:s');
+        $user->updated_by = 1; //tam
+        if ($user->save()) {
+            $result = [
+                'status' => true,
+                'user' => $user,
+                'message' => 'Cap nhat du lieu thanh cong'
+            ];
+            return response()->json($result, 200);
+        }
+
+        // If save fails
+        $result = [
+            'status' => false,
+            'user' => null,
+            'message' => 'Khoong the them du lieu'
+        ];
+        return response()->json($result, 200);
+    }
 }

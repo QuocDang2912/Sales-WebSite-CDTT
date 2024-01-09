@@ -1,7 +1,4 @@
-
-
 import httpAxios from "../Api/httpAxios";
-
 const OrderServie = {
     index: () => {
         return httpAxios.get(`order/index`);
@@ -17,6 +14,9 @@ const OrderServie = {
     },
     destroy: (id) => {
         return httpAxios.delete(`order/destroy/${id}`);
+    },
+    status: (id) => {
+        return httpAxios.get(`order/status/${id}`);
     },
 
 }

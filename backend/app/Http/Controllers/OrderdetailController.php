@@ -17,7 +17,6 @@ class OrderdetailController extends Controller
             ->get();
         $total = Orderdetail::count();
         $result = [
-
             'orderdetail' => $orderdetail,
             'message' => 'Tai du lieu thanh cong',
             'total' => $total

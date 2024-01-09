@@ -2,9 +2,14 @@ import React, { useEffect, useState } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import ContactServie from '../../../services/ContactService';
 import Loading from '../../../components/Loading';
+import { FaEdit, FaEye, FaToggleOff, FaToggleOn, FaTrash } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify'
+
 export default function ContactIndex() {
     const [contacts, setcontacts] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [reload, setReLoad] = useState(0);
 
     useEffect(() => {
         (async () => {
@@ -14,7 +19,25 @@ export default function ContactIndex() {
             setcontacts(result.contact);
             setLoading(false);
         })();
-    }, []);
+    }, [reload]);
+
+
+    const handDelete = (id) => {
+        (async () => {
+            // const data = await BrandService.destroy(id);
+            const result = await ContactServie.destroy(id);
+            setReLoad(result.contact.id);
+            toast.success(result.message);
+
+        })();
+    };
+
+    const handleStatus = (id) => {
+        (async () => {
+            const result = await ContactServie.status(id);
+            setReLoad(Date.now);
+        })();
+    };
 
 
     return (
@@ -46,18 +69,23 @@ export default function ContactIndex() {
                                                 <a href="contact_reply.html">{contact.name}</a>
                                             </div>
                                             <div className="function_style">
-                                                <a href="#" className="text-success mx-1">
-                                                    <i className="fa fa-toggle-on" />
-                                                </a>
-                                                <a href="contact_replay.html" className="text-primary mx-1">
-                                                    <i className="fa fa-edit" /> Trả lời
-                                                </a>
-                                                <a href="contact_show.html" className="text-info mx-1">
-                                                    <i className="fa fa-eye" />
-                                                </a>
-                                                <a href="#" className="text-danger mx-1">
-                                                    <i className="fa fa-trash" />
-                                                </a>
+                                                <button onClick={() => handleStatus(contact.id)}
+                                                    className={
+                                                        contact.status === 1
+                                                            ? "border-0 px-1 text-success"
+                                                            : "border-0 px-1 text-danger"
+                                                    }
+                                                >
+                                                    {contact.status === 1 ? <FaToggleOn /> : <FaToggleOn />}
+
+                                                </button>
+                                                <Link to={"/admin/contact/reply/" + contact.id} className="px-1 text-primary">
+                                                    <FaEdit /> trả lời
+                                                </Link>
+                                                <Link to={`/admin/contact/show/${contact.id}`} className="px-1 text-info">
+                                                    <FaEye />
+                                                </Link>
+                                                <button onClick={() => handDelete(contact.id)} className="px-1 text-danger"><FaTrash /></button>
                                             </div>
                                         </td>
                                         <td>{contact.phone}</td>
@@ -72,7 +100,20 @@ export default function ContactIndex() {
                     </tbody>
                 </table>
             </section>
-
+            <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+            />
+            {/* Same as */}
+            <ToastContainer />
         </div>
     )
 }

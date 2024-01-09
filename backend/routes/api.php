@@ -10,6 +10,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderdetailController;
+use App\Http\Controllers\PageController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\TopicController;
@@ -104,7 +105,14 @@ Route::prefix('post')->group(function () {
     Route::delete('destroy/{id}', [PostController::class, 'destroy']);
     Route::get('status/{id}', [PostController::class, 'status']);
 });
-
+Route::prefix('page')->group(function () {
+    Route::get('index', [PageController::class, 'index']);
+    Route::get('show/{id}', [PageController::class, 'show']);
+    Route::post('store', [PageController::class, 'store']);
+    Route::post('update/{id}', [PageController::class, 'update']);
+    Route::delete('destroy/{id}', [PageController::class, 'destroy']);
+    Route::get('status/{id}', [PageController::class, 'status']);
+});
 Route::prefix('product')->group(function () {
     Route::get('index', [ProductController::class, 'index']);
     Route::get('show/{id}', [ProductController::class, 'show']);

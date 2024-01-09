@@ -52,6 +52,7 @@ export default function BrandIndex() {
             setDescription("");
             setSortOrder(1);
             setStatus(1);
+            image.value = ""
             document.getElementById('idreset').reset();
             setReLoad(result.brand.id);
         })();

@@ -35,9 +35,9 @@ export default function BannerShow() {
                                     <div className="row mt-2 align-items-center">
                                         <div className="col-md-12 text-end">
 
-                                            <a href="banner_edit.html" className="btn btn-success btn-sm">
-                                                <Link to={'/admin/banner/index'} style={{ color: "white" }}>về trang chính</Link>
-                                            </a>
+                                            {/* <a href="banner_edit.html" className="btn btn-success btn-sm"> */}
+                                            <Link className="btn btn-primary btn-sm" to={'/admin/banner/index'} style={{ color: "white" }}>về trang chính</Link>
+                                            {/* </a> */}
                                             {/* <a href="banner_index.html" className="btn btn-danger btn-sm">
                                                 <i className="fa fa-trash" /> Xóa
                                             </a> */}

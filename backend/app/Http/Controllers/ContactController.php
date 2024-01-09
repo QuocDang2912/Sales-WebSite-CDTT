@@ -146,8 +146,40 @@ class ContactController extends Controller
         // If delete fails
         $result = [
             'status' => false,
-            'brand' => null,
+            'contact' => null,
             'message' => 'Khong the xoa du lieu'
+        ];
+        return response()->json($result, 200);
+    }
+    function status($id)
+    {
+        $contact = Contact::find($id);
+        if ($contact == null) {
+            $result = [
+                'status' => false,
+                'contac$contact' => null,
+                'message' => 'Khong tim thay du lieu'
+            ];
+            return response()->json($result, 404);
+        }
+
+        $contact->status = ($contact->status == 1) ? 2 : 1;
+        $contact->updated_at = date('Y-m-d H:i:s');
+        $contact->updated_by = 1; //tam
+        if ($contact->save()) {
+            $result = [
+                'status' => true,
+                'contac$contact' => $contact,
+                'message' => 'Cap nhat du lieu thanh cong'
+            ];
+            return response()->json($result, 200);
+        }
+
+        // If save fails
+        $result = [
+            'status' => false,
+            'contac$contact' => null,
+            'message' => 'Khoong the them du lieu'
         ];
         return response()->json($result, 200);
     }

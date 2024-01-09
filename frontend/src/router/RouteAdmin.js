@@ -24,6 +24,17 @@ import UserEdit from '../pages/beckend/user/UserEdit'
 import BrandShow from '../pages/beckend/brand/BrandShow'
 import BannerShow from '../pages/beckend/banner/BannerShow'
 import CategoryShow from '../pages/beckend/category/CategoryShow'
+import ContactReply from '../pages/beckend/contact/ContactReply'
+import ContactShow from '../pages/beckend/contact/ContactShow'
+import OrderShow from '../pages/beckend/order/OrderShow'
+import PostShow from '../pages/beckend/post/PostShow'
+import ProductShow from '../pages/beckend/product/ProductShow'
+import TopicShow from '../pages/beckend/topic/TopicShow'
+import UserShow from '../pages/beckend/user/UserShow'
+import PageIndex from '../pages/beckend/page/PageIndex'
+import PageCreate from '../pages/beckend/page/PageCreate'
+import PageEdit from '../pages/beckend/page/PageEdit'
+import PageShow from '../pages/beckend/page/PageShow'
 
 const RouteAdmin = [
     { path: '/admin/brand/index', component: BrandIndex },
@@ -39,27 +50,42 @@ const RouteAdmin = [
     { path: '/admin/category/show/:id', component: CategoryShow },
     // contact
     { path: '/admin/contact/index', component: ContactIndex },
-    // { path: '/admin/category/edit/:id', component: CategoryEdit }
+    { path: '/admin/contact/reply/:id', component: ContactReply },
+    { path: '/admin/contact/show/:id', component: ContactShow },
+
     // menu
     { path: '/admin/menu/index', component: MenuIndex },
     { path: '/admin/menu/edit/:id', component: MenuEdit },
     // order
     { path: '/admin/order/index', component: OrderIndex },
     { path: '/admin/orderExport/index', component: OrderExport },
-    // 
+    { path: '/admin/order/show/:id', component: OrderShow },
+
+    // post 
     { path: '/admin/post/index', component: PostIndex },
     { path: '/admin/post/create', component: PostCreate },
     { path: '/admin/post/edit/:id', component: PostEdit },
+    { path: '/admin/post/show/:id', component: PostShow },
+    //page
+    { path: '/admin/page/index', component: PageIndex },
+    { path: '/admin/page/create', component: PageCreate },
+    { path: '/admin/page/edit/:id', component: PageEdit },
+    { path: '/admin/page/show/:id', component: PageShow },
+
     //  product
     { path: '/admin/product/index', component: ProductIndex },
     { path: '/admin/product/create', component: ProductCreate },
     { path: '/admin/product/edit/:id', component: ProductEdit },
+    { path: '/admin/product/show/:id', component: ProductShow },
+
     // topic
     { path: '/admin/topic/index', component: TopicIndex },
     { path: '/admin/topic/edit/:id', component: TopicEdit },
+    { path: '/admin/topic/show/:id', component: TopicShow },
     // user
     { path: '/admin/user/index', component: UserIndex },
     { path: '/admin/user/create', component: UserCreate },
     { path: '/admin/user/edit/:id', component: UserEdit },
+    { path: '/admin/user/show/:id', component: UserShow },
 ]
 export default RouteAdmin

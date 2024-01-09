@@ -50,6 +50,14 @@ export default function BannerIndex() {
         (async () => {
             const result = await BennerService.store(banner);
             alert(result.message);
+            setName("");
+            setDescription("");
+            setposition("");
+            setLink("");
+            setStatus(1);
+            image.value = ""
+
+            document.getElementById('idreset').reset();
             setReLoad(result.banner.id);
         })();
     };
@@ -100,7 +108,7 @@ export default function BannerIndex() {
                                 <section className="content-body my-5">
                                     <div className="row">
                                         <div className="col-md-4">
-                                            <form onSubmit={handleSubmit}>
+                                            <form onSubmit={handleSubmit} id='idreset'>
                                                 <div className="mb-3">
                                                     <label>
                                                         <strong>Tên Banner (*)</strong>

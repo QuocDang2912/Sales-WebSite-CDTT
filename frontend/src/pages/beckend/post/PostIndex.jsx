@@ -2,10 +2,14 @@ import React, { useEffect, useState } from 'react'
 import PostServie from '../../../services/PostService';
 import { urlImage } from '../../../Api/config';
 import Loading from '../../../components/Loading';
+import { FaEdit, FaEye, FaToggleOff, FaToggleOn, FaTrash } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify'
 
 export default function PortIndex() {
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [reload, setReLoad] = useState(0);
 
 
 
@@ -14,18 +18,32 @@ export default function PortIndex() {
 
             const result = await PostServie.index();
             console.log("🚀 ~ file: BrandIndex.jsx:26 ~ result:", result)
-            setPosts(result.post);
+            setPosts(result.posts);
             setLoading(false);
         })();
-    }, []);
+    }, [reload]);
+    const handDelete = (id) => {
+        (async () => {
+            const result = await PostServie.destroy(id);
+            setReLoad(result.post.id);
+            toast.success(result.message);
 
+        })();
+    };
+
+    const handleStatus = (id) => {
+        (async () => {
+            const result = await PostServie.status(id);
+            setReLoad(Date.now);
+        })();
+    };
 
     return (
         <div>
             <div className="content">
                 <section className="content-header my-2">
                     <h1 className="d-inline">Quản lý bài viết</h1>
-                    <a href="post_create.html" className="btn-add">Thêm mới</a>
+                    <Link className="btn btn-primary btn-sm" to={'/admin/post/create'} style={{ color: "white" }}> them moi</Link>
                     <div className="row mt-3 align-items-center">
                         <div className="col-6">
                             <ul className="manager">
@@ -77,7 +95,7 @@ export default function PortIndex() {
                                 </th>
                                 <th className="text-center" style={{ width: 130 }}>Hình ảnh</th>
                                 <th>Tiêu đề bài viết</th>
-                                <th>topic_id</th>
+                                <th>detail</th>
                                 <th className="text-center" style={{ width: 30 }}>ID</th>
 
                             </tr>
@@ -91,7 +109,7 @@ export default function PortIndex() {
                                                 <input type="checkbox" id="checkId" />
                                             </td>
                                             <td>
-                                                <img className="img-fluid" src={urlImage + "brand/" + post.image} alt={post.image} />
+                                                <img className="img-fluid" src={urlImage + "post/" + post.image} alt={post.image} />
                                             </td>
                                             <td>
                                                 <div className="name">
@@ -100,21 +118,26 @@ export default function PortIndex() {
                                                     </a>
                                                 </div>
                                                 <div className="function_style">
-                                                    <a href="#" className="text-success mx-1">
-                                                        <i className="fa fa-toggle-on" />
-                                                    </a>
-                                                    <a href="post_edit.html" className="text-primary mx-1">
-                                                        <i className="fa fa-edit" />
-                                                    </a>
-                                                    <a href="post_show.html" className="text-info mx-1">
-                                                        <i className="fa fa-eye" />
-                                                    </a>
-                                                    <a href="#" className="text-danger mx-1">
-                                                        <i className="fa fa-trash" />
-                                                    </a>
+                                                    <button onClick={() => handleStatus(post.id)}
+                                                        className={
+                                                            post.status === 1
+                                                                ? "border-0 px-1 text-success"
+                                                                : "border-0 px-1 text-danger"
+                                                        }
+                                                    >
+                                                        {post.status === 1 ? <FaToggleOn /> : <FaToggleOn />}
+
+                                                    </button>
+                                                    <Link to={"/admin/post/edit/" + post.id} className="px-1 text-primary">
+                                                        <FaEdit />
+                                                    </Link>
+                                                    <Link to={`/admin/post/show/${post.id}`} className="px-1 text-info">
+                                                        <FaEye />
+                                                    </Link>
+                                                    <button onClick={() => handDelete(post.id)} className="px-1 text-danger"><FaTrash /></button>
                                                 </div>
                                             </td>
-                                            <td>{post.topic_id}</td>
+                                            <td>{post.detail}</td>
                                             <td className="text-center">{post.id}</td>
                                         </tr>
                                     )
@@ -125,7 +148,20 @@ export default function PortIndex() {
                     </table>
                 </section>
             </div>
-
+            <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+            />
+            {/* Same as */}
+            <ToastContainer />
         </div>
     )
 }

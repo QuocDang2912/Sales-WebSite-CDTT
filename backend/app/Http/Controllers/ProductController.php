@@ -56,17 +56,13 @@ class ProductController extends Controller
         $product->detail = $request->detail;
         $product->slug = Str::of($request->name)->slug('-');
         // Upload file -- reactjs
-        $image = $request->file('image');  // Use file() method to get the UploadedFile instance
-        if ($image != null && $image->isValid()) {
+        $image = $request->image;
+        if ($image != null) {
             $extension = $image->getClientOriginalExtension();
-            $image = $request->image;
-            if ($image != null) {
-                $extension = $image->getClientOriginalExtension();
-                if (in_array($extension, ['jpg', 'gif', 'png', 'webp'])) {
-                    $fileName = date('YmdHis') . '.' . $extension;
-                    $image->move(public_path('images/product'), $fileName);
-                    $product->image = $fileName;
-                }
+            if (in_array($extension, ['jpg', 'gif', 'png', 'webp'])) {
+                $fileName = date('YmdHis') . '.' . $extension;
+                $image->move(public_path('images/product'), $fileName);
+                $product->image = $fileName;
             }
         }
 
@@ -114,17 +110,13 @@ class ProductController extends Controller
         $product->detail = $request->detail;
         $product->slug = Str::of($request->name)->slug('-');
         // Upload file -- reactjs
-        $image = $request->file('image');  // Use file() method to get the UploadedFile instance
-        if ($image != null && $image->isValid()) {
+        $image = $request->image;
+        if ($image != null) {
             $extension = $image->getClientOriginalExtension();
-            $image = $request->image;
-            if ($image != null) {
-                $extension = $image->getClientOriginalExtension();
-                if (in_array($extension, ['jpg', 'gif', 'png', 'webp'])) {
-                    $fileName = date('YmdHis') . '.' . $extension;
-                    $image->move(public_path('images/product'), $fileName);
-                    $product->image = $fileName;
-                }
+            if (in_array($extension, ['jpg', 'gif', 'png', 'webp'])) {
+                $fileName = date('YmdHis') . '.' . $extension;
+                $image->move(public_path('images/product'), $fileName);
+                $product->image = $fileName;
             }
         }
 
@@ -145,7 +137,6 @@ class ProductController extends Controller
             ];
             return response()->json($result, 200);
         }
-
         // If save fails
         $result = [
             'status' => false,
@@ -181,6 +172,38 @@ class ProductController extends Controller
             'status' => false,
             'product' => null,
             'message' => 'Khong the xoa du lieu'
+        ];
+        return response()->json($result, 200);
+    }
+    function status($id)
+    {
+        $product = Product::find($id);
+        if ($product == null) {
+            $result = [
+                'status' => false,
+                'product' => null,
+                'message' => 'Khong tim thay du lieu'
+            ];
+            return response()->json($result, 404);
+        }
+
+        $product->status = ($product->status == 1) ? 2 : 1;
+        $product->updated_at = date('Y-m-d H:i:s');
+        $product->updated_by = 1; //tam
+        if ($product->save()) {
+            $result = [
+                'status' => true,
+                'product' => $product,
+                'message' => 'Cap nhat du lieu thanh cong'
+            ];
+            return response()->json($result, 200);
+        }
+
+        // If save fails
+        $result = [
+            'status' => false,
+            'product' => null,
+            'message' => 'Khoong the them du lieu'
         ];
         return response()->json($result, 200);
     }

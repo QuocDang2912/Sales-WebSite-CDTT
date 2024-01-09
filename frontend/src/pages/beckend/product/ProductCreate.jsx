@@ -1,8 +1,17 @@
 
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import ProductServie from '../../../services/ProductService';
+import CategoryServie from '../../../services/CategoryService';
+
+import BrandService from '../../../services/BrandService';
 export default function ProductCreate() {
+
+    // call category 
+    const [categories, setCategories] = useState([])
+    const [brands, setBrands] = useState([])
+
+
     const [description, setDescription] = useState("");
     const [detail, setDetail] = useState("");
     const [name, setname] = useState("");
@@ -11,6 +20,7 @@ export default function ProductCreate() {
     const [brand_id, setbrand_id] = useState(1);
     const [status, setStatus] = useState(1);
 
+    const navigate = useNavigate()
 
 
     const handleSubmit = (e) => {
@@ -20,35 +30,59 @@ export default function ProductCreate() {
         product.append("detail", detail);
         product.append("name", name);
         product.append("category_id", category_id);
+        console.log("🚀 ~ file: ProductCreate.jsx:30 ~ handleSubmit ~ category_id:", category_id)
         product.append("brand_id", brand_id);
         product.append("price", price);
         product.append("status", status);
         const image = document.getElementById("image");
-        product.append("image", image);
-        product.append("image", image.isDefaultNamespace.length === 0 ? "" : image.files[0]);
+        product.append("image", image.files.length === 0 ? "" : image.files[0]);
 
         (async () => {
             const result = await ProductServie.store(product);
             alert(result.message);
-            // Reset form fields
 
-            // document.getElementById('idreset').reset();
+            navigate("/admin/product/index", { replace: true });
+
+
         })();
     };
+
+    useEffect(() => {
+        // fetChCategory 
+        (
+            async () => {
+                const fetChCategory = await CategoryServie.index()
+                console.log("🚀 ~ file: ProductCreate.jsx:46 ~ fetChCategory:", fetChCategory)
+                setCategories(fetChCategory.category)
+            }
+        )();
+
+        // fetBrand
+        (
+            async () => {
+                const fetBrand = await BrandService.index()
+                console.log("🚀 ~ file: ProductCreate.jsx:64 ~ fetBrand:", fetBrand)
+
+                setBrands(fetBrand.brands)
+            }
+        )()
+    }, [])
+
+    console.log(categories)
+
     return (
         <div>
             <div className="content">
                 <section className="content-header my-2">
                     <h1 className="d-inline">Thêm sản phẩm</h1>
                     <div className="mt-1 text-end">
-                        <a className="btn btn-sm btn-primary" href="product_index.html">
-                            <Link style={{ color: "white" }} to='/admin/product/index'>quay về</Link>
-                        </a>
+                        <Link className="btn btn-sm btn-primary" style={{ color: "white" }} to='/admin/product/index'>quay về</Link>
                     </div>
                 </section>
-                <section className="content-body my-2">
-                    <div className="row">
-                        <form onSubmit={handleSubmit} id='idreset' encType="multipart/form-data">
+                <form onSubmit={handleSubmit} id='idreset' encType="multipart/form-data">
+
+                    <section className="content-body my-2">
+                        <div className="row">
                             <div className="col-md-9">
                                 <div className="mb-3">
                                     <label><strong>Tên sản phẩm (*)</strong></label>
@@ -86,8 +120,16 @@ export default function ProductCreate() {
                                     </div>
                                     <div className="box-body p-2 border-bottom">
                                         <select name="category_id" className="form-select" onChange={(e) => setcategory_id(e.target.value)}>
-                                            <option value>Chọn danh mục</option>
-                                            <option value={1}>Tên danh mục</option>
+                                            {
+                                                categories && categories.length > 0 &&
+                                                categories.map((item, index) => {
+                                                    return (
+                                                        <option key={index} value={item.id}>{item.name}</option>
+                                                    )
+                                                })
+                                            }
+                                            {/* <option value>Chọn danh mục</option>
+                                            <option value={1}>Tên danh mục</option> */}
                                         </select>
                                     </div>
                                 </div>
@@ -97,8 +139,14 @@ export default function ProductCreate() {
                                     </div>
                                     <div className="box-body p-2 border-bottom">
                                         <select name="brand_id" className="form-select" onChange={(e) => setbrand_id(e.target.value)}>
-                                            <option value>Chọn thương hiêu</option>
-                                            <option value={1}>Tên danh mục</option>
+                                            {
+                                                brands && brands.length > 0 &&
+                                                brands.map((item, index) => {
+                                                    return (
+                                                        <option key={index} value={item.id}>{item.name}</option>
+                                                    )
+                                                })
+                                            }
                                         </select>
                                     </div>
                                 </div>
@@ -111,14 +159,6 @@ export default function ProductCreate() {
                                             <label><strong>Giá bán (*)</strong></label>
                                             <input onChange={(e) => setprice(e.target.value)} type="number" defaultValue={10000} min={10000} name="price" className="form-control" />
                                         </div>
-                                        {/* <div className="mb-3">
-                                            <label><strong>Giá khuyến mãi (*)</strong></label>
-                                            <input type="number" defaultValue={10000} min={10000} name="pricesale" className="form-control" />
-                                        </div> */}
-                                        {/* <div className="mb-3">
-                                            <label><strong>Số lượng (*)</strong></label>
-                                            <input type="number" defaultValue={1} min={1} name="qty" className="form-control" />
-                                        </div> */}
                                     </div>
                                 </div>
                                 <div className="box-container mt-2 bg-white">
@@ -130,9 +170,9 @@ export default function ProductCreate() {
                                     </div>
                                 </div>
                             </div>
-                        </form>
-                    </div>
-                </section>
+                        </div>
+                    </section>
+                </form>
             </div>
 
         </div>

@@ -13,10 +13,13 @@ const ProductServie = {
         return httpAxios.post(`product/store`, data);
     },
     update: (data, id) => {
-        return httpAxios.put(`product/update/${id}`, data);
+        return httpAxios.post(`product/update/${id}`, data);
     },
     destroy: (id) => {
         return httpAxios.delete(`product/destroy/${id}`);
+    },
+    status: (id) => {
+        return httpAxios.get(`product/status/${id}`);
     },
 
 }

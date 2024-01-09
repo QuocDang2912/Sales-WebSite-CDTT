@@ -13,10 +13,13 @@ const ContactServie = {
         return httpAxios.post(`contact/store`, data);
     },
     update: (data, id) => {
-        return httpAxios.put(`contact/update/${id}`, data);
+        return httpAxios.post(`contact/update/${id}`, data);
     },
     destroy: (id) => {
         return httpAxios.delete(`contact/destroy/${id}`);
+    },
+    status: (id) => {
+        return httpAxios.get(`contact/status/${id}`);
     },
 
 }

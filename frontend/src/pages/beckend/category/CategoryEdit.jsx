@@ -75,7 +75,7 @@ export default function CategoryEdit() {
                                     <section className="content-header my-2">
                                         <h1 className="d-inline">Cập nhật danh mục</h1>
                                         <div className="text-end">
-                                            <a href="category_index.html">Về danh sách</a>
+                                            <Link className="btn btn-primary btn-sm" to={'/admin/category/index'} style={{ color: "white" }}>về trang chính</Link>
                                         </div>
                                     </section>
                                     <section className="content-body my-2">

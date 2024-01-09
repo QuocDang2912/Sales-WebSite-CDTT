@@ -73,9 +73,8 @@ export default function BannerEdit() {
                                     <section className="content-header my-2">
                                         <h1 className="d-inline">Cập nhật banner</h1>
                                         <div className="text-end">
-                                            <a href="banner_index.html" className="btn btn-sm btn-success">
-                                                <i className="fa fa-arrow-left" /> Về danh sách
-                                            </a>
+                                            <Link className="btn btn-primary btn-sm" to={'/admin/banner/index'} style={{ color: "white" }}>về trang chính</Link>
+
                                         </div>
                                     </section>
                                     <section className="content-body my-2">

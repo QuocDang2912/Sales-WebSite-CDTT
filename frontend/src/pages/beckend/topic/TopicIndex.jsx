@@ -2,11 +2,10 @@ import React, { useEffect, useState } from 'react'
 import TopicServie from '../../../services/TopicService';
 import Loading from '../../../components/Loading';
 import { MdDeleteForever } from "react-icons/md";
-import { FaEdit } from "react-icons/fa";
-import { urlImage } from '../../../Api/config';
 import { Link } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
+import { FaEdit, FaEye, FaToggleOff, FaToggleOn } from 'react-icons/fa';
 export default function TopicIndex() {
   const [topics, setTopics] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -42,7 +41,11 @@ export default function TopicIndex() {
       console.log("🚀 ~ file: TopicIndex.js:42 ~ result:", result)
       alert(result.message);
       // Reset form fields
-
+      setName("");
+      setDescription("");
+      setSortOrder(1);
+      setStatus(1);
+      document.getElementById('idreset').reset();
       setReLoad(result.topic.id);
     })();
   };
@@ -62,7 +65,12 @@ export default function TopicIndex() {
 
     deleteBrand();
   }
-
+  const handleStatus = (id) => {
+    (async () => {
+      const result = await TopicServie.status(id);
+      setReLoad(Date.now);
+    })();
+  };
 
 
   return (
@@ -185,6 +193,19 @@ export default function TopicIndex() {
                             <Link to={`/admin/topic/edit/${topic.id}`}>
                               <FaEdit style={{ color: 'blue', fontSize: '20' }} />
                             </Link>
+                            <Link to={`/admin/topic/show/${topic.id}`} className="px-1 text-info">
+                              <FaEye />
+                            </Link>
+                            <button onClick={() => handleStatus(topic.id)}
+                              className={
+                                topic.status === 1
+                                  ? "border-0 px-1 text-success"
+                                  : "border-0 px-1 text-danger"
+                              }
+                            >
+                              {topic.status === 1 ? <FaToggleOn /> : <FaToggleOn />}
+
+                            </button>
                           </td>
                         </tr>
                       )

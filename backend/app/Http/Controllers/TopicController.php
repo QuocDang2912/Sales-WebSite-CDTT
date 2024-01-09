@@ -145,4 +145,36 @@ class TopicController extends Controller
         ];
         return response()->json($result, 200);
     }
+    function status($id)
+    {
+        $topic = Topic::find($id);
+        if ($topic == null) {
+            $result = [
+                'status' => false,
+                'topic' => null,
+                'message' => 'Khong tim thay du lieu'
+            ];
+            return response()->json($result, 404);
+        }
+
+        $topic->status = ($topic->status == 1) ? 2 : 1;
+        $topic->updated_at = date('Y-m-d H:i:s');
+        $topic->updated_by = 1; //tam
+        if ($topic->save()) {
+            $result = [
+                'status' => true,
+                'topic' => $topic,
+                'message' => 'Cap nhat du lieu thanh cong'
+            ];
+            return response()->json($result, 200);
+        }
+
+        // If save fails
+        $result = [
+            'status' => false,
+            'topic' => null,
+            'message' => 'Khoong the them du lieu'
+        ];
+        return response()->json($result, 200);
+    }
 }

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import UserServie from '../../../services/UserService';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function UserCreate() {
     const [name, setname] = useState("");
@@ -13,7 +13,7 @@ export default function UserCreate() {
 
     const [status, setStatus] = useState(1);
 
-
+    const navigate = useNavigate()
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -26,14 +26,10 @@ export default function UserCreate() {
         user.append("phone", phone);
         user.append("roles", roles);
         user.append("status", status);
-
-
         (async () => {
             const result = await UserServie.store(user);
             alert(result.message);
-            // Reset form fields
-
-            // document.getElementById('idreset').reset();
+            navigate("/admin/user/index", { replace: true });
         })();
     };
 
@@ -46,9 +42,9 @@ export default function UserCreate() {
                     <div className="row mt-2 align-items-center">
                         <div className="col-md-12 text-end">
 
-                            <a href="user_index.html" className="btn btn-primary btn-sm">
-                                <Link style={{ color: "white" }} to='/admin/user/index'>quay về trang chủ </Link>
-                            </a>
+
+                            <Link className="btn btn-primary btn-sm" style={{ color: "white" }} to='/admin/user/index'>quay về trang chủ </Link>
+
                         </div>
                     </div>
                 </section>
@@ -76,7 +72,7 @@ export default function UserCreate() {
                                 </div>
                                 <div className="mb-3">
                                     <label><strong>roles(*)</strong></label>
-                                    <input onChange={(e) => setroles(e.target.value)} type="text" name="phone" className="form-control" placeholder="Điện thoại" />
+                                    <input onChange={(e) => setroles(e.target.value)} type="text" name="phone" className="form-control" placeholder="roles" />
                                 </div>
                             </div>
                             <div className="col-md-6">

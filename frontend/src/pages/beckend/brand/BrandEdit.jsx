@@ -66,9 +66,9 @@ export default function BrandEdit() {
                                 <section className="content-header my-2">
                                     <h1 className="d-inline">edit Banner</h1>
                                     <div className="text-end">
-                                        <a href="brand_index.html" className="btn btn-sm btn-success">
-                                            <Link to={'/admin/brand/index'} style={{ color: "white" }}>về trang chính</Link>
-                                        </a>
+                                        {/* <a href="brand_index.html" className="btn btn-sm btn-success"> */}
+                                        <Link className="btn btn-primary btn-sm" to={'/admin/brand/index'} style={{ color: "white" }}>về trang chính</Link>
+                                        {/* </a> */}
                                     </div>
                                 </section>
                                 <section className="content-body my-2">

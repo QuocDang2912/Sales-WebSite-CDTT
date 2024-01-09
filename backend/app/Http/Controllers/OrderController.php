@@ -147,4 +147,36 @@ class OrderController extends Controller
         ];
         return response()->json($result, 200);
     }
+    function status($id)
+    {
+        $order = Order::find($id);
+        if ($order == null) {
+            $result = [
+                'status' => false,
+                'contac$order' => null,
+                'message' => 'Khong tim thay du lieu'
+            ];
+            return response()->json($result, 404);
+        }
+
+        $order->status = ($order->status == 1) ? 2 : 1;
+        $order->updated_at = date('Y-m-d H:i:s');
+        $order->updated_by = 1; //tam
+        if ($order->save()) {
+            $result = [
+                'status' => true,
+                'contac$order' => $order,
+                'message' => 'Cap nhat du lieu thanh cong'
+            ];
+            return response()->json($result, 200);
+        }
+
+        // If save fails
+        $result = [
+            'status' => false,
+            'contac$order' => null,
+            'message' => 'Khoong the them du lieu'
+        ];
+        return response()->json($result, 200);
+    }
 }

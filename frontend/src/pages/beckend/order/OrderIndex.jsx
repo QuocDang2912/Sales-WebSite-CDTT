@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import OrderServie from '../../../services/OrderService';
 import Loading from '../../../components/Loading';
+import { ToastContainer, toast } from 'react-toastify'
+import { Link } from 'react-router-dom';
+import { FaEdit, FaEye, FaToggleOff, FaToggleOn, FaTrash } from 'react-icons/fa';
 
 export default function OrderIndex() {
     const [orders, setOrder] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [reload, setReLoad] = useState(0);
 
     useEffect(() => {
         (async () => {
@@ -13,7 +17,24 @@ export default function OrderIndex() {
             setOrder(result.order);
             setLoading(false);
         })();
-    }, []);
+    }, [reload]);
+
+    const handDelete = (id) => {
+        (async () => {
+            // const data = await BrandService.destroy(id);
+            const result = await OrderServie.destroy(id);
+            setReLoad(result.order.id);
+            toast.success(result.message);
+
+        })();
+    };
+
+    const handleStatus = (id) => {
+        (async () => {
+            const result = await OrderServie.status(id);
+            setReLoad(Date.now);
+        })();
+    };
 
 
     return (
@@ -96,18 +117,23 @@ export default function OrderIndex() {
                                                     </a>
                                                 </div>
                                                 <div className="function_style">
-                                                    <a href="#" className="text-success mx-1">
-                                                        <i className="fa fa-toggle-on" />
-                                                    </a>
-                                                    <a href="order_edit.html" className="text-primary mx-1">
-                                                        <i className="fa fa-edit" />
-                                                    </a>
-                                                    <a href="order_show.html" className="text-info mx-1">
-                                                        <i className="fa fa-eye" />
-                                                    </a>
-                                                    <a href="#" className="text-danger mx-1">
-                                                        <i className="fa fa-trash" />
-                                                    </a>
+                                                    <button onClick={() => handleStatus(order.id)}
+                                                        className={
+                                                            order.status === 1
+                                                                ? "border-0 px-1 text-success"
+                                                                : "border-0 px-1 text-danger"
+                                                        }
+                                                    >
+                                                        {order.status === 1 ? <FaToggleOn /> : <FaToggleOn />}
+
+                                                    </button>
+                                                    <Link to={"/admin/order/edit/" + order.id} className="px-1 text-primary">
+                                                        <FaEdit /> trả lời
+                                                    </Link>
+                                                    <Link to={`/admin/order/show/${order.id}`} className="px-1 text-info">
+                                                        <FaEye />
+                                                    </Link>
+                                                    <button onClick={() => handDelete(order.id)} className="px-1 text-danger"><FaTrash /></button>
                                                 </div>
                                             </td>
                                             <td>{order.delivery_phone}</td>
@@ -123,7 +149,20 @@ export default function OrderIndex() {
                     </table>
                 </section>
             </div>
-
+            <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+            />
+            {/* Same as */}
+            <ToastContainer />
         </div>
     )
 }

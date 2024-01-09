@@ -37,9 +37,9 @@ export default function BrandShow() {
                                     <h1 className="d-inline">Chi tiết</h1>
                                     <div className="row mt-2 align-items-center">
                                         <div className="col-md-12 text-end">
-                                            <a href="brand_index.html" className="btn btn-primary btn-sm">
-                                                <Link to={'/admin/brand/index'} style={{ color: "white" }}>về trang chính</Link>
-                                            </a>
+                                            {/* <a href="brand_index.html" className="btn btn-primary btn-sm"> */}
+                                            <Link className="btn btn-primary btn-sm" to={'/admin/brand/index'} style={{ color: "white" }}>về trang chính</Link>
+                                            {/* </a> */}
                                             {/* <a href="brand_edit.html" className="btn btn-success btn-sm">
                                                     <i className="fa fa-edit" /> Sửa
                                                 </a>

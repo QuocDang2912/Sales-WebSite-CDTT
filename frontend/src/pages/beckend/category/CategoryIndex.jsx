@@ -55,6 +55,13 @@ export default function CategoryIndex() {
         (async () => {
             const result = await CategoryServie.store(category);
             alert(result.message);
+            setName("");
+            setDescription("");
+            setSortOrder(1);
+            setParent_id(1);
+            setStatus(1);
+            image.value = ""
+            document.getElementById('idreset').reset();
             setReLoad(result.category.id);
         })();
 
@@ -103,7 +110,7 @@ export default function CategoryIndex() {
                                 <section className="content-body my-2">
                                     <div className="row">
                                         <div className="col-md-4">
-                                            <form onSubmit={handleSubmit}>
+                                            <form onSubmit={handleSubmit} id='idreset'>
                                                 <div className="mb-3">
                                                     <label>
                                                         <strong>Tên category (*)</strong>
@@ -112,7 +119,7 @@ export default function CategoryIndex() {
                                                 </div>
                                                 <div className="mb-3">
                                                     <label><strong>Mô tả</strong></label>
-                                                    <textarea onChange={(e) => setDescription(e.target.value)} value={description} name="description" placeholder="Mô tả" rows={4} className="form-control" defaultValue={""} />
+                                                    <textarea onChange={(e) => setDescription(e.target.value)} value={description} name="description" placeholder="Mô tả" rows={4} className="form-control" defaultValue={""} required />
                                                 </div>
                                                 <div className="mb-3">
                                                     <label><strong>sort_order</strong></label>

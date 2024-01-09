@@ -13,10 +13,13 @@ const TopicServie = {
         return httpAxios.post(`topic/store`, data);
     },
     update: (data, id) => {
-        return httpAxios.put(`topic/update/${id}`, data);
+        return httpAxios.post(`topic/update/${id}`, data);
     },
     destroy: (id) => {
         return httpAxios.delete(`topic/destroy/${id}`);
+    },
+    status: (id) => {
+        return httpAxios.get(`topic/status/${id}`);
     },
 
 }

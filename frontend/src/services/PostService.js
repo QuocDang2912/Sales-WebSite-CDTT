@@ -13,10 +13,13 @@ const PostServie = {
         return httpAxios.post(`post/store`, data);
     },
     update: (data, id) => {
-        return httpAxios.put(`post/update/${id}`, data);
+        return httpAxios.post(`post/update/${id}`, data);
     },
     destroy: (id) => {
         return httpAxios.delete(`post/destroy/${id}`);
+    },
+    status: (id) => {
+        return httpAxios.get(`post/status/${id}`);
     },
 
 }

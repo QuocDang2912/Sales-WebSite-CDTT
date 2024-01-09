@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import UserServie from '../../../services/UserService';
 import { ToastContainer, toast } from 'react-toastify'
 import { MdDeleteForever } from "react-icons/md";
-import { FaEdit } from "react-icons/fa";
+import { FaEdit, FaEye, FaToggleOff, FaToggleOn } from 'react-icons/fa';
 import 'react-toastify/dist/ReactToastify.css';
 import { Link } from 'react-router-dom';
 import Loading from '../../../components/Loading';
@@ -35,6 +35,13 @@ export default function UserIndex() {
 
         deleteBrand();
     }
+
+    const handleStatus = (id) => {
+        (async () => {
+            const result = await UserServie.status(id);
+            setReLoad(Date.now);
+        })();
+    };
 
     return (
         <div>
@@ -129,9 +136,21 @@ export default function UserIndex() {
                                             <td className="text-center">
                                                 <MdDeleteForever onClick={() => handleDelete(user.id)} style={{ color: 'red', fontSize: '20' }} />
 
-                                                <Link to={`/admin/topic/edit/${user.id}`}>
+                                                <Link to={`/admin/user/edit/${user.id}`}>
                                                     <FaEdit style={{ color: 'blue', fontSize: '20' }} />
                                                 </Link>
+                                                <Link to={`/admin/user/show/${user.id}`} className="px-1 text-info">
+                                                    <FaEye />
+                                                </Link>
+                                                <button onClick={() => handleStatus(user.id)}
+                                                    className={
+                                                        user.status === 1
+                                                            ? "border-0 px-1 text-success"
+                                                            : "border-0 px-1 text-danger"
+                                                    }
+                                                >
+                                                    {user.status === 1 ? <FaToggleOn /> : <FaToggleOn />}
+                                                </button>
                                             </td>
                                         </tr>
                                     )
