@@ -36,7 +36,6 @@ class PostController extends Controller
             ];
             return response()->json($result, 404);
         }
-
         $result = [
             'status' => true,
             'post' => $post,
@@ -201,6 +200,63 @@ class PostController extends Controller
             'status' => false,
             'post' => null,
             'message' => 'Khong the them du lieu'
+        ];
+        return response()->json($result, 200);
+    }
+    public function post_new()
+    {
+        $postnhat = Post::where('status', '!=', 0)
+            ->where('type', '=', 'post')
+            ->orderBy('created_at', 'desc')
+            ->select('id', 'title', 'detail', 'status', 'image', 'slug')
+            ->limit(1)
+            ->get();
+        $postsau = Post::where('status', '!=', 0)
+            ->where('type', '=', 'post')
+            ->orderBy('created_at', 'desc')
+            ->select('id', 'title', 'detail', 'status', 'image', 'slug')
+            ->skip(1) // Bỏ qua 1 bài viết (bài mới nhất)
+            ->take(2) // Lấy 2 bài viết (từ số 2 đến số 3)
+            ->limit(2)
+            ->get();
+        $total = Post::count();
+        $resul = [
+            'status' => true,
+            'postnhat' => $postnhat,
+            'postsau' => $postsau,
+            'message' => 'Tai du lieu thanh cong',
+            'total' => $total
+        ];
+        return response()->json($resul, 200);
+    }
+    // post_detail
+    function post_detail($slug)
+    {
+        $post = Post::where('slug', $slug)
+            ->where('status', '!=', 0)
+            ->first();
+
+        if ($post == null) {
+            $result = [
+                'status' => false,
+                'post' => null,
+                'message' => 'Khong tim thay du lieu'
+            ];
+            return response()->json($result, 404);
+        }
+        // Tìm nạp các bài viết liên quan dựa trên cùng một chủ đề_id
+        $relatedPosts = Post::where('topic_id', $post->topic_id)
+            ->where('status', '!=', 0)
+            ->where('id', '!=', $post->id) //Loại trừ bài viết hiện tại
+
+            ->take(3) // Điều chỉnh số lượng bài viết liên quan theo nhu cầu
+            ->get();
+
+        $result = [
+            'status' => true,
+            'post' => $post,
+            'related_posts' => $relatedPosts,
+            'message' => 'Tai du lieu thanh cong'
         ];
         return response()->json($result, 200);
     }

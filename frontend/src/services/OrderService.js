@@ -1,23 +1,32 @@
 import httpAxios from "../Api/httpAxios";
 const OrderServie = {
-    index: () => {
-        return httpAxios.get(`order/index`);
+    getList: (status) => {
+        return httpAxios.get(`order/index/${status}`);
     },
-    show: (id) => {
+    getById: (id) => {
         return httpAxios.get(`order/show/${id}`);
     },
     store: (data) => {
         return httpAxios.post(`order/store`, data);
     },
     update: (data, id) => {
-        return httpAxios.put(`order/update/${id}`, data);
-    },
-    destroy: (id) => {
-        return httpAxios.delete(`order/destroy/${id}`);
+        return httpAxios.post(`order/update/${id}`, data);
     },
     status: (id) => {
         return httpAxios.get(`order/status/${id}`);
     },
+    delete: (id) => {
+        return httpAxios.get(`order/delete/${id}`);
+    },
+    restore: (id) => {
+        return httpAxios.get(`order/restore/${id}`);
+    },
+    destroy: (id) => {
+        return httpAxios.delete(`order/destroy/${id}`);
+    },
+
+
+
 
 }
 export default OrderServie;

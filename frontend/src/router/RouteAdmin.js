@@ -16,6 +16,7 @@ import PostEdit from '../pages/beckend/post/PostEdit'
 import ProductIndex from '../pages/beckend/product/ProductIndex'
 import ProductCreate from '../pages/beckend/product/ProductCreate'
 import ProductEdit from '../pages/beckend/product/ProductEdit'
+import ProductShow from '../pages/beckend/product/ProductShow'
 import TopicIndex from '../pages/beckend/topic/TopicIndex'
 import TopicEdit from '../pages/beckend/topic/TopicEdit'
 import UserIndex from '../pages/beckend/user/UserIndex'
@@ -28,13 +29,13 @@ import ContactReply from '../pages/beckend/contact/ContactReply'
 import ContactShow from '../pages/beckend/contact/ContactShow'
 import OrderShow from '../pages/beckend/order/OrderShow'
 import PostShow from '../pages/beckend/post/PostShow'
-import ProductShow from '../pages/beckend/product/ProductShow'
 import TopicShow from '../pages/beckend/topic/TopicShow'
 import UserShow from '../pages/beckend/user/UserShow'
 import PageIndex from '../pages/beckend/page/PageIndex'
 import PageCreate from '../pages/beckend/page/PageCreate'
 import PageEdit from '../pages/beckend/page/PageEdit'
 import PageShow from '../pages/beckend/page/PageShow'
+
 
 const RouteAdmin = [
     { path: '/admin/brand/index', component: BrandIndex },
@@ -87,5 +88,6 @@ const RouteAdmin = [
     { path: '/admin/user/create', component: UserCreate },
     { path: '/admin/user/edit/:id', component: UserEdit },
     { path: '/admin/user/show/:id', component: UserShow },
+
 ]
 export default RouteAdmin

@@ -67,8 +67,6 @@ class PageController extends Controller
                 }
             }
         }
-
-
         // end upload
         $page->description = $request->description;
         $page->created_at = date('Y-m-d H:i:s');

@@ -52,7 +52,7 @@ export default function Dashboard() {
                                     <Link to='/admin/topic/index'>chủ đề</Link>
                                 </li>
                                 <li>
-                                    <a href="page_index.html">Trang đơn</a>
+                                    <Link to='/admin/page/index'>trang đơn</Link>
                                 </li>
                             </ul>
                         </li>
