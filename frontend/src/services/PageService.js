@@ -19,5 +19,8 @@ const PageService = {
     status: (id) => {
         return httpAxios.get(`page/status/${id}`);
     },
+    PostPage: (slug) => {
+        return httpAxios.get(`page/post_page/${slug}`);
+    },
 }
 export default PageService;

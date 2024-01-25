@@ -2,23 +2,31 @@ import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import ProductServie from '../../../../services/ProductService'
 import { urlImage } from '../../../../Api/config'
+import Loading from '../../../../components/Loading'
 
 export default function ProductBrand() {
     const { slug } = useParams()
 
     const [productBrand, setProductBrand] = useState([])
+    const [currentPage, setCurrentPage] = useState(1);
+    const [lastPage, setLastPage] = useState(1);
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
 
         (
             async () => {
-                const res = await ProductServie.productBrand(slug)
-                console.log("🚀 ~ res:", res)
-                setProductBrand(res.products)
+                const res = await ProductServie.productBrand(slug, currentPage)
+                console.log(res.products.data)
+                setProductBrand(res.products.data)
+                setCurrentPage(res.products.current_page);
+                setLastPage(res.products.last_page);
+                setLoading(false)
+
             }
         )()
 
-    }, [slug])
+    }, [slug, currentPage])
     return (
         <div>
             <div>
@@ -30,7 +38,7 @@ export default function ProductBrand() {
                                     <a className="text-main" href="index.html">Trang chủ</a>
                                 </li>
                                 <li className="breadcrumb-item active" aria-current="page">
-                                    Sản phẩm theo loại
+                                    Sản phẩm theo thương hiệu
                                 </li>
                             </ol>
                         </nav>
@@ -112,32 +120,27 @@ export default function ProductBrand() {
                                                 )
                                             })
                                         }
+                                        {loading ? <Loading /> : ""}
 
                                     </div>
                                 </div>
-                                <nav aria-label="Phân trang">
-                                    <ul className="pagination justify-content-center">
-                                        <li className="page-item">
-                                            <a className="page-link text-main" href="product_category.html" aria-label="Previous">
-                                                <span aria-hidden="true">«</span>
-                                            </a>
-                                        </li>
-                                        <li className="page-item">
-                                            <a className="page-link text-main" href="product_category.html">1</a>
-                                        </li>
-                                        <li className="page-item">
-                                            <a className="page-link text-main" href="product_category.html">2</a>
-                                        </li>
-                                        <li className="page-item">
-                                            <a className="page-link text-main" href="product_category.html">3</a>
-                                        </li>
-                                        <li className="page-item">
-                                            <a className="page-link text-main" href="product_category.html" aria-label="Next">
-                                                <span aria-hidden="true">»</span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </nav>
+                                <div className="d-flex justify-content-center">
+                                    <nav aria-label="Page navigation">
+                                        <ul className="pagination">
+                                            <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+                                                <a className="page-link" onClick={() => setCurrentPage(currentPage - 1)}>&lt; </a>
+                                            </li>
+                                            {Array.from({ length: lastPage }, (_, i) => (
+                                                <li className={`page-item ${i + 1 === currentPage ? 'active' : ''}`} key={i}>
+                                                    <a className="page-link" onClick={() => setCurrentPage(i + 1)}>{i + 1}</a>
+                                                </li>
+                                            ))}
+                                            <li className={`page-item ${currentPage === lastPage ? 'disabled' : ''}`}>
+                                                <a className="page-link" onClick={() => setCurrentPage(currentPage + 1)}> &gt;</a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </div>
                             </div>
                         </div>
                     </div>

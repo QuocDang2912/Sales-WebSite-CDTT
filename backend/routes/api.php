@@ -15,11 +15,9 @@ use App\Http\Controllers\PageController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\TopicController;
-use App\Http\Controllers\User;
+
 use App\Http\Controllers\UserController;
-use App\Models\Menu;
-use App\Models\Order;
-use App\Models\Orderdetail;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -45,6 +43,9 @@ Route::prefix('brand')->group(function () {
     Route::post('update/{id}', [BrandController::class, 'update']);
     Route::delete('destroy/{id}', [BrandController::class, 'destroy']);
     Route::get('status/{id}', [BrandController::class, 'status']);
+
+    Route::put('delete/{id}', [BrandController::class, 'delete']);
+    Route::get('thungrac', [BrandController::class, 'thungrac']);
 });
 
 Route::prefix('banner')->group(function () {
@@ -77,25 +78,7 @@ Route::prefix('contact')->group(function () {
 
 
 
-Route::prefix('post')->group(function () {
-    Route::get('index', [PostController::class, 'index']);
-    Route::get('show/{id}', [PostController::class, 'show']);
-    Route::post('store', [PostController::class, 'store']);
-    Route::post('update/{id}', [PostController::class, 'update']);
-    Route::delete('destroy/{id}', [PostController::class, 'destroy']);
-    Route::get('status/{id}', [PostController::class, 'status']);
 
-    Route::get('postnew', [PostController::class, 'post_new']);
-    Route::get('post_detail/{slug}', [PostController::class, 'post_detail']);
-});
-Route::prefix('page')->group(function () {
-    Route::get('index', [PageController::class, 'index']);
-    Route::get('show/{id}', [PageController::class, 'show']);
-    Route::post('store', [PageController::class, 'store']);
-    Route::post('update/{id}', [PageController::class, 'update']);
-    Route::delete('destroy/{id}', [PageController::class, 'destroy']);
-    Route::get('status/{id}', [PageController::class, 'status']);
-});
 
 
 
@@ -118,6 +101,10 @@ Route::prefix('user')->group(function () {
     Route::post('update/{id}', [UserController::class, 'update']);
     Route::delete('destroy/{id}', [UserController::class, 'destroy']);
     Route::get('status/{id}', [UserController::class, 'status']);
+    Route::post('login', [UserController::class, 'login']);
+
+    // thay đổi mk
+    Route::post('changePassword/{id}', [UserController::class, 'changePassword']);
 });
 
 
@@ -146,28 +133,46 @@ Route::prefix('customer')->group(function () {
 
 
 Route::prefix('menu')->group(function () {
-    Route::get('index/{status}', [MenuController::class, 'index']);
-    Route::get('trash', [MenuController::class, 'trash']);
-    Route::post('store', [MenuController::class, 'store']);
-    Route::get('show/{id}', [MenuController::class, 'show']);
-    Route::post('update/{id}', [MenuController::class, 'update']);
-    Route::get('status/{id}', [MenuController::class, 'status']);
-    Route::get('delete/{id}', [MenuController::class, 'delete']);
-    Route::get('restore/{id}', [MenuController::class, 'restore ']);
-    Route::delete('destroy/{id}', [MenuController::class, 'destroy']);
-});
 
+    Route::get('index', [MenuController::class, 'index']);
+    Route::get('getAllMenus', [MenuController::class, 'getAllMenus']);
+    Route::get('show/{id}', [MenuController::class, 'show']);
+    Route::get('thungrac', [MenuController::class, 'thungrac']);
+    Route::post('store', [MenuController::class, 'store']);
+    Route::post('update/{id}', [MenuController::class, 'update']);
+    Route::delete('destroy/{id}', [MenuController::class, 'destroy']);
+    Route::get('status/{id}', [MenuController::class, 'status']);
+    Route::put('delete/{id}', [MenuController::class, 'delete']);
+});
 
 Route::prefix('order')->group(function () {
-    Route::get('index/{status}', [OrderController::class, 'index']);
+    // Route::get('index/{status}', [OrderController::class, 'index']);
+    // Route::get('show/{id}', [OrderController::class, 'show']);
+    // Route::post('update/{id}', [OrderController::class, 'update']);
+    // Route::get('status/{id}', [OrderController::class, 'status']);
+    // Route::get('delete/{id}', [OrderController::class, 'delete']);
+    // Route::get('restore/{id}', [OrderController::class, 'restore']);
+    // Route::delete('destroy/{id}', [OrderController::class, 'destroy']);
+
     Route::post('store', [OrderController::class, 'store']);
-    Route::get('show/{id}', [OrderController::class, 'show']);
-    Route::post('update/{id}', [OrderController::class, 'update']);
-    Route::get('status/{id}', [OrderController::class, 'status']);
-    Route::get('delete/{id}', [OrderController::class, 'delete']);
-    Route::get('restore/{id}', [OrderController::class, 'restore']);
-    Route::delete('destroy/{id}', [OrderController::class, 'destroy']);
 });
+
+Route::prefix('orderdetail')->group(function () {
+    // Route::get('index/{status}', [OrderController::class, 'index']);
+    // Route::get('show/{id}', [OrderController::class, 'show']);
+    // Route::post('update/{id}', [OrderController::class, 'update']);
+    // Route::get('status/{id}', [OrderController::class, 'status']);
+    // Route::get('delete/{id}', [OrderController::class, 'delete']);
+    // Route::get('restore/{id}', [OrderController::class, 'restore']);
+    // Route::delete('destroy/{id}', [OrderController::class, 'destroy']);
+
+    // của me
+    Route::post('store', [OrderdetailController::class, 'store']);
+    // của bún bò
+    Route::post('store1', [OrderdetailController::class, 'store1']);
+});
+
+
 
 Route::prefix('product')->group(function () {
     Route::get('index', [ProductController::class, 'index']);
@@ -186,34 +191,61 @@ Route::prefix('product')->group(function () {
     Route::get('product_category_home/{id}', [ProductController::class, 'product_category_home']);
     Route::get('product_detail/{slug}', [ProductController::class, 'product_detail']);
     // mới
-    Route::post('storeimport', [ProductController::class, 'storeimport']);
+
     //Sản phẩm khuyến mãi
     Route::get('sale', [ProductController::class, 'sale']);
     Route::post('storesale', [ProductController::class, 'storesale']);
-    // all product
-    Route::get('product_all', [ProductController::class, 'product_all']);
+
     // product category
     Route::get('product_category/{slug}', [ProductController::class, 'product_category']);
     // product brand
     Route::get('product_brand/{slug}', [ProductController::class, 'product_brand']);
+
+    // search
+    Route::get('sreach', [ProductController::class, 'sreach']);
+
+    // store import 
+    Route::get('import', [ProductController::class, 'import']);
+    Route::post('storeimport', [ProductController::class, 'storeimport']);
+
+
+    // all product phân trang
+    Route::get('product_all', [ProductController::class, 'product_all']);
+    // all trong trong admin order export có product sale
+    Route::get('product_all1', [ProductController::class, 'product_all1']);
 });
 
-// Route::prefix('product')->group(function () {
-//     Route::get('index/{status}', [ProductController::class, 'index']);
-//     Route::post('store', [ProductController::class, 'store']);
-//     Route::get('import', [ProductController::class, 'import']);
-//     Route::get('show/{id}', [ProductController::class, 'show']);
-//     Route::post('update/{id}', [ProductController::class, 'update']);
-//     Route::get('status/{id}', [ProductController::class, 'status']);
-//     Route::get('delete/{id}', [ProductController::class, 'delete']);
-//     Route::get('restore/{id}', [ProductController::class, 'restore']);
-//     Route::delete('destroy/{id}', [ProductController::class, 'destroy']);
+Route::prefix('post')->group(function () {
+    Route::get('index', [PostController::class, 'index']);
+    Route::get('show/{id}', [PostController::class, 'show']);
+    Route::post('store', [PostController::class, 'store']);
+    Route::post('update/{id}', [PostController::class, 'update']);
+    Route::delete('destroy/{id}', [PostController::class, 'destroy']);
+    Route::get('status/{id}', [PostController::class, 'status']);
 
-//     Route::post('storeimport', [ProductController::class, 'storeimport']);
-//     //Sản phẩm khuyến mãi
-//     Route::get('sale', [ProductController::class, 'sale']);
-//     Route::post('storesale', [ProductController::class, 'storesale']);
-// });
+    Route::get('postnew', [PostController::class, 'post_new']);
+    Route::get('post_detail/{slug}', [PostController::class, 'post_detail']);
+
+    // post all
+    Route::get('post_all', [PostController::class, 'post_all']);
+    // post_topic
+    Route::get('post_topic/{slug}', [PostController::class, 'post_topic']);
+});
+Route::prefix('page')->group(function () {
+    Route::get('index', [PageController::class, 'index']);
+    Route::get('show/{id}', [PageController::class, 'show']);
+    Route::post('store', [PageController::class, 'store']);
+    Route::post('update/{id}', [PageController::class, 'update']);
+    Route::delete('destroy/{id}', [PageController::class, 'destroy']);
+    Route::get('status/{id}', [PageController::class, 'status']);
+    // lấy ra trang đơn
+    Route::get('post_page/{slug}', [PageController::class, 'post_page']);
+});
+
+
+
+
+
 
 
 Route::get('brand_list', [BrandController::class, 'brand_list']);

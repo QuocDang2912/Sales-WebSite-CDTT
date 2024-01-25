@@ -49,6 +49,34 @@ class MenuController extends Controller
         ];
         return response()->json($result, 200);
     }
+    function getAllMenus()
+    {
+        // Lấy tất cả các menu cấp cha (parent_id = 0)
+        // $parentMenus = Menu::where([['parent_id', 0],['status','=',1]])->get();
+        $parentMenus = Menu::where([['parent_id', 0]])->get();
+
+        $result = [
+            'status' => true,
+            'parentMenus' => [],
+            'message' => 'Tải dữ liệu thành công'
+        ];
+
+        // Duyệt qua từng menu cấp cha
+        foreach ($parentMenus as $parentMenu) {
+            // Lấy tất cả các menu con của menu cha
+            // $childMenus = Menu::where([['parent_id', $parentMenu->id],['status','=',1]])->get();
+            $childMenus = Menu::where([['parent_id', $parentMenu->id]])->get();
+
+            // Thêm thông tin menu cấp cha và các menu con vào kết quả
+            $result['parentMenus'][] = [
+                'parentMenu' => $parentMenu,
+                'childMenus' => $childMenus,
+            ];
+        }
+
+        return response()->json($result, 200);
+    }
+
     // hiển thị thùng rác
     public function trash()
     {
@@ -91,7 +119,7 @@ class MenuController extends Controller
     function store(Request $request)
     {
         if (isset($request->ADDCATEGORY)) {
-            $listcategoryid = $request->listcategoryid;
+            $listcategoryid = $request->categoryid;
             foreach ($listcategoryid as $id) {
                 $category = Category::find($id);
                 $menu = new Menu();
@@ -99,10 +127,9 @@ class MenuController extends Controller
                 $menu->name = $category->name;
                 $menu->link = "danh-muc/" . $category->slug;
 
+                $menu->description = $category->description;
                 $menu->position = $request->position;
-                $menu->sort_order = 1;
-
-                $menu->parent_id = 0;
+                $menu->parent_id = $request->parent_id;
                 $menu->type = 'category';
                 $menu->table_id = $category->id;
                 $menu->status = 2;
@@ -128,10 +155,10 @@ class MenuController extends Controller
                 $menu->name = $brand->name;
                 $menu->link = 'thuong-hieu/' . $brand->slug;
 
-                $menu->sort_order = 1;
+                $menu->description = $brand->description;
                 $menu->position = $request->position;
 
-                $menu->parent_id = 0;
+                $menu->parent_id = $request->parent_id;
                 $menu->type = 'brand';
                 $menu->table_id = $brand->id;
                 $menu->status = 2;
@@ -157,9 +184,9 @@ class MenuController extends Controller
 
                 $menu->name = $topic->name;
                 $menu->link = 'chu-de/' . $topic->slug;
-                $menu->sort_order = 1;
+                $menu->description = $topic->name;
                 $menu->position = $request->position;
-                $menu->parent_id = 0;
+                $menu->parent_id = $request->parent_id;
                 $menu->type = 'topic';
                 $menu->table_id = $topic->id;
                 $menu->status = 2;
@@ -184,8 +211,8 @@ class MenuController extends Controller
                 $menu = new Menu();
                 $menu->name = $page->title;
                 $menu->link = 'trang-don/' . $page->slug;
-                $menu->sort_order = 1;
-                $menu->parent_id = 0;
+                $menu->description = $page->title;
+                $menu->parent_id = $request->parent_id;
                 $menu->position = $request->position;
                 $menu->type = 'page';
                 $menu->table_id = $page->id;
@@ -208,9 +235,9 @@ class MenuController extends Controller
 
             $menu->name = $request->name;
             $menu->link = $request->link;
-            $menu->sort_order = 1;
+            $menu->description = " ";
             $menu->position = $request->position;
-            $menu->parent_id = 0;
+            $menu->parent_id = $request->parent_id;
             $menu->type = 'custom';
             $menu->status = 2;
             $menu->created_by = Auth::id() ?? 1;
@@ -280,11 +307,11 @@ class MenuController extends Controller
         $menu->link = $request->link;
         $menu->sort_order = $request->sort_order;
         $menu->parent_id = $request->parent_id;
-        // $menu->type = $request->type;
-        // $menu->table_id = $request->table_id;
+        $menu->type = $request->type;
+        $menu->table_id = 1;
 
-        // $menu->description = $request->description;
-        $menu->update_at = date('Ymd H:i:s');
+        $menu->description = "sss";
+        $menu->updated_at = date('Ymd H:i:s');
         $menu->updated_by = Auth::id() ?? 1;
         $menu->status = $request->status;
 
@@ -326,10 +353,10 @@ class MenuController extends Controller
         ];
         return response()->json($result, 200);
     }
-    public function delete(string $id)
+    function delete(Request $request, $id)
     {
-        $menu = Menu::find($id);
-        if ($menu == null) {
+        $brand = Menu::find($id);
+        if ($brand == null) {
             $result = [
                 'status' => false,
                 'menu' => null,
@@ -337,14 +364,21 @@ class MenuController extends Controller
             ];
             return response()->json($result, 404);
         }
-        $menu->created_at = date('Ymd H:i:s');
-        $menu->created_by = Auth::id() ?? 1;
-        $menu->status = 0;
-        $menu->save();
+        $brand->status = $request->status;
+        if ($brand->save()) {
+            $result = [
+                'status' => true,
+                'menu' => $brand,
+                'message' => 'Da xoa vao thung rac'
+            ];
+            return response()->json($result, 200);
+        }
+
+        // If save fails
         $result = [
-            'status' => true,
-            'menu' => $menu,
-            'message' => 'Cap nhat du lieu thanh cong'
+            'status' => false,
+            'brand' => null,
+            'message' => 'Khoong the them du lieu'
         ];
         return response()->json($result, 200);
     }
@@ -413,5 +447,20 @@ class MenuController extends Controller
             'message' => 'Khoong the them du lieu'
         ];
         return response()->json($result, 200);
+    }
+    public function thungrac()
+    {
+        $brand = Menu::where('status', '=', 0)
+            ->orderBy('created_at', 'desc')
+            ->select('id', 'name', 'link', 'type', 'position', 'status')
+            ->get();
+        $total = Menu::count();
+        $resul = [
+            'status' => true,
+            'menu' => $brand,
+            'message' => 'Tai du lieu thanh cong',
+            'total' => $total
+        ];
+        return response()->json($resul, 200);
     }
 }

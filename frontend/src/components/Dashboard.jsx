@@ -35,8 +35,10 @@ export default function Dashboard() {
                                 </li>
 
                                 <li>
-                                    <a href="product_sale.html">Khuyễn mãi</a>
-
+                                    <Link to='/admin/product/productsale'>ProductSale</Link>
+                                </li>
+                                <li>
+                                    <Link to='/admin/product/productImport'>productImport</Link>
                                 </li>
                             </ul>
                         </li>
@@ -106,7 +108,7 @@ export default function Dashboard() {
                         </li>
                     </ul>
                 </nav>
-            </div>
-        </div>
+            </div >
+        </div >
     )
 }

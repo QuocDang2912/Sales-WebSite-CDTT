@@ -35,7 +35,6 @@ class ContactController extends Controller
             ];
             return response()->json($result, 404);
         }
-
         $result = [
             'status' => true,
             'contact' => $contact,
@@ -49,8 +48,8 @@ class ContactController extends Controller
     function store(Request $request)
     {
         $contact = new Contact();
-        $contact->name = $request->name;
         $contact->user_id = $request->user_id;
+        $contact->name = $request->name;
         $contact->email = $request->email;
         $contact->phone = $request->phone;
         $contact->title = $request->title;
@@ -71,7 +70,6 @@ class ContactController extends Controller
             ];
             return response()->json($result, 200);
         }
-
         // If save fails
         $result = [
             'status' => false,

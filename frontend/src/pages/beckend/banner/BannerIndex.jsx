@@ -272,7 +272,6 @@ export default function BannerIndex() {
                 theme="light"
             />
             {/* Same as */}
-            <ToastContainer />
         </div >
 
     )

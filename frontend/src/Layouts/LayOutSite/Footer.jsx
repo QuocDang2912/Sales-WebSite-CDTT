@@ -13,7 +13,6 @@ export default function Footer() {
             setPage(res.pages)
         }
         fetch()
-
     }, [])
 
 
@@ -81,8 +80,7 @@ export default function Footer() {
                                     Page && Page.length > 0 && Page.map((item) => {
                                         return (
                                             <li>
-                                                <Link to={`/post_detail/${item.slug}`}>{item.title}</Link>
-
+                                                <Link to={`/post_page/${item.slug}`}>{item.title}</Link>
                                                 {/* <a href="index.html"></a> */}
                                             </li>
                                         )

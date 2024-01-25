@@ -21,11 +21,20 @@ const PostServie = {
     status: (id) => {
         return httpAxios.get(`post/status/${id}`);
     },
+
     postnew: () => {
         return httpAxios.get("post/postnew");
     },
     PostDetail: (slug) => {
         return httpAxios.get(`post/post_detail/${slug}`);
+    },
+
+    postAll: (page) => {
+        return httpAxios.get(`post/post_all?page=${page}`);
+    },
+    // post_topic
+    postTopic: (slug, page) => {
+        return httpAxios.get(`post/post_topic/${slug}?page=${page}`);
     },
 
 }

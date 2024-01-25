@@ -10,9 +10,14 @@ export default function ProductNew() {
     useEffect(() => {
         (
             async () => {
-                const res = await ProductServie.productnew(8)
-                setProduct(res.product)
-                setLoading(false)
+                try {
+                    const res = await ProductServie.productnew(8)
+                    setProduct(res.product)
+                    setLoading(false)
+                } catch (error) {
+                    console.log("🚀 ~ error:", error)
+
+                }
 
             }
         )()

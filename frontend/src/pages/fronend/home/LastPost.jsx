@@ -12,11 +12,16 @@ export default function LastPost() {
     //
     useEffect(() => {
         (async () => {
-            const result = await PostServie.postnew();
-            console.log("🚀 ~ result:", result)
-            setPost(result.postnhat);
-            setPost1(result.postsau);
-            setLoading(false)
+            try {
+                const result = await PostServie.postnew();
+           
+                setPost(result.postnhat);
+                setPost1(result.postsau);
+                setLoading(false)
+            } catch (error) {
+                console.log("🚀 ~ error:", error)
+            }
+
         })();
     }, []);
 

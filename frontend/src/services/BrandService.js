@@ -22,6 +22,13 @@ const BrandService = {
         return httpAxios.get(`brand/status/${id}`);
     },
 
+    delete: (data, id) => {
+        return httpAxios.put(`brand/delete/${id}`, data);
+    },
+    thungrac: () => {
+        return httpAxios.get("brand/thungrac");
+    },
+
 }
 export default BrandService;
 

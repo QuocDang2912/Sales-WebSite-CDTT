@@ -3,21 +3,25 @@ import CategoryServie from '../../../services/CategoryService'
 import { Link } from 'react-router-dom'
 import BrandService from '../../../services/BrandService'
 
+import TopicServie from '../../../services/TopicService'
+
 export default function Menu() {
     const [category, setCategory] = useState([])
     const [brand, setbrand] = useState([])
+
+    const [topic, setTopic] = useState([])
 
     useEffect(() => {
         const fetch = async () => {
             const res = await CategoryServie.index()
             const fetchbrand1 = await BrandService.index()
+            const fetchTopic = await TopicServie.index()
+            setTopic(fetchTopic.topics)
             setCategory(res.category)
             setbrand(fetchbrand1.brands)
         }
         fetch()
     }, [])
-
-
     return (
         <>
 
@@ -56,11 +60,14 @@ export default function Menu() {
                                     <div className="collapse navbar-collapse" id="navbarSupportedContent">
                                         <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                                             <li className="nav-item">
-                                                <a className="nav-link text-white" aria-current="page" href="/">Trang chủ</a>
+                                                <Link to={"/"}>
+                                                    <a className="nav-link text-white" aria-current="page" >Trang chủ</a>
+                                                </Link>
                                             </li>
-                                            <li className="nav-item">
+                                            {/* <li className="nav-item">
+
                                                 <a className="nav-link text-white" href="post_page.html">Giới thiệu</a>
-                                            </li>
+                                            </li> */}
 
                                             <li className="nav-item dropdown">
                                                 <a className="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -81,12 +88,29 @@ export default function Menu() {
                                                     </Link>
                                                 </ul>
                                             </li>
-                                            <li className="nav-item">
-                                                <a href="post_topic.html" className="nav-link text-white">Bài viết</a>
+                                            <li className="nav-item dropdown">
+                                                <a className="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    Bài viết
+                                                </a>
+                                                <ul className="dropdown-menu">
+                                                    {topic && topic.length > 0 && topic.map((topic) => {
+                                                        return (
+                                                            <li key={topic.id}>
+                                                                <Link className="dropdown-item text-main" to={`/posttopic/${topic.slug}`}>{topic.name}</Link>
+                                                            </li>
+                                                        )
+                                                    })}
+                                                    <Link to={"/postall"}>
+                                                        <li>
+                                                            <a className="dropdown-item text-main" >Tất cả sản phẩm</a>
+                                                        </li>
+                                                    </Link>
+                                                </ul>
                                             </li>
                                             <li className="nav-item">
-                                                <a href="contact.html" className="nav-link text-white">Liên hệ</a>
-                                            </li>
+                                                <Link to={"/contact"}>
+                                                    <a className="nav-link text-white" aria-current="page" >liên hệ</a>
+                                                </Link>                                            </li>
                                         </ul>
                                     </div>
                                 </div>

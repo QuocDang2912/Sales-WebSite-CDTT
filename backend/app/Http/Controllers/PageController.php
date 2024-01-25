@@ -201,4 +201,24 @@ class PageController extends Controller
         ];
         return response()->json($result, 200);
     }
+    function post_page($slug)
+    {
+        $page = Post::where('slug', $slug)
+            ->where('status', '!=', 0)
+            ->first();
+        if ($page == null) {
+            $result = [
+                'status' => false,
+                'page' => null,
+                'message' => 'Khong tim thay du lieu'
+            ];
+            return response()->json($result, 404);
+        }
+        $result = [
+            'status' => true,
+            'page' => $page,
+            'message' => 'Tai du lieu thanh cong'
+        ];
+        return response()->json($result, 200);
+    }
 }

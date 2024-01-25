@@ -6,8 +6,7 @@ import BannerEdit from '../pages/beckend/banner/BannerEdit'
 import CategoryIndex from '../pages/beckend/category/CategoryIndex'
 import CategoryEdit from '../pages/beckend/category/CategoryEdit'
 import ContactIndex from '../pages/beckend/contact/ContactIndex'
-import MenuIndex from '../pages/beckend/menu/MenuIndex'
-import MenuEdit from '../pages/beckend/menu/MenuEdit'
+
 import OrderIndex from '../pages/beckend/order/OrderIndex'
 import OrderExport from '../pages/beckend/order/OrderExport'
 import PostIndex from '../pages/beckend/post/PostIndex'
@@ -35,6 +34,12 @@ import PageIndex from '../pages/beckend/page/PageIndex'
 import PageCreate from '../pages/beckend/page/PageCreate'
 import PageEdit from '../pages/beckend/page/PageEdit'
 import PageShow from '../pages/beckend/page/PageShow'
+import ProductSale from '../pages/beckend/product/ProductSale'
+import ProductImport from '../pages/beckend/product/ProductImport'
+import MenuIndex from '../pages/beckend/menu/MenuIndex'
+import MenuEdit from '../pages/beckend/menu/MenuEdit'
+import MenuShow from '../pages/beckend/menu/MenuShow'
+import MenuTrash from '../pages/beckend/menu/MenuTrash'
 
 
 const RouteAdmin = [
@@ -55,8 +60,10 @@ const RouteAdmin = [
     { path: '/admin/contact/show/:id', component: ContactShow },
 
     // menu
-    { path: '/admin/menu/index', component: MenuIndex },
-    { path: '/admin/menu/edit/:id', component: MenuEdit },
+    { path: "/admin/menu/index", component: MenuIndex },
+    { path: "/admin/menu/edit/:id", component: MenuEdit },
+    { path: "/admin/menu/show/:id", component: MenuShow },
+    { path: "/admin/menu/trash", component: MenuTrash },
     // order
     { path: '/admin/order/index', component: OrderIndex },
     { path: '/admin/orderExport/index', component: OrderExport },
@@ -78,6 +85,8 @@ const RouteAdmin = [
     { path: '/admin/product/create', component: ProductCreate },
     { path: '/admin/product/edit/:id', component: ProductEdit },
     { path: '/admin/product/show/:id', component: ProductShow },
+    { path: '/admin/product/productsale', component: ProductSale },
+    { path: '/admin/product/productImport', component: ProductImport },
 
     // topic
     { path: '/admin/topic/index', component: TopicIndex },

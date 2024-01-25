@@ -21,6 +21,13 @@ const UserServie = {
     status: (id) => {
         return httpAxios.get(`user/status/${id}`);
     },
+    login: (data) => {
+        return httpAxios.post(`user/login`, data);
+    },
+
+    changePass: (data, id) => {
+        return httpAxios.post(`user/changePassword/${id}`, data);
+    },
 
 }
 export default UserServie;

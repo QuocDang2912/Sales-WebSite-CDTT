@@ -9,9 +9,13 @@ export default function ProductSale() {
     useEffect(() => {
         (
             async () => {
-                const res = await ProductServie.productsale(8)
-                setProduct(res.product)
-                setLoading(false)
+                try {
+                    const res = await ProductServie.productsale(8)
+                    setProduct(res.product)
+                    setLoading(false)
+                } catch (error) {
+                    console.log("🚀 ~ error:", error)
+                }
 
             }
         )()
@@ -38,7 +42,6 @@ export default function ProductSale() {
                                 })
                             }
                             {loading ? <Loading /> : ""}
-
                         </div>
                     </div>
                 </div>

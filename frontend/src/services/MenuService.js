@@ -3,10 +3,17 @@
 import httpAxios from "../Api/httpAxios";
 
 const MenuServie = {
-    getList: (status) => {
-        return httpAxios.get(`menu/index/${status}`);
+    //lấy ra danh sách
+    index: () => {
+        return httpAxios.get("menu/index");
     },
-    getById: (id) => {
+    getAllMenus: () => {
+        return httpAxios.get("menu/getAllMenus");
+    },
+    thungrac: () => {
+        return httpAxios.get("menu/thungrac");
+    },
+    show: (id) => {
         return httpAxios.get(`menu/show/${id}`);
     },
     store: (data) => {
@@ -15,21 +22,14 @@ const MenuServie = {
     update: (data, id) => {
         return httpAxios.post(`menu/update/${id}`, data);
     },
+    delete: (data, id) => {
+        return httpAxios.put(`menu/delete/${id}`, data);
+    },
     destroy: (id) => {
         return httpAxios.delete(`menu/destroy/${id}`);
-    },
-    delete: (id) => {
-        return httpAxios.get(`menu/delete/${id}`);
-    },
-    restore: (id) => {
-        return httpAxios.get(`menu/restore/${id}`);
     },
     status: (id) => {
         return httpAxios.get(`menu/status/${id}`);
     },
-    menuParenId: (id) => {
-        return httpAxios.get(`menu_parentid/${id}`);
-    }
-
 }
 export default MenuServie;

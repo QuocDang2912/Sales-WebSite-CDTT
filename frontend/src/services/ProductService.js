@@ -52,12 +52,10 @@ const ProductServie = {
     // destroy: (id) => {
     //     return httpAxios.delete(`product/destroy/${id}`);
     // },
-    getStore: () => {
-        return httpAxios.get(`product/import`);
-    },
-    storeProductStore: (productstore) => {
-        return httpAxios.post(`product/storeimport`, productstore);
-    },
+
+
+
+
 
 
     // productAll: () => {
@@ -66,11 +64,24 @@ const ProductServie = {
     productAll: (page) => {
         return httpAxios.get(`product/product_all?page=${page}`);
     },
-    productCategory: (slug) => {
-        return httpAxios.get(`product/product_category/${slug}`);
+
+    productAll1: () => {
+        return httpAxios.get(`product/product_all1`);
     },
-    productBrand: (slug) => {
-        return httpAxios.get(`product/product_brand/${slug}`);
+
+
+
+    // productCategory: (slug) => {
+    //     return httpAxios.get(`product/product_category/${slug}`);
+    // },
+    productCategory: (slug, page) => {
+        return httpAxios.get(`product/product_category/${slug}?page=${page}`);
+    },
+    // productBrand: (slug) => {
+    //     return httpAxios.get(`product/product_brand/${slug}`);
+    // },
+    productBrand: (slug, page) => {
+        return httpAxios.get(`product/product_brand/${slug}?page=${page}`);
     },
     product_detail: (slug) => {
         return httpAxios.get(`product/product_detail/${slug}`);
@@ -91,8 +102,22 @@ const ProductServie = {
     },
 
 
+    // thêm product sale
+    sale: () => {
+        return httpAxios.get(`product/sale`);
+    },
+    storesale: (data) => {
+        return httpAxios.post(`product/storesale`, data);
+    },
 
+    // product store
 
+    getStore: () => {
+        return httpAxios.get(`product/import`);
+    },
+    storeProductStore: (productstore) => {
+        return httpAxios.post(`product/storeimport`, productstore);
+    },
 
 }
 export default ProductServie;

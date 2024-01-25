@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\Topic;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -257,6 +258,45 @@ class PostController extends Controller
             'post' => $post,
             'related_posts' => $relatedPosts,
             'message' => 'Tai du lieu thanh cong'
+        ];
+        return response()->json($result, 200);
+    }
+
+    // post all
+    function post_all()
+    {
+        $perPage = 4; // Đặt số lượng sản phẩm trên mỗi trang
+        $posts = Post::where('status', '!=', 0)
+            ->where('type', '=', 'post')
+            ->orderBy('created_at', 'desc')
+            ->select('id', 'title', 'detail', 'image', 'description', 'status', 'type', 'slug')
+            ->paginate($perPage); // Move paginate() before get()
+
+        $result = [
+            'status' => true,
+            'posts' => $posts,
+            'message' => 'Tai du lieu thanh cong',
+        ];
+        return response()->json($result, 200);
+    }
+    // post theo topic
+    public function post_topic($slug)
+    {
+        $perPage = 4; // Đặt số lượng sản phẩm trên mỗi trang
+
+        $args = [
+            ['status', '=', 1],
+            ['slug', '=', $slug]
+        ];
+        $topic = Topic::where($args)->first();
+
+        $posts = Post::where([['post.topic_id', '=', $topic->id], ['post.status', '=', 1]])
+            ->orderBy('post.created_at', 'desc')
+            ->paginate($perPage);
+        $result = [
+            'status' => true,
+            'posts' => $posts,
+            'message' => 'Tải dữ liệu thành công',
         ];
         return response()->json($result, 200);
     }

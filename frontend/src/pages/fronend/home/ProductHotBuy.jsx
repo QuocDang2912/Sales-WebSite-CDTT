@@ -9,9 +9,14 @@ const ProductHotBuy = () => {
 
     useEffect(() => {
         (async () => {
-            const result = await ProductService.producthotbuy(8);
-            setProducts(result.products);
-            setLoading(false)
+            try {
+                const result = await ProductService.producthotbuy(8);
+                setProducts(result.products);
+                setLoading(false)
+            } catch (error) {
+                console.log("🚀 ~ error:", error)
+
+            }
 
         })();
     }, []);

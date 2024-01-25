@@ -2,10 +2,13 @@ import React, { useEffect, useState } from 'react'
 import PostServie from '../../../services/PostService'
 import { Link, useParams } from 'react-router-dom'
 import { urlImage } from '../../../Api/config'
+import Loading from '../../../components/Loading'
 
 export default function PostDetail() {
     const [post, setPost] = useState([])
     const [related_posts, setrelated_posts] = useState([])
+    const [loading, setLoading] = useState(true)
+
     const { slug } = useParams()
     useEffect(() => {
 
@@ -13,7 +16,8 @@ export default function PostDetail() {
             const res = await PostServie.PostDetail(slug)
             setPost(res.post)
             setrelated_posts(res.related_posts)
-            console.log("🚀 ~ fetch ~ res:", res)
+            setLoading(false)
+
         }
         fetch()
 
@@ -95,6 +99,8 @@ export default function PostDetail() {
                                         )
                                     })
                                 }
+                                {loading ? <Loading /> : ""}
+
                             </ul>
                         </div>
                     </div>

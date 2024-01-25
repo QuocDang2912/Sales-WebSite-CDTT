@@ -3,27 +3,45 @@ import React, { useEffect, useState } from "react";
 import { Link, useParams } from 'react-router-dom'
 import ProductServie from "../../../../services/ProductService";
 import { urlImage } from "../../../../Api/config";
+import Loading from "../../../../components/Loading";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../../../../state/CartSlice";
 
 export default function ProductDetail() {
     const { slug } = useParams()
     console.log("🚀 ~ ProductDetail ~ slug:", slug)
     const [product, setProduct] = useState([]);
     const [product_other, setProductOther] = useState([]);
-    //
+    const [loading, setLoading] = useState(true)
     useEffect(() => {
         const fetchBrand = async () => {
             try {
                 const result = await ProductServie.product_detail(slug);
-                console.log("🚀 ~ fetchBrand ~ result:", result)
-                setProduct(result.products);
+
+                setProduct(result.product);
                 setProductOther(result.product_other)
-                console.error("Error fetching brandww: ", result.product_other);
+
+                setLoading(false)
             } catch (error) {
                 console.error("Error fetching brand: ", error);
             }
         };
         fetchBrand();
     }, [slug]);
+
+
+    // redux
+    const dispatch = useDispatch()
+
+    const handleClickToCart = () => {
+        dispatch(
+            addToCart(
+                {
+                    item: { ...product, count: 1 }
+                }
+            )
+        )
+    }
 
     return (
         <>
@@ -57,7 +75,10 @@ export default function ProductDetail() {
                         <div className="col-md-6">
                             <h1 className="text-main">{product.name}</h1>
                             <h2 className="text-main py-4">
-                                {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.price)}
+                                Gía :  {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.price)}
+                            </h2>
+                            <h2 className=" py-4">
+                                giảm giá :  {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.pricesale)}
                             </h2>
                             <h2 className="text-main py-4">{product.detail}</h2>
                             <div className="mb-3">
@@ -66,12 +87,10 @@ export default function ProductDetail() {
                             </div>
 
                             <div className="mb-3">
-                                {/* <a className="btn btn-main" href="checkout.html">Mua ngay</a> */}
-                                <button style={{ backgroundColor: "#ff0099" }} className="btn btn-main">Thêm vào giỏ hàng</button>
+                                <button onClick={handleClickToCart} style={{ backgroundColor: "#ff0099" }} className="btn btn-main">Thêm vào giỏ hàng</button>
                             </div>
                         </div>
                     </div>
-
                     <div className="row">
                         <h2 className="text-main fs-4 pt-4">Sản phẩm khác</h2>
                         <div className="product-category mt-3">
@@ -120,7 +139,11 @@ export default function ProductDetail() {
                                             </div>
 
                                         );
-                                    })}
+                                    })
+                                }
+
+                                {loading ? <Loading /> : ""}
+
                             </div>
                         </div>
                     </div>
