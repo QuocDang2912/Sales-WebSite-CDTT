@@ -199,4 +199,50 @@ class BannerController extends Controller
         ];
         return response()->json($result, 200);
     }
+
+    function delete(Request $request, $id)
+    {
+        $banner = Banner::find($id);
+        if ($banner == null) {
+            $result = [
+                'status' => false,
+                'banner' => null,
+                'message' => 'Khong tim thay du lieu'
+            ];
+            return response()->json($result, 404);
+        }
+        $banner->status = $request->status;
+        if ($banner->save()) {
+            $result = [
+                'status' => true,
+                'banner' => $banner,
+                'message' => 'Da xoa vao thung rac'
+            ];
+            return response()->json($result, 200);
+        }
+
+        // If save fails
+        $result = [
+            'status' => false,
+            'banner' => null,
+            'message' => 'Khoong the them du lieu'
+        ];
+        return response()->json($result, 200);
+    }
+
+    public function thungrac()
+    {
+        $banner = Banner::where('status', '=', 0)
+            ->orderBy('created_at', 'desc')
+            ->select('id', 'name', 'link', 'status', 'image', 'position')
+            ->get();
+        $total = Banner::count();
+        $resul = [
+            'status' => true,
+            'banner' => $banner,
+            'message' => 'Tai du lieu thanh cong',
+            'total' => $total
+        ];
+        return response()->json($resul, 200);
+    }
 }

@@ -15,6 +15,7 @@ class UserController extends Controller
     function index()
     {
         $user = User::where('status', '!=', 0)
+            ->where('roles', '=', 'admin')
             ->orderBy('created_at', 'desc')
             ->select('id', 'name', 'username', 'status', 'gender', 'phone', 'email')
             ->get();
@@ -182,6 +183,54 @@ class UserController extends Controller
         ];
         return response()->json($result, 200);
     }
+
+    function delete(Request $request, $id)
+    {
+        $user = User::find($id);
+        if ($user == null) {
+            $result = [
+                'status' => false,
+                'user' => null,
+                'message' => 'Khong tim thay du lieu'
+            ];
+            return response()->json($result, 404);
+        }
+        $user->status = $request->status;
+        if ($user->save()) {
+            $result = [
+                'status' => true,
+                'user' => $user,
+                'message' => 'Da xoa vao thung rac'
+            ];
+            return response()->json($result, 200);
+        }
+
+        // If save fails
+        $result = [
+            'status' => false,
+            'user' => null,
+            'message' => 'Khoong the them du lieu'
+        ];
+        return response()->json($result, 200);
+    }
+
+    public function thungrac()
+    {
+        $user = User::where('status', '=', 0)
+            ->orderBy('created_at', 'desc')
+            ->select('id', 'name', 'username', 'status', 'gender', 'phone', 'email')
+            ->get();
+        $total = User::count();
+        $resul = [
+            'status' => true,
+            'user' => $user,
+            'message' => 'Tai du lieu thanh cong',
+            'total' => $total
+        ];
+        return response()->json($resul, 200);
+    }
+
+
     public function login(Request $request)
     {
         $username = $request->input('username');

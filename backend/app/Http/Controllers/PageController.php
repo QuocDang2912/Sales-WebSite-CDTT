@@ -201,6 +201,56 @@ class PageController extends Controller
         ];
         return response()->json($result, 200);
     }
+
+    //
+    function delete(Request $request, $id)
+    {
+        $page = Post::find($id);
+        if ($page == null) {
+            $result = [
+                'status' => false,
+                'page' => null,
+                'message' => 'Khong tim thay du lieu'
+            ];
+            return response()->json($result, 404);
+        }
+        $page->status = $request->status;
+        if ($page->save()) {
+            $result = [
+                'status' => true,
+                'page' => $page,
+                'message' => 'Da xoa vao thung rac'
+            ];
+            return response()->json($result, 200);
+        }
+
+        // If save fails
+        $result = [
+            'status' => false,
+            'page' => null,
+            'message' => 'Khoong the them du lieu'
+        ];
+        return response()->json($result, 200);
+    }
+
+    public function thungrac()
+    {
+        $page = Post::where('status', '=', 0)
+            ->orderBy('created_at', 'desc')
+            ->select('id', 'title', 'detail', 'image', 'description', 'status', 'type', 'slug')
+            ->get();
+        $total = Post::count();
+        $resul = [
+            'status' => true,
+            'page' => $page,
+            'message' => 'Tai du lieu thanh cong',
+            'total' => $total
+        ];
+        return response()->json($resul, 200);
+    }
+
+
+    ///
     function post_page($slug)
     {
         $page = Post::where('slug', $slug)

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import UserServie from '../../../services/UserService';
 import { Link, useNavigate } from 'react-router-dom';
 
-export default function UserCreate() {
+export default function CustomerCreate() {
     const [name, setname] = useState("");
     const [username, setusername] = useState("");
     const [password, setpassword] = useState("");
@@ -24,12 +24,12 @@ export default function UserCreate() {
         user.append("gender", gender);
         user.append("email", email);
         user.append("phone", phone);
-        user.append("roles", roles || "admin");
+        user.append("roles", roles || "customer");
         user.append("status", status);
         (async () => {
             const result = await UserServie.store(user);
             alert(result.message);
-            navigate("/admin/user/index", { replace: true });
+            navigate("/admin/customer/index", { replace: true });
         })();
     };
 
@@ -41,7 +41,7 @@ export default function UserCreate() {
                     <h1 className="d-inline">Thêm thành viên</h1>
                     <div className="row mt-2 align-items-center">
                         <div className="col-md-12 text-end">
-                            <Link className="btn btn-primary btn-sm" style={{ color: "white" }} to='/admin/user/index'>quay về trang chủ </Link>
+                            <Link className="btn btn-primary btn-sm" style={{ color: "white" }} to='/admin/customer/index'>quay về trang chủ </Link>
                         </div>
                     </div>
                 </section>
@@ -71,7 +71,7 @@ export default function UserCreate() {
                                     <label><strong>roles(*)</strong></label>
                                     <select onChange={(e) => setroles(e.target.value)} value={roles} name="roles" className="form-select" >
                                         <option value>none</option>
-                                        <option value="admin">admin</option>
+                                        <option value="customer">customer</option>
                                     </select>
                                 </div>
                             </div>

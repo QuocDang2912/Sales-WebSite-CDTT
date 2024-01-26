@@ -22,5 +22,12 @@ const TopicServie = {
         return httpAxios.get(`topic/status/${id}`);
     },
 
+    delete: (data, id) => {
+        return httpAxios.put(`topic/delete/${id}`, data);
+    },
+    thungrac: () => {
+        return httpAxios.get("topic/thungrac");
+    },
+
 }
 export default TopicServie;

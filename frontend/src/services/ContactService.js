@@ -21,6 +21,12 @@ const ContactServie = {
     status: (id) => {
         return httpAxios.get(`contact/status/${id}`);
     },
+    delete: (data, id) => {
+        return httpAxios.put(`contact/delete/${id}`, data);
+    },
+    thungrac: () => {
+        return httpAxios.get("contact/thungrac");
+    },
 
 }
 export default ContactServie;

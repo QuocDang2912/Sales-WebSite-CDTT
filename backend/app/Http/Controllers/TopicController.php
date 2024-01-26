@@ -177,4 +177,50 @@ class TopicController extends Controller
         ];
         return response()->json($result, 200);
     }
+
+    function delete(Request $request, $id)
+    {
+        $topic = Topic::find($id);
+        if ($topic == null) {
+            $result = [
+                'status' => false,
+                'topic' => null,
+                'message' => 'Khong tim thay du lieu'
+            ];
+            return response()->json($result, 404);
+        }
+        $topic->status = $request->status;
+        if ($topic->save()) {
+            $result = [
+                'status' => true,
+                'topic' => $topic,
+                'message' => 'Da xoa vao thung rac'
+            ];
+            return response()->json($result, 200);
+        }
+
+        // If save fails
+        $result = [
+            'status' => false,
+            'topic' => null,
+            'message' => 'Khoong the them du lieu'
+        ];
+        return response()->json($result, 200);
+    }
+
+    public function thungrac()
+    {
+        $topic = Topic::where('status', '=', 0)
+            ->orderBy('created_at', 'desc')
+            ->select('id', 'name', 'slug', 'status', 'sort_order',)
+            ->get();
+        $total = Topic::count();
+        $resul = [
+            'status' => true,
+            'topic' => $topic,
+            'message' => 'Tai du lieu thanh cong',
+            'total' => $total
+        ];
+        return response()->json($resul, 200);
+    }
 }

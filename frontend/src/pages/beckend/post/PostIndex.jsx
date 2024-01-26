@@ -1,34 +1,39 @@
-import React, { useEffect, useState } from 'react'
-import PostServie from '../../../services/PostService';
-import { urlImage } from '../../../Api/config';
-import Loading from '../../../components/Loading';
-import { FaEdit, FaEye, FaToggleOff, FaToggleOn, FaTrash } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify'
+import React, { useEffect, useState } from "react";
+
+
+import { FaEdit, FaEye, FaToggleOff, FaToggleOn, FaTrash } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import PostServie from "../../../services/PostService";
+import { urlImage } from "../../../Api/config";
+import Loading from "../../../components/Loading";
 
 export default function PortIndex() {
-    const [posts, setPosts] = useState([]);
+    const [status1, setStatus1] = useState(0);
+
+    const [post, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [reload, setReLoad] = useState(0);
 
-
-
     useEffect(() => {
         (async () => {
-
             const result = await PostServie.index();
-            console.log("🚀 ~ file: BrandIndex.jsx:26 ~ result:", result)
+            console.log("🚀 ~ file: BrandIndex.jsx:26 ~ result:", result);
             setPosts(result.posts);
             setLoading(false);
         })();
     }, [reload]);
-    const handDelete = (id) => {
-        (async () => {
-            const result = await PostServie.destroy(id);
-            setReLoad(result.post.id);
-            toast.success(result.message);
-
-        })();
+    const handleDelete = async (id) => {
+        try {
+            const updatedTopic = {
+                status: status1,
+            };
+            const result = await PostServie.delete(updatedTopic, id);
+            //   toast("Da xoa vao thung rac");
+            setReLoad(reload + 1); // Reload brands
+        } catch (error) {
+            console.error("Error deleting brand: ", error);
+        }
     };
 
     const handleStatus = (id) => {
@@ -43,13 +48,25 @@ export default function PortIndex() {
             <div className="content">
                 <section className="content-header my-2">
                     <h1 className="d-inline">Quản lý bài viết</h1>
-                    <Link className="btn btn-primary btn-sm" to={'/admin/post/create'} style={{ color: "white" }}> them moi</Link>
+                    <Link className="btn btn-primary btn-sm" to={"/admin/post/create"} style={{ color: "white" }}>
+                        {" "}
+                        them moi
+                    </Link>
                     <div className="row mt-3 align-items-center">
                         <div className="col-6">
                             <ul className="manager">
-                                <li><a href="post_index.html">Tất cả (123)</a></li>
-                                <li><a href="#">Xuất bản (12)</a></li>
-                                <li><a href="post_trash.html">Rác (12)</a></li>
+                                <li>
+                                    <a href="post_index.html">Tất cả (123)</a>
+                                </li>
+                                <li>
+                                    <a href="#">Xuất bản (12)</a>
+                                </li>
+                                <li>
+                                    <Link to="/admin/post/trash">
+                                        {" "}
+                                        Thùng Rác <FaTrash />
+                                    </Link>
+                                </li>
                             </ul>
                         </div>
                         <div className="col-6 text-end">
@@ -75,11 +92,25 @@ export default function PortIndex() {
                                     <li className="page-item disabled">
                                         <a className="page-link">«</a>
                                     </li>
-                                    <li className="page-item"><a className="page-link" href="#">1</a></li>
-                                    <li className="page-item"><a className="page-link" href="#">2</a></li>
-                                    <li className="page-item"><a className="page-link" href="#">3</a></li>
                                     <li className="page-item">
-                                        <a className="page-link" href="#">»</a>
+                                        <a className="page-link" href="#">
+                                            1
+                                        </a>
+                                    </li>
+                                    <li className="page-item">
+                                        <a className="page-link" href="#">
+                                            2
+                                        </a>
+                                    </li>
+                                    <li className="page-item">
+                                        <a className="page-link" href="#">
+                                            3
+                                        </a>
+                                    </li>
+                                    <li className="page-item">
+                                        <a className="page-link" href="#">
+                                            »
+                                        </a>
                                     </li>
                                 </ul>
                             </nav>
@@ -93,16 +124,19 @@ export default function PortIndex() {
                                 <th className="text-center" style={{ width: 30 }}>
                                     <input type="checkbox" id="checkboxAll" />
                                 </th>
-                                <th className="text-center" style={{ width: 130 }}>Hình ảnh</th>
+                                <th className="text-center" style={{ width: 130 }}>
+                                    Hình ảnh
+                                </th>
                                 <th>Tiêu đề bài viết</th>
                                 <th>detail</th>
-                                <th className="text-center" style={{ width: 30 }}>ID</th>
-
+                                <th className="text-center" style={{ width: 30 }}>
+                                    ID
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
-                            {posts &&
-                                posts.map((post, index) => {
+                            {post &&
+                                post.map((post, index) => {
                                     return (
                                         <tr className="datarow" key={index}>
                                             <td>
@@ -113,20 +147,14 @@ export default function PortIndex() {
                                             </td>
                                             <td>
                                                 <div className="name">
-                                                    <a href="post_edit.html">
-                                                        {post.title}
-                                                    </a>
+                                                    <a href="post_edit.html">{post.title}</a>
                                                 </div>
                                                 <div className="function_style">
-                                                    <button onClick={() => handleStatus(post.id)}
-                                                        className={
-                                                            post.status === 1
-                                                                ? "border-0 px-1 text-success"
-                                                                : "border-0 px-1 text-danger"
-                                                        }
+                                                    <button
+                                                        onClick={() => handleStatus(post.id)}
+                                                        className={post.status === 1 ? "border-0 px-1 text-success" : "border-0 px-1 text-danger"}
                                                     >
                                                         {post.status === 1 ? <FaToggleOn /> : <FaToggleOn />}
-
                                                     </button>
                                                     <Link to={"/admin/post/edit/" + post.id} className="px-1 text-primary">
                                                         <FaEdit />
@@ -134,15 +162,16 @@ export default function PortIndex() {
                                                     <Link to={`/admin/post/show/${post.id}`} className="px-1 text-info">
                                                         <FaEye />
                                                     </Link>
-                                                    <button onClick={() => handDelete(post.id)} className="px-1 text-danger"><FaTrash /></button>
+                                                    <button onClick={() => handleDelete(post.id)} className="px-1 text-danger">
+                                                        <FaTrash />
+                                                    </button>
                                                 </div>
                                             </td>
                                             <td>{post.detail}</td>
                                             <td className="text-center">{post.id}</td>
                                         </tr>
-                                    )
-                                })
-                            }
+                                    );
+                                })}
                             {loading ? <Loading /> : ""}
                         </tbody>
                     </table>
@@ -161,7 +190,6 @@ export default function PortIndex() {
                 theme="light"
             />
             {/* Same as */}
-            <ToastContainer />
         </div>
     )
 }

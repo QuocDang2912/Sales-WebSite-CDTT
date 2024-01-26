@@ -19,6 +19,12 @@ const BennerService = {
     status: (id) => {
         return httpAxios.get(`banner/status/${id}`);
     },
+    delete: (data, id) => {
+        return httpAxios.put(`banner/delete/${id}`, data);
+    },
+    thungrac: () => {
+        return httpAxios.get("banner/thungrac");
+    },
 
 }
 export default BennerService;

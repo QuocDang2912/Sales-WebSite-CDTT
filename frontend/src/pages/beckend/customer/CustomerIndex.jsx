@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import UserServie from '../../../services/UserService';
 import { ToastContainer, toast } from 'react-toastify'
 import { MdDeleteForever } from "react-icons/md";
 import { FaEdit, FaEye, FaToggleOff, FaToggleOn, FaTrash } from "react-icons/fa";
 import 'react-toastify/dist/ReactToastify.css';
 import { Link } from 'react-router-dom';
 import Loading from '../../../components/Loading';
-export default function UserIndex() {
+import CustomerService from '../../../services/CustomerService';
+export default function CustomerIndex() {
     const [status1, setStatus1] = useState(0);
 
     const [users, setusers] = useState([]);
@@ -15,9 +15,9 @@ export default function UserIndex() {
     useEffect(() => {
         (async () => {
 
-            const result = await UserServie.index();
+            const result = await CustomerService.index();
             console.log("🚀 ~ file: BrandIndex.jsx:26 ~ result:", result)
-            setusers(result.user);
+            setusers(result.customner);
             setLoading(false);
         })();
     }, [reload]);
@@ -26,7 +26,7 @@ export default function UserIndex() {
             const updatedTopic = {
                 status: status1,
             };
-            const result = await UserServie.delete(updatedTopic, id);
+            const result = await CustomerService.delete(updatedTopic, id);
             //   toast("Da xoa vao thung rac");
             setReLoad(reload + 1); // Reload brands
         } catch (error) {
@@ -36,17 +36,18 @@ export default function UserIndex() {
 
     const handleStatus = (id) => {
         (async () => {
-            const result = await UserServie.status(id);
+            const result = await CustomerService.status(id);
             setReLoad(Date.now);
         })();
     };
 
     return (
+
         <div>
             <div className="content">
                 <section className="content-header my-2">
                     <h1 className="d-inline">Thành viên</h1>
-                    <Link className="btn btn-success" to="/admin/user/create">
+                    <Link className="btn btn-success" to="/admin/customer/create">
                         thêm mới{" "}
                     </Link>
                     <div className="row mt-3 align-items-center">
@@ -150,10 +151,10 @@ export default function UserIndex() {
                                                     style={{ color: "red", fontSize: "20" }}
                                                 />
 
-                                                <Link to={`/admin/user/edit/${user.id}`}>
+                                                <Link to={`/admin/customner/edit/${user.id}`}>
                                                     <FaEdit style={{ color: "blue", fontSize: "20" }} />
                                                 </Link>
-                                                <Link to={`/admin/user/show/${user.id}`} className="px-1 text-info">
+                                                <Link to={`/admin/customner/show/${user.id}`} className="px-1 text-info">
                                                     <FaEye />
                                                 </Link>
                                                 <button

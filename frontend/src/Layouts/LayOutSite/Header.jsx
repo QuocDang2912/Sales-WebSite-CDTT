@@ -1,10 +1,21 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { FaRegUser } from "react-icons/fa";
+import { FaSearch, FaShoppingCart, FaPhone, FaRegUser } from "react-icons/fa";
 import { setCurrent } from '../../state/UserSlice';
+
+
 export default function Header() {
 
+    // search
+    const [search, setSearch] = useState([]);
+    const handleSearch = () => {
+        // Chuyển trang và truyền search query
+        window.location.href = `/product_search/${encodeURIComponent(search)}`;
+    };
+    // search
+
+    // REDUX
     const dispatch = useDispatch()
 
     let cartItem = useSelector((state) => state.cart.items)
@@ -14,6 +25,9 @@ export default function Header() {
 
     let user = useSelector((state) => state.user.current)
     console.log("🚀 ~ Header ~ user:", user)
+
+    // REDUX
+
     // logout
     const handleLogout = () => {
         dispatch(setCurrent({}))
@@ -63,9 +77,17 @@ export default function Header() {
                     </div>
                     <div className="col-12 col-sm-9 d-none d-md-block col-md-5 py-3">
                         <div className="input-group mb-3">
-                            <input type="text" className="form-control" placeholder="Nhập nội dung tìm kiếm" aria-label="Recipient's username" aria-describedby="basic-addon2" />
+                            <input
+                                onChange={(e) => setSearch(e.target.value)}
+                                value={search}
+                                type="text"
+                                className="form-control"
+                                placeholder="Nhập nội dung tìm kiếm"
+                                aria-label="Recipient's username"
+                                aria-describedby="basic-addon2"
+                            />
                             <span className="input-group-text bg-main" id="basic-addon2">
-                                <i className="fa fa-search" aria-hidden="true" />
+                                <FaSearch onClick={handleSearch} />
                             </span>
                         </div>
                     </div>

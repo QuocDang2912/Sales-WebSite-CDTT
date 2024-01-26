@@ -22,6 +22,14 @@ const PostServie = {
         return httpAxios.get(`post/status/${id}`);
     },
 
+    delete: (data, id) => {
+        return httpAxios.put(`post/delete/${id}`, data);
+    },
+    thungrac: () => {
+        return httpAxios.get("post/thungrac");
+    },
+
+
     postnew: () => {
         return httpAxios.get("post/postnew");
     },

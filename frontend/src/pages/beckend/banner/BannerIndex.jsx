@@ -4,7 +4,7 @@ import BennerService from '../../../services/BannerService'
 import { useEffect } from 'react'
 import { urlImage } from '../../../Api/config'
 import Loading from '../../../components/Loading'
-import { FaEdit, FaEye, FaToggleOff, FaToggleOn } from 'react-icons/fa';
+import { FaEdit, FaEye, FaTrash, FaToggleOn } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
@@ -63,22 +63,18 @@ export default function BannerIndex() {
     };
 
 
-    const handleDelete = (id) => {
-        console.log("🚀 ~ file: BrandIndex.jsx:52 ~ handleDelete ~ id:", id);
-
-        const deleteBrand = async () => {
-            try {
-                const deleteB = await BennerService.destroy(id);
-                console.log("🚀 ~ file: BrandIndex.jsx:56 ~ deleteBrand ~ deleteB:", deleteB);
-                toast.success(deleteB.message);
-                setReLoad(deleteB.banner.id);
-            } catch (error) {
-                alert('Không thể xóa');
-            }
-        };
-
-        deleteBrand();
-    }
+    const handleDelete = async (id) => {
+        try {
+            const updatedBrand = {
+                status: 0,
+            };
+            const result = await BennerService.delete(updatedBrand, id);
+            //   toast("Da xoa vao thung rac");
+            setReLoad(reload + 1); // Reload brands
+        } catch (error) {
+            console.error("Error deleting brand: ", error);
+        }
+    };
 
 
     const handleStatus = (id) => {
@@ -150,8 +146,10 @@ export default function BannerIndex() {
                                                 <div className="col-12">
                                                     <ul className="manager">
                                                         <li><a href="brand_index.html">Tất cả (123)</a></li>
-                                                        <li><a href="#">Xuất bản (12)</a></li>
-                                                        <li><a href="brand_trash.html">Rác (12)</a></li>
+                                                        <Link to="/admin/banner/trash">
+                                                            {" "}
+                                                            Thùng Rác <FaTrash />
+                                                        </Link>
                                                     </ul>
                                                 </div>
                                             </div>

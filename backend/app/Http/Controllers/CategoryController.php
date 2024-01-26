@@ -201,4 +201,50 @@ class CategoryController extends Controller
         ];
         return response()->json($result, 200);
     }
+
+    function delete(Request $request, $id)
+    {
+        $category = Category::find($id);
+        if ($category == null) {
+            $result = [
+                'status' => false,
+                'category' => null,
+                'message' => 'Khong tim thay du lieu'
+            ];
+            return response()->json($result, 404);
+        }
+        $category->status = $request->status;
+        if ($category->save()) {
+            $result = [
+                'status' => true,
+                'category' => $category,
+                'message' => 'Da xoa vao thung rac'
+            ];
+            return response()->json($result, 200);
+        }
+
+        // If save fails
+        $result = [
+            'status' => false,
+            'category' => null,
+            'message' => 'Khoong the them du lieu'
+        ];
+        return response()->json($result, 200);
+    }
+
+    public function thungrac()
+    {
+        $category = Category::where('status', '=', 0)
+            ->orderBy('created_at', 'desc')
+            ->select('id', 'name', 'slug', 'status', 'image')
+            ->get();
+        $total = Category::count();
+        $resul = [
+            'status' => true,
+            'category' => $category,
+            'message' => 'Tai du lieu thanh cong',
+            'total' => $total
+        ];
+        return response()->json($resul, 200);
+    }
 }

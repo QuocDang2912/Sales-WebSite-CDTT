@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import CategoryService from "../../../services/CategoryService";
-
+import ContactService from "../../../services/ContactService";
 
 import { Link } from "react-router-dom";
 import {
@@ -13,10 +12,9 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import Loading from "../../../components/Loading";
 import { urlImage } from "../../../Api/config";
-export default function CategoryTrash() {
 
-
-    const [categories, setCategories] = useState([]);
+export default function ContactTrash() {
+    const [Contacts, setcontacts] = useState([]);
     const [load, setLoad] = useState(true);
     const [reload, setReLoad] = useState(0);
 
@@ -25,8 +23,8 @@ export default function CategoryTrash() {
     useEffect(() => {
         (async () => {
             setLoad(false);
-            const result = await CategoryService.thungrac();
-            setCategories(result.category);
+            const result = await ContactService.thungrac();
+            setcontacts(result.contact);
             setLoad(false);
         })();
     }, [reload]);
@@ -39,7 +37,7 @@ export default function CategoryTrash() {
             const updatedCategory = {
                 status: status1
             };
-            const result = await CategoryService.delete(updatedCategory, id);
+            const result = await ContactService.delete(updatedCategory, id);
             setReLoad(reload + 1); // Reload brands
             toast("Khoi phuc thanh cong");
         } catch (error) {
@@ -49,15 +47,13 @@ export default function CategoryTrash() {
     //
     const handleDelete = async (id) => {
         try {
-            const result = await CategoryService.destroy(id);
+            const result = await ContactService.destroy(id);
             setReLoad(reload + 1); // Reload brands
             toast("Xoa thanh cong");
         } catch (error) {
             console.error("Error deleting brand: ", error);
         }
     };
-
-
     return (
         <div>
             <section className="hdl-content">
@@ -68,7 +64,7 @@ export default function CategoryTrash() {
                             {/*CONTENT  */}
                             <div className="content">
                                 <section className="content-header my-2">
-                                    <h1 className="d-inline">Danh mục</h1>
+                                    <h1 className="d-inline">Thương hiệu</h1>
                                     <hr style={{ border: "none" }} />
                                 </section>
                                 <section className="content-body my-5">
@@ -123,8 +119,8 @@ export default function CategoryTrash() {
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    {categories &&
-                                                        categories.map((brand, index) => {
+                                                    {Contacts &&
+                                                        Contacts.map((contact, index) => {
                                                             return (
                                                                 <tr className="datarow" key={index}>
                                                                     <td className="text-center">
@@ -133,32 +129,32 @@ export default function CategoryTrash() {
                                                                     <td>
                                                                         <img
                                                                             className="img-fluid"
-                                                                            src={urlImage + "category/" + brand.image}
-                                                                            alt={brand.image}
+                                                                            src={urlImage + "contact/" + contact.image}
+                                                                            alt={contact.image}
                                                                         />
                                                                     </td>
                                                                     <td>
                                                                         <div className="name">
                                                                             <a href="brand_index.html">
-                                                                                {brand.name}
+                                                                                {contact.name}
                                                                             </a>
                                                                         </div>
                                                                         <div className="function_style">
                                                                             <Link href="#"
-                                                                                onClick={() => handleKp(brand.id)}
+                                                                                onClick={() => handleKp(contact.id)}
                                                                                 className="px-1 text-success">
                                                                                 <RiArrowGoBackFill />
                                                                             </Link>
                                                                             <Link
                                                                                 to={``}
-                                                                                onClick={() => handleDelete(brand.id)}
+                                                                                onClick={() => handleDelete(contact.id)}
                                                                                 className="px-1 text-danger">
                                                                                 <RiDeleteBin5Fill />
                                                                             </Link>
                                                                         </div>
                                                                     </td>
-                                                                    <td>{brand.slug}</td>
-                                                                    <td className="text-center">{brand.id}</td>
+                                                                    <td>{contact.slug}</td>
+                                                                    <td className="text-center">{contact.id}</td>
                                                                 </tr>
                                                             );
                                                         })}
@@ -174,6 +170,5 @@ export default function CategoryTrash() {
                 </div>
             </section>
         </div>
-
     )
 }

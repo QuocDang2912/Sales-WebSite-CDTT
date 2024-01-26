@@ -7,6 +7,7 @@ import PageService from '../../../services/PageService';
 import { urlImage } from '../../../Api/config';
 
 export default function PageIndex() {
+    const [status1, setStatus1] = useState(0);
 
     const [page, setPage] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -21,12 +22,17 @@ export default function PageIndex() {
         })();
     }, [reload]);
 
-    const handDelete = (id) => {
-        (async () => {
-            const result = await PageService.destroy(id);
-            setReLoad(result.page.id);
-            toast.success(result.message);
-        })();
+    const handleDelete = async (id) => {
+        try {
+            const updatedTopic = {
+                status: status1,
+            };
+            const result = await PageService.delete(updatedTopic, id);
+            //   toast("Da xoa vao thung rac");
+            setReLoad(reload + 1); // Reload brands
+        } catch (error) {
+            console.error("Error deleting brand: ", error);
+        }
     };
 
     const handleStatus = (id) => {
@@ -40,13 +46,25 @@ export default function PageIndex() {
         <div class="content">
             <section class="content-header my-2">
                 <h1 class="d-inline">Quản lý trang đơn</h1>
-                <Link className="btn btn-primary btn-sm ms-4" to={'/admin/page/create'} style={{ color: "white" }}> Thêm mới</Link>
+                <Link className="btn btn-primary btn-sm ms-4" to={"/admin/page/store"} style={{ color: "white" }}>
+                    {" "}
+                    Thêm mới
+                </Link>
                 <div class="row mt-3 align-items-center">
                     <div class="col-6">
                         <ul class="manager">
-                            <li><a href="page_index.html">Tất cả (123)</a></li>
-                            <li><a href="#">Xuất bản (12)</a></li>
-                            <li><a href="page_trash.html">Rác (12)</a></li>
+                            <li>
+                                <a href="page_index.html">Tất cả (123)</a>
+                            </li>
+                            <li>
+                                <a href="#">Xuất bản (12)</a>
+                            </li>
+                            <li>
+                                <Link to="/admin/page/trash">
+                                    {" "}
+                                    Thùng Rác <FaTrash />
+                                </Link>
+                            </li>
                         </ul>
                     </div>
                     <div class="col-6 text-end">
@@ -68,11 +86,25 @@ export default function PageIndex() {
                                 <li class="page-item disabled">
                                     <a class="page-link">&laquo;</a>
                                 </li>
-                                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                <li class="page-item"><a class="page-link" href="#">3</a></li>
                                 <li class="page-item">
-                                    <a class="page-link" href="#">&raquo;</a>
+                                    <a class="page-link" href="#">
+                                        1
+                                    </a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#">
+                                        2
+                                    </a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#">
+                                        3
+                                    </a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#">
+                                        &raquo;
+                                    </a>
                                 </li>
                             </ul>
                         </nav>
@@ -86,10 +118,14 @@ export default function PageIndex() {
                             <th class="text-center" style={{ width: 30 }}>
                                 <input type="checkbox" id="checkboxAll" />
                             </th>
-                            <th class="text-center" style={{ width: 90 }}>Hình ảnh</th>
+                            <th class="text-center" style={{ width: 90 }}>
+                                Hình ảnh
+                            </th>
                             <th>Tên trang đơn</th>
                             <th>Tên slug</th>
-                            <th class="text-center" style={{ width: 30 }}>ID</th>
+                            <th class="text-center" style={{ width: 30 }}>
+                                ID
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -101,16 +137,11 @@ export default function PageIndex() {
                                             <input type="checkbox" id="checkId" />
                                         </td>
                                         <td>
-                                            <img
-                                                className="img-fluid"
-                                                src={urlImage + "post/" + page.image}
-                                                alt={page.image} />
+                                            <img className="img-fluid" src={urlImage + "post/" + page.image} alt={page.image} />
                                         </td>
                                         <td>
                                             <div class="name">
-                                                <a href="index">
-                                                    {page.title}
-                                                </a>
+                                                <a href="index">{page.title}</a>
                                             </div>
                                             <div className="function_style">
                                                 <button
@@ -123,16 +154,13 @@ export default function PageIndex() {
                                                 >
                                                     {page.status === 1 ? <FaToggleOn /> : <FaToggleOff />}
                                                 </button>
-                                                <Link to={"/admin/page/edit/" + page.id} className='px-1 text-primary'>
+                                                <Link to={"/admin/page/update/" + page.id} className="px-1 text-primary">
                                                     <FaEdit />
                                                 </Link>
-                                                <Link to={"/admin/page/show/" + page.id}
-                                                    className='px-1 text-info'>
+                                                <Link to={"/admin/page/show/" + page.id} className="px-1 text-info">
                                                     <FaEye />
                                                 </Link>
-                                                <button
-                                                    onClick={() => handDelete(page.id)}
-                                                    className='border-0 bg-white px-1 text-danger'>
+                                                <button onClick={() => handleDelete(page.id)} className="border-0 bg-white px-1 text-danger">
                                                     <FaTrash />
                                                 </button>
                                             </div>
@@ -140,9 +168,8 @@ export default function PageIndex() {
                                         <td>{page.slug}</td>
                                         <td class="text-center">{page.id}</td>
                                     </tr>
-                                )
-                            })
-                        }
+                                );
+                            })}
                     </tbody>
                 </table>
             </section>

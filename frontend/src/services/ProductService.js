@@ -24,34 +24,12 @@ const ProductServie = {
         return httpAxios.get(`product/status/${id}`);
     },
 
-
-
-    //code mới
-
-    // getList: (status) => {
-    //     return httpAxios.get(`product/index/${status}`);
-    // },
-    // getById: (id) => {
-    //     return httpAxios.get(`product/show/${id}`);
-    // },
-    // store: (data) => {
-    //     return httpAxios.post(`product/store`, data);
-    // },
-    // update: (data, id) => {
-    //     return httpAxios.post(`product/update/${id}`, data);
-    // },
-    // status: (id) => {
-    //     return httpAxios.get(`product/status/${id}`);
-    // },
-    // delete: (id) => {
-    //     return httpAxios.get(`product/delete/${id}`);
-    // },
-    // restore: (id) => {
-    //     return httpAxios.get(`product/restore/${id}`);
-    // },
-    // destroy: (id) => {
-    //     return httpAxios.delete(`product/destroy/${id}`);
-    // },
+    delete: (data, id) => {
+        return httpAxios.put(`product/delete/${id}`, data);
+    },
+    thungrac: () => {
+        return httpAxios.get("product/thungrac");
+    },
 
 
 
@@ -117,6 +95,12 @@ const ProductServie = {
     },
     storeProductStore: (productstore) => {
         return httpAxios.post(`product/storeimport`, productstore);
+    },
+
+
+    // search
+    search: (sreach) => {
+        return httpAxios.get(`product/search/${sreach}`);
     },
 
 }

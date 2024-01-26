@@ -22,5 +22,13 @@ const CategoryServie = {
         return httpAxios.get(`category/status/${id}`);
     },
 
+
+    delete: (data, id) => {
+        return httpAxios.put(`category/delete/${id}`, data);
+    },
+    thungrac: () => {
+        return httpAxios.get("category/thungrac");
+    },
+
 }
 export default CategoryServie;

@@ -9,6 +9,7 @@ import ProductAll from "../pages/fronend/Product/ProductAll/ProductAll"
 import ProductBrand from "../pages/fronend/Product/ProductBrand/ProductBrand"
 import ProductCategory from "../pages/fronend/Product/ProductCategory/ProductCategory"
 import ProductDetail from "../pages/fronend/Product/ProductDetail/ProductDetail"
+import ProductSearch from "../pages/fronend/Product/ProductSearch/ProductSearch"
 
 import Home from "../pages/fronend/home/index"
 import Login from "../pages/fronend/login/Login"
@@ -68,6 +69,9 @@ const RouteSite = [
     {
         path: '/changePass', component: ChangePass,
     },
+
+    // search
+    { path: "/product_search/:search", component: ProductSearch },
 ]
 
 export default RouteSite

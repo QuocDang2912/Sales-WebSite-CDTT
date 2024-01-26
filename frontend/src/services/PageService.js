@@ -19,6 +19,15 @@ const PageService = {
     status: (id) => {
         return httpAxios.get(`page/status/${id}`);
     },
+
+    delete: (data, id) => {
+        return httpAxios.put(`page/delete/${id}`, data);
+    },
+    thungrac: () => {
+        return httpAxios.get("page/thungrac");
+    },
+
+
     PostPage: (slug) => {
         return httpAxios.get(`page/post_page/${slug}`);
     },

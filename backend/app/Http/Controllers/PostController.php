@@ -300,4 +300,51 @@ class PostController extends Controller
         ];
         return response()->json($result, 200);
     }
+
+
+    function delete(Request $request, $id)
+    {
+        $post = Post::find($id);
+        if ($post == null) {
+            $result = [
+                'status' => false,
+                'post' => null,
+                'message' => 'Khong tim thay du lieu'
+            ];
+            return response()->json($result, 404);
+        }
+        $post->status = $request->status;
+        if ($post->save()) {
+            $result = [
+                'status' => true,
+                'post' => $post,
+                'message' => 'Da xoa vao thung rac'
+            ];
+            return response()->json($result, 200);
+        }
+
+        // If save fails
+        $result = [
+            'status' => false,
+            'post' => null,
+            'message' => 'Khoong the them du lieu'
+        ];
+        return response()->json($result, 200);
+    }
+
+    public function thungrac()
+    {
+        $post = Post::where('status', '=', 0)
+            ->orderBy('created_at', 'desc')
+            ->select('id', 'title', 'slug', 'status', 'image')
+            ->get();
+        $total = Post::count();
+        $resul = [
+            'status' => true,
+            'post' => $post,
+            'message' => 'Tai du lieu thanh cong',
+            'total' => $total
+        ];
+        return response()->json($resul, 200);
+    }
 }

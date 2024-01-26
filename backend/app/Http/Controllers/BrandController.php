@@ -3,14 +3,29 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Brand;
 use Illuminate\Support\Str;
+use App\Models\Brand;
 
 class BrandController extends Controller
 {
     function index()
     {
-        $brands = Brand::where('status', '=', 0)
+        $brands = Brand::where('status', '!=', 0)
+            ->orderBy('created_at', 'desc')
+            ->select('id', 'name', 'slug', 'status', 'image')
+            ->get();
+        $total = Brand::count();
+        $result = [
+            'status' => true,
+            'brands' => $brands,
+            'message' => 'Tai du lieu thanh cong',
+            'total' => $total
+        ];
+        return response()->json($result, 200);
+    }
+    function index1()
+    {
+        $brands = Brand::where('status', '=', 1)
             ->orderBy('created_at', 'desc')
             ->select('id', 'name', 'slug', 'status', 'image')
             ->get();
@@ -34,6 +49,7 @@ class BrandController extends Controller
             ];
             return response()->json($result, 404);
         }
+
         $result = [
             'status' => true,
             'brand' => $brand,
@@ -57,6 +73,8 @@ class BrandController extends Controller
                 $brand->image = $fileName;
             }
         }
+        // end upload
+
         $brand->sort_order = $request->sort_order;
         $brand->description = $request->description;
         $brand->created_at = date('Y-m-d H:i:s');
@@ -125,7 +143,40 @@ class BrandController extends Controller
         $result = [
             'status' => false,
             'brand' => null,
-            'message' => 'Khong the them du lieu'
+            'message' => 'Khoong the them du lieu'
+        ];
+        return response()->json($result, 200);
+    }
+
+    function status($id)
+    {
+        $brand = Brand::find($id);
+        if ($brand == null) {
+            $result = [
+                'status' => false,
+                'brand' => null,
+                'message' => 'Khong tim thay du lieu'
+            ];
+            return response()->json($result, 404);
+        }
+
+        $brand->status = ($brand->status == 1) ? 2 : 1;
+        $brand->updated_at = date('Y-m-d H:i:s');
+        $brand->updated_by = 1; //tam
+        if ($brand->save()) {
+            $result = [
+                'status' => true,
+                'brand' => $brand,
+                'message' => 'Cap nhat du lieu thanh cong'
+            ];
+            return response()->json($result, 200);
+        }
+
+        // If save fails
+        $result = [
+            'status' => false,
+            'brand' => null,
+            'message' => 'Khoong the them du lieu'
         ];
         return response()->json($result, 200);
     }
@@ -159,38 +210,7 @@ class BrandController extends Controller
         ];
         return response()->json($result, 200);
     }
-    function status($id)
-    {
-        $brand = Brand::find($id);
-        if ($brand == null) {
-            $result = [
-                'status' => false,
-                'brand' => null,
-                'message' => 'Khong tim thay du lieu'
-            ];
-            return response()->json($result, 404);
-        }
-
-        $brand->status = ($brand->status == 1) ? 2 : 1;
-        $brand->updated_at = date('Y-m-d H:i:s');
-        $brand->updated_by = 1; //tam
-        if ($brand->save()) {
-            $result = [
-                'status' => true,
-                'brand' => $brand,
-                'message' => 'Cap nhat du lieu thanh cong'
-            ];
-            return response()->json($result, 200);
-        }
-
-        // If save fails
-        $result = [
-            'status' => false,
-            'brand' => null,
-            'message' => 'Khoong the them du lieu'
-        ];
-        return response()->json($result, 200);
-    }
+    ////xoá
     function delete(Request $request, $id)
     {
         $brand = Brand::find($id);
@@ -206,12 +226,11 @@ class BrandController extends Controller
         if ($brand->save()) {
             $result = [
                 'status' => true,
-                'banner' => $brand,
+                'brand' => $brand,
                 'message' => 'Da xoa vao thung rac'
             ];
             return response()->json($result, 200);
         }
-
         // If save fails
         $result = [
             'status' => false,
@@ -220,7 +239,6 @@ class BrandController extends Controller
         ];
         return response()->json($result, 200);
     }
-
     public function thungrac()
     {
         $brand = Brand::where('status', '=', 0)
@@ -235,27 +253,5 @@ class BrandController extends Controller
             'total' => $total
         ];
         return response()->json($resul, 200);
-    }
-    public function restore(string $id)
-    {
-        $brand = Brand::find($id);
-        if ($brand == null) {
-            $result = [
-                'status' => false,
-                'brand' => null,
-                'message' => 'Khong tim thay du lieu'
-            ];
-            return response()->json($result, 200);
-        }
-        $brand->status = 2;
-        $brand->updated_at = date('Y-m-d H:i:s');
-        $brand->updated_by = 1; //tam
-        $brand->save();
-        $result = [
-            'status' => true,
-            'brand' => $brand,
-            'message' => 'Tải dữ liệu thành công'
-        ];
-        return response()->json($result, 200);
     }
 }

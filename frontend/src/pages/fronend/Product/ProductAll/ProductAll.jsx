@@ -9,11 +9,14 @@ import Loading from '../../../../components/Loading'
 
 export default function ProductAll() {
 
+    // state all product and page
     const [ProductAll, setProductALL] = useState([])
     const [currentPage, setCurrentPage] = useState(1);
     const [lastPage, setLastPage] = useState(1);
     const [loading, setLoading] = useState(true)
 
+    // state lấy min max filter
+    const [inputs, setInputs] = useState({});
 
 
 
@@ -32,24 +35,65 @@ export default function ProductAll() {
     }, [currentPage])
 
 
+    const handleChange = (event) => {
+        const name = event.target.name;
+        const value = event.target.value;
+        setInputs(values => ({ ...values, [name]: value }))
+    }
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        console.log(inputs);
+    }
+
+
+
     return (
         <div>
             <section className="bg-light">
                 <div className="container">
-                    <nav aria-label="breadcrumb">
-                        <ol className="breadcrumb py-2 my-0">
-                            <li className="breadcrumb-item">
-                                <a className="text-main" href="index.html">Trang chủ</a>
-                            </li>
-                            <li className="breadcrumb-item active" aria-current="page">
-                                tất cả Sản phẩm
-                            </li>
-                        </ol>
-                    </nav>
+                    <div className="row">
+                        <div className="col-3">
+                            <nav aria-label="breadcrumb">
+                                <ol className="breadcrumb py-2 my-0">
+                                    <li className="breadcrumb-item">
+                                        <a className="text-main" href="index.html">Trang chủ</a>
+                                    </li>
+                                    <li className="breadcrumb-item active" aria-current="page">
+                                        tất cả Sản phẩm
+                                    </li>
+                                </ol>
+                            </nav>
+                        </div>
+                        <div className="col-9">
+                            <div className='filter-sort'>
+                                <div className="filter_price">
+                                    <form onSubmit={handleSubmit}>
+                                        <label>minPrice:
+                                            <input
+                                                type="number"
+                                                name="minPrice"
+                                                value={inputs.minPrice}
+                                                onChange={handleChange}
+                                            />
+                                        </label>
+                                        <label>maxPrice:
+                                            <input
+                                                type="number"
+                                                name="maxPrice"
+                                                value={inputs.maxPrice}
+                                                onChange={handleChange}
+                                            />
+                                        </label>
+                                        <input type="submit" />
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </section >
-
-
             <section className="hdl-maincontent py-2">
                 <div className="container">
                     <div className="row">

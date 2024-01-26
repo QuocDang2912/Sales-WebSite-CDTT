@@ -3,12 +3,13 @@ const OrderServie = {
 
 
 
-
+    //
     store: (data) => {
         return httpAxios.post(`order/store`, data);
     },
 
-    // bún bò
+    //
+
     index: (status) => {
         return httpAxios.get(`order/index/${status}`);
     },
@@ -18,6 +19,7 @@ const OrderServie = {
     show: (id) => {
         return httpAxios.get(`order/show/${id}`);
     },
+
     update: (data, id) => {
         return httpAxios.post(`order/update/${id}`, data);
     },
@@ -30,7 +32,6 @@ const OrderServie = {
     status: (id) => {
         return httpAxios.get(`order/status/${id}`);
     },
-
 
 }
 export default OrderServie;

@@ -21,6 +21,14 @@ const UserServie = {
     status: (id) => {
         return httpAxios.get(`user/status/${id}`);
     },
+    delete: (data, id) => {
+        return httpAxios.put(`user/delete/${id}`, data);
+    },
+    thungrac: () => {
+        return httpAxios.get("user/thungrac");
+    },
+
+
     login: (data) => {
         return httpAxios.post(`user/login`, data);
     },

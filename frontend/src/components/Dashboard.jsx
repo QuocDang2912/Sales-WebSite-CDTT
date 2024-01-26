@@ -74,7 +74,7 @@ export default function Dashboard() {
                         </li>
                         <li class="hdlitem">
                             <FaProductHunt className="icon-left" />
-                            <a href="customer_index.html">Khách hàng</a>
+                            <Link to='/admin/customer/index'>customer</Link>
                         </li>
                         <li class="hdlitem">
                             <FaProductHunt className="icon-left" />
@@ -101,6 +101,7 @@ export default function Dashboard() {
                                 <li>
                                     <Link to='/admin/user/index'>user</Link>
                                 </li>
+
                                 <li>
                                     <a href="config_index.html">Cấu hình</a>
                                 </li>

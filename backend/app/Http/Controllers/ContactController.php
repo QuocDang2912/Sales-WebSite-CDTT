@@ -181,4 +181,54 @@ class ContactController extends Controller
         ];
         return response()->json($result, 200);
     }
+
+
+
+    //xoá
+
+    function delete(Request $request, $id)
+    {
+        $Contact = Contact::find($id);
+        if ($Contact == null) {
+            $result = [
+                'status' => false,
+                'contact' => null,
+                'message' => 'Khong tim thay du lieu'
+            ];
+            return response()->json($result, 404);
+        }
+        $Contact->status = $request->status;
+        if ($Contact->save()) {
+            $result = [
+                'status' => true,
+                'contact' => $Contact,
+                'message' => 'Da xoa vao thung rac'
+            ];
+            return response()->json($result, 200);
+        }
+
+        // If save fails
+        $result = [
+            'status' => false,
+            'contact' => null,
+            'message' => 'Khoong the them du lieu'
+        ];
+        return response()->json($result, 200);
+    }
+
+    public function thungrac()
+    {
+        $Contact = Contact::where('status', '=', 0)
+            ->orderBy('created_at', 'desc')
+            ->select('id', 'name', 'email', 'status', 'phone')
+            ->get();
+        $total = Contact::count();
+        $resul = [
+            'status' => true,
+            'contact' => $Contact,
+            'message' => 'Tai du lieu thanh cong',
+            'total' => $total
+        ];
+        return response()->json($resul, 200);
+    }
 }

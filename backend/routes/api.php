@@ -55,6 +55,11 @@ Route::prefix('banner')->group(function () {
     Route::post('update/{id}', [BannerController::class, 'update']);
     Route::delete('destroy/{id}', [BannerController::class, 'destroy']);
     Route::get('status/{id}', [BannerController::class, 'status']);
+
+
+
+    Route::put('delete/{id}', [BannerController::class, 'delete']);
+    Route::get('thungrac', [BannerController::class, 'thungrac']);
 });
 Route::prefix('category')->group(function () {
     Route::get('index', [CategoryController::class, 'index']);
@@ -63,6 +68,10 @@ Route::prefix('category')->group(function () {
     Route::post('update/{id}', [CategoryController::class, 'update']);
     Route::delete('destroy/{id}', [CategoryController::class, 'destroy']);
     Route::get('status/{id}', [CategoryController::class, 'status']);
+
+
+    Route::put('delete/{id}', [CategoryController::class, 'delete']);
+    Route::get('thungrac', [CategoryController::class, 'thungrac']);
 });
 
 Route::prefix('contact')->group(function () {
@@ -72,14 +81,11 @@ Route::prefix('contact')->group(function () {
     Route::post('postreply/{id}', [ContactController::class, 'postreply']);
     Route::delete('destroy/{id}', [ContactController::class, 'destroy']);
     Route::get('status/{id}', [ContactController::class, 'status']);
+
+
+    Route::put('delete/{id}', [ContactController::class, 'delete']);
+    Route::get('thungrac', [ContactController::class, 'thungrac']);
 });
-
-
-
-
-
-
-
 
 
 
@@ -92,6 +98,9 @@ Route::prefix('topic')->group(function () {
     Route::post('update/{id}', [TopicController::class, 'update']);
     Route::delete('destroy/{id}', [TopicController::class, 'destroy']);
     Route::get('status/{id}', [TopicController::class, 'status']);
+
+    Route::put('delete/{id}', [TopicController::class, 'delete']);
+    Route::get('thungrac', [TopicController::class, 'thungrac']);
 });
 
 Route::prefix('user')->group(function () {
@@ -101,6 +110,9 @@ Route::prefix('user')->group(function () {
     Route::post('update/{id}', [UserController::class, 'update']);
     Route::delete('destroy/{id}', [UserController::class, 'destroy']);
     Route::get('status/{id}', [UserController::class, 'status']);
+    Route::put('delete/{id}', [UserController::class, 'delete']);
+    Route::get('thungrac', [UserController::class, 'thungrac']);
+
     Route::post('login', [UserController::class, 'login']);
 
     // thay đổi mk
@@ -109,27 +121,17 @@ Route::prefix('user')->group(function () {
 
 
 Route::prefix('customer')->group(function () {
-    Route::get('index/{status}', [CustomerController::class, 'index']);
-    Route::post('store', [CustomerController::class, 'store']);
+    Route::get('index', [CustomerController::class, 'index']);
     Route::get('show/{id}', [CustomerController::class, 'show']);
+    Route::post('store', [CustomerController::class, 'store']);
     Route::post('update/{id}', [CustomerController::class, 'update']);
-    Route::get('status/{id}', [CustomerController::class, 'status']);
-    Route::get('delete/{id}', [CustomerController::class, 'delete']);
-    Route::get('restore/{id}', [CustomerController::class, 'restore']);
     Route::delete('destroy/{id}', [CustomerController::class, 'destroy']);
+    Route::get('status/{id}', [CustomerController::class, 'status']);
+    Route::put('delete/{id}', [CustomerController::class, 'delete']);
+    Route::get('thungrac', [CustomerController::class, 'thungrac']);
 });
 
-// Route::prefix('export')->group(function () {
-//     Route::get('/', [ExportController::class, 'index']);
-//     Route::get('trash', [ExportController::class, 'trash']);
-//     Route::post('store', [ExportController::class, 'store']);
-//     Route::get('show/{id}', [ExportController::class, 'show']);
-//     Route::post('update/{id}', [ExportController::class, 'update']);
-//     Route::get('status/{id}', [ExportController::class, 'status']);
-//     Route::get('delete/{id}', [ExportController::class, 'delete']);
-//     Route::get('restore/{id}', [ExportController::class, 'restore']);
-//     Route::delete('destroy/{id}', [ExportController::class, 'destroy']);
-// });
+
 
 
 Route::prefix('menu')->group(function () {
@@ -146,14 +148,16 @@ Route::prefix('menu')->group(function () {
 });
 
 Route::prefix('order')->group(function () {
-    // Route::get('index/{status}', [OrderController::class, 'index']);
-    // Route::get('show/{id}', [OrderController::class, 'show']);
-    // Route::post('update/{id}', [OrderController::class, 'update']);
-    // Route::get('status/{id}', [OrderController::class, 'status']);
-    // Route::get('delete/{id}', [OrderController::class, 'delete']);
-    // Route::get('restore/{id}', [OrderController::class, 'restore']);
-    // Route::delete('destroy/{id}', [OrderController::class, 'destroy']);
+    Route::get('index/{status}', [OrderController::class, 'index']);
+    Route::get('status/{id}', [OrderController::class, 'status']);
+    Route::get('show/{id}', [OrderController::class, 'show']);
+    Route::post('update/{id}', [OrderController::class, 'update']);
+    Route::delete('destroy/{id}', [OrderController::class, 'destroy']);
+    Route::get('thungrac', [OrderController::class, 'thungrac']);
+    Route::put('delete/{id}', [OrderController::class, 'delete']);
 
+
+    // store của tôi
     Route::post('store', [OrderController::class, 'store']);
 });
 
@@ -182,6 +186,10 @@ Route::prefix('product')->group(function () {
     Route::delete('destroy/{id}', [ProductController::class, 'destroy']);
     Route::get('status/{id}', [ProductController::class, 'status']);
 
+    Route::put('delete/{id}', [ProductController::class, 'delete']);
+    Route::get('thungrac', [ProductController::class, 'thungrac']);
+
+    // trang chủ
 
     Route::get('productnew/{limit}', [ProductController::class, 'productnew']);
     Route::get('productsale/{limit}', [ProductController::class, 'productsale']);
@@ -189,6 +197,7 @@ Route::prefix('product')->group(function () {
     Route::get('producthotbuy/{limit}', [ProductController::class, 'producthotbuy']);
 
     Route::get('product_category_home/{id}', [ProductController::class, 'product_category_home']);
+    // trang chủ
     Route::get('product_detail/{slug}', [ProductController::class, 'product_detail']);
     // mới
 
@@ -201,8 +210,7 @@ Route::prefix('product')->group(function () {
     // product brand
     Route::get('product_brand/{slug}', [ProductController::class, 'product_brand']);
 
-    // search
-    Route::get('sreach', [ProductController::class, 'sreach']);
+
 
     // store import 
     Route::get('import', [ProductController::class, 'import']);
@@ -213,6 +221,23 @@ Route::prefix('product')->group(function () {
     Route::get('product_all', [ProductController::class, 'product_all']);
     // all trong trong admin order export có product sale
     Route::get('product_all1', [ProductController::class, 'product_all1']);
+
+    // search
+    Route::get('search/{search}', [ProductController::class, 'search']);
+
+
+    // lọc theo khoảng giá product all 
+    Route::post('filter_productAll', [ProductController::class, 'filter_productAll']);
+
+
+    // lọc theo brann ,category của bò
+    Route::post('product_category_price', [ProductController::class, 'product_category_price']);
+    Route::post('product_brand_price', [ProductController::class, 'product_brand_price']);
+
+
+
+    // lọc theo khoảng giá
+    Route::get('product_all_cc', [ProductController::class, 'product_all_cc']);
 });
 
 Route::prefix('post')->group(function () {
@@ -222,6 +247,11 @@ Route::prefix('post')->group(function () {
     Route::post('update/{id}', [PostController::class, 'update']);
     Route::delete('destroy/{id}', [PostController::class, 'destroy']);
     Route::get('status/{id}', [PostController::class, 'status']);
+
+
+    Route::put('delete/{id}', [PostController::class, 'delete']);
+    Route::get('thungrac', [PostController::class, 'thungrac']);
+
 
     Route::get('postnew', [PostController::class, 'post_new']);
     Route::get('post_detail/{slug}', [PostController::class, 'post_detail']);
@@ -238,6 +268,12 @@ Route::prefix('page')->group(function () {
     Route::post('update/{id}', [PageController::class, 'update']);
     Route::delete('destroy/{id}', [PageController::class, 'destroy']);
     Route::get('status/{id}', [PageController::class, 'status']);
+
+
+
+    Route::put('delete/{id}', [PageController::class, 'delete']);
+    Route::get('thungrac', [PageController::class, 'thungrac']);
+
     // lấy ra trang đơn
     Route::get('post_page/{slug}', [PageController::class, 'post_page']);
 });

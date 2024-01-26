@@ -11,6 +11,8 @@ use Illuminate\Support\Str;
 class OrderController extends Controller
 {
 
+
+    // order thêm ko thay đổi
     function store(Request $request)
     {
         $order = new Order();
@@ -45,7 +47,7 @@ class OrderController extends Controller
         ];
         return response()->json($result, 200);
     }
-
+    // order thêm ko thay đổi
     //
 
     public function index($status)
@@ -78,10 +80,11 @@ class OrderController extends Controller
     {
         $order = Order::find($id);
         $orderdetail = Orderdetail::where('orderdetail.order_id', $id)
-            ->join('products', 'products.id', '=', 'orderdetail.product_id')
-            ->select('products.image', 'products.name', 'orderdetail.qty', 'orderdetail.price', 'orderdetail.amount')
+            ->join('product', 'product.id', '=', 'orderdetail.product_id')
+            ->select('product.image', 'product.name', 'orderdetail.qty', 'orderdetail.price', 'orderdetail.amount')
             ->get();
-        $customer = User::where([['id', $order->user_id], ['roles', '=', '1']])->first();
+        // $customer = User::where([['id', $order->user_id], ['roles', '=', '1']])->first(); // của thầy ['roles', '=', '1'] 
+        $customer = User::where([['id', $order->user_id], ['roles', '=', 'customer']])->first(); // của mình 
         $total = 0;
         foreach ($orderdetail as $r) {
             $total += ($r->qty * $r->price);
@@ -138,52 +141,6 @@ class OrderController extends Controller
         ];
         return response()->json($result, 200);
     }
-    function delete(Request $request, $id)
-    {
-        $brand = Order::find($id);
-        if ($brand == null) {
-            $result = [
-                'status' => false,
-                'brand' => null,
-                'message' => 'Khong tim thay du lieu'
-            ];
-            return response()->json($result, 404);
-        }
-        $brand->status = $request->status;
-        if ($brand->save()) {
-            $result = [
-                'status' => true,
-                'order' => $brand,
-                'message' => 'Da xoa vao thung rac'
-            ];
-            return response()->json($result, 200);
-        }
-
-        // If save fails
-        $result = [
-            'status' => false,
-            'brand' => null,
-            'message' => 'Khoong the them du lieu'
-        ];
-        return response()->json($result, 200);
-    }
-    public function thungrac()
-    {
-        $brand = Order::where('order.status', '==', 0)
-            ->join('user', 'user.id', '=', 'order.user_id')
-            ->orderBy('order.created_at', 'desc')
-            ->select('order.*', 'user.name')
-            ->get();
-        $total = Order::count();
-        $resul = [
-            'status' => true,
-            'order' => $brand,
-            'message' => 'Tai du lieu thanh cong1',
-            'total' => $total
-        ];
-        return response()->json($resul, 200);
-    }
-
     function update(Request $request, $id)
     {
         $brand = Order::find($id);
@@ -265,5 +222,51 @@ class OrderController extends Controller
             'message' => 'Khong the xoa du lieu'
         ];
         return response()->json($result, 200);
+    }
+
+    function delete(Request $request, $id)
+    {
+        $brand = Order::find($id);
+        if ($brand == null) {
+            $result = [
+                'status' => false,
+                'brand' => null,
+                'message' => 'Khong tim thay du lieu'
+            ];
+            return response()->json($result, 404);
+        }
+        $brand->status = $request->status;
+        if ($brand->save()) {
+            $result = [
+                'status' => true,
+                'order' => $brand,
+                'message' => 'Da xoa vao thung rac'
+            ];
+            return response()->json($result, 200);
+        }
+
+        // If save fails
+        $result = [
+            'status' => false,
+            'brand' => null,
+            'message' => 'Khoong the them du lieu'
+        ];
+        return response()->json($result, 200);
+    }
+    public function thungrac()
+    {
+        $brand = Order::where('order.status', '==', 0)
+            ->join('user', 'user.id', '=', 'order.user_id')
+            ->orderBy('order.created_at', 'desc')
+            ->select('order.*', 'user.name')
+            ->get();
+        $total = Order::count();
+        $resul = [
+            'status' => true,
+            'order' => $brand,
+            'message' => 'Tai du lieu thanh cong1',
+            'total' => $total
+        ];
+        return response()->json($resul, 200);
     }
 }

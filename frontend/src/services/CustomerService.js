@@ -1,9 +1,9 @@
 import httpAxios from "../Api/httpAxios";
 const CustomerService = {
-    getList: (status) => {
-        return httpAxios.get(`customer/index/${status}`);
+    index: () => {
+        return httpAxios.get(`customer/index`);
     },
-    getById: (id) => {
+    show: (id) => {
         return httpAxios.get(`customer/show/${id}`);
     },
     store: (data) => {
@@ -12,17 +12,17 @@ const CustomerService = {
     update: (data, id) => {
         return httpAxios.post(`customer/update/${id}`, data);
     },
+    destroy: (id) => {
+        return httpAxios.delete(`customer/destroy/${id}`);
+    },
     status: (id) => {
         return httpAxios.get(`customer/status/${id}`);
     },
-    delete: (id) => {
-        return httpAxios.get(`customer/delete/${id}`);
+    delete: (data, id) => {
+        return httpAxios.put(`customer/delete/${id}`, data);
     },
-    restore: (id) => {
-        return httpAxios.get(`customer/restore/${id}`);
-    },
-    destroy: (id) => {
-        return httpAxios.delete(`customer/destroy/${id}`);
+    thungrac: () => {
+        return httpAxios.get("customer/thungrac");
     },
 }
 export default CustomerService;
