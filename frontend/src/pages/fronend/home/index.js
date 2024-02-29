@@ -20,7 +20,7 @@ export default function Home() {
                     <ProductByCategory />
                 </div>
             </section>
-            <LastPost />
+            {/* <LastPost /> */}
         </>
     )
 }

@@ -64,10 +64,7 @@ export default function Menu() {
                                                     <a className="nav-link text-white" aria-current="page" >Trang chủ</a>
                                                 </Link>
                                             </li>
-                                            {/* <li className="nav-item">
-
-                                                <a className="nav-link text-white" href="post_page.html">Giới thiệu</a>
-                                            </li> */}
+                                        
 
                                             <li className="nav-item dropdown">
                                                 <a className="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">

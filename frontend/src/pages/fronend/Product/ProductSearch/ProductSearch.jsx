@@ -16,29 +16,28 @@ export default function ProductSearch() {
     }, []);
     return (
         <>
-            <div className="row">
-                <div class="col-md-12">
-                    <div class="category-title">
-                        <h1 class="fs-5 py-3 my-3 text-center text-uppercase">Kết quả tìm kiếm</h1>
-                        {/* <img
-              className="img-fluid d-none d-md-block"
-              src={require("../../../../src/assets/images/4.jpg")}
-              alt="category.jpg"
-            /> */}
-                    </div>
+            <div className="container" >
+                <div className="row">
                     <div class="col-md-12">
-                        <div class="row product-list">
-                            {product.map((product, index) => {
-                                return (
-                                    <div className="col-6 col-md-3 mb-4" key={index}>
-                                        <ProductItem product={product} />
-                                    </div>
-                                );
-                            })}
+                        <div class="category-title">
+                            <h1 class="fs-5 py-3 my-3 text-center text-uppercase">Kết quả tìm kiếm</h1>
+
+                        </div>
+                        <div class="col-md-12">
+                            <div class="row product-list">
+                                {product.map((product, index) => {
+                                    return (
+                                        <div className="col-6 col-md-3 mb-4" key={index}>
+                                            <ProductItem product={product} />
+                                        </div>
+                                    );
+                                })}
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+
         </>
     );
 }

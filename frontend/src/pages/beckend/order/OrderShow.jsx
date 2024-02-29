@@ -28,7 +28,7 @@ export default function OrderShow() {
     //deleteOrder
     const handleDelete = (id) => {
         (async function () {
-            const result = await OrderService.deleteOrder(id);
+            const result = await OrderService.destroy(id);
             if (result.status === true) {
                 toast.success(result.message);
             }

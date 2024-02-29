@@ -85,8 +85,10 @@ export default function Header() {
                                 placeholder="Nhập nội dung tìm kiếm"
                                 aria-label="Recipient's username"
                                 aria-describedby="basic-addon2"
+                                style={{ border: '2px solid #ced4da', outline: 'none' }}
+
                             />
-                            <span className="input-group-text bg-main" id="basic-addon2">
+                            <span style={{ backgroundColor: "#0070D2" }} className="input-group-text bg-main" id="basic-addon2">
                                 <FaSearch onClick={handleSearch} />
                             </span>
                         </div>

@@ -24,8 +24,7 @@ export default function OrderIndex() {
             setIsLoading(true);
             const result = await OrderService.index('index');
             console.log("🚀 ~ result:", result)
-            setOrders(result.order
-            );
+            setOrders(result.order);
 
             setIsLoading(false);
             // console.log(result.orders);

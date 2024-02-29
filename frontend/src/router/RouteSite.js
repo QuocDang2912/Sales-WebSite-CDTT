@@ -15,6 +15,7 @@ import Home from "../pages/fronend/home/index"
 import Login from "../pages/fronend/login/Login"
 import ChangePass from "../pages/fronend/profile/ChangePass"
 import Profile from "../pages/fronend/profile/Profile"
+import QuanLy_Order from "../pages/fronend/profile/QuanLy_Order"
 import Register from "../pages/fronend/register/Register"
 
 const RouteSite = [
@@ -69,9 +70,11 @@ const RouteSite = [
     {
         path: '/changePass', component: ChangePass,
     },
-
     // search
     { path: "/product_search/:search", component: ProductSearch },
+    {
+        path: '/quanly_order', component: QuanLy_Order,
+    },
 ]
 
 export default RouteSite

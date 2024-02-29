@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux'
 import UserServie from '../../../services/UserService';
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
+
 export default function ChangePass() {
 
     const [inputs, setInputs] = useState({});
@@ -88,7 +89,9 @@ export default function ChangePass() {
                                                 <input type="password" name="old_password"
                                                     value={inputs.old_password || ""}
                                                     onChange={handleChange}
-                                                    className="form-control" />
+                                                    className="form-control"
+                                                    style={{ border: '2px solid #ced4da', outline: 'none' }}
+                                                />
                                             </td>
                                         </tr>
                                         <tr>
@@ -99,13 +102,13 @@ export default function ChangePass() {
 
                                                     value={inputs.new_password || ""}
                                                     onChange={handleChange}
-
+                                                    style={{ border: '2px solid #ced4da', outline: 'none' }}
                                                     className="form-control" />
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <button className="btn btn-main" type="submit" name="CHANEGPASSWORD">
+                                                <button style={{ backgroundColor: "#0070D2" }} className="btn btn-main" type="submit" name="CHANEGPASSWORD">
                                                     Đổi mật khẩu
                                                 </button>
                                             </td>

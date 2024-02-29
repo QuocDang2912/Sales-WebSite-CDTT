@@ -78,7 +78,7 @@ const ProductImport = () => {
                                 <th>Tên danh mục</th>
                                 <th>Tên thương hiệu</th>
                                 <th>Tổng số lượng</th>
-                                <th>Tổng giá</th>
+                                {/* <th>Tổng giá</th> */}
                             </tr>
                         </thead>
                         <tbody id="bodyproduct">
@@ -97,7 +97,7 @@ const ProductImport = () => {
                                             <td>{productsale.categoryname}</td>
                                             <td>{productsale.brandname}</td>
                                             <td>{productsale.sum_qty || 0}</td>
-                                            <td>{productsale.avg_priceroot}</td>
+                                            {/* <td>{productsale.avg_priceroot}</td> */}
                                         </tr>
                                     );
                                 })}

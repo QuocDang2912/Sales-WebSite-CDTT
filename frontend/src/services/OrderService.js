@@ -33,5 +33,10 @@ const OrderServie = {
         return httpAxios.get(`order/status/${id}`);
     },
 
+    // get lấy id của order từ user id
+    getOrdersByUserId: (userId) => {
+        return httpAxios.get(`order/getOrdersByUserId/${userId}`);
+    },
+
 }
 export default OrderServie;

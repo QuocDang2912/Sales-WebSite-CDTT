@@ -26,7 +26,7 @@ export default function LastPost() {
     }, []);
 
     return (
-        <section className="hdl-lastpost bg-main mt-3 py-4">
+        <section className="hdl-lastpost bg-main-post mt-3 py-4">
             <div className="container">
                 <div className="row">
                     <div className="col-md-12">

@@ -30,19 +30,23 @@ export default function Profile() {
                     <div className="row">
                         <div className="col-md-3 order-2 order-md-1">
                             <ul className="list-group mb-3 list-category">
-                                <li className="list-group-item bg-main py-3">Thông tin tài khoản</li>
+                                <li style={{ backgroundColor: "#0070D2" }} className="list-group-item bg-main py-3">Thông tin tài khoản</li>
                                 <li className="list-group-item">
-                                    <a href="profile.html">Thông tin tài khoản</a>
+                                    <Link to={'/profile'}>
+                                        quản lý thông tin
+                                    </Link>
                                 </li>
                                 <li className="list-group-item">
-                                    <a href="profile.html">Quản lý đơn hàng</a>
+                                    <Link to={'/quanly_order'}>
+                                        quản lý đơn hang
+                                    </Link>
                                 </li>
                                 <li className="list-group-item">
-                                    <a href="profile_changepassword.html">Đổi mật khẩu</a>
+                                    <Link to={'/changePass'}>
+                                        Đổi mật khẩu
+                                    </Link>
                                 </li>
-                                <li className="list-group-item">
-                                    <a href="profile.html">Thời trang thể thao</a>
-                                </li>
+
                             </ul>
                         </div>
                         <div className="col-md-9 order-1 order-md-2">

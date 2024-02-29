@@ -73,18 +73,23 @@ export default function ProductDetail() {
                             </div>
                         </div>
                         <div className="col-md-6">
-                            <h1 className="text-main">{product.name}</h1>
-                            <h2 className="text-main py-4">
-                                Gía :  {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.price)}
+                            <h1 style={{ color: "black" }} className="text-main">{product.name}</h1>
+                            <h2 className=" py-4">
+                                <span style={{ textDecoration: "underline", }}>
+                                    giá bán :
+                                </span>
+
+                                <span style={{ color: "red" }}>
+                                    {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.price)}
+                                </span>
                             </h2>
                             <h2 className=" py-4">
                                 giảm giá :  {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.pricesale)}
                             </h2>
-                            <h2 className="text-main py-4">{product.detail}</h2>
-                            <div className="mb-3">
+                            {/* <div className="mb-3">
                                 <label htmlFor>Số lượng</label>
                                 <input type="number" defaultValue={1} name="qty" className="form-control" style={{ width: 200 }} />
-                            </div>
+                            </div> */}
 
                             <div className="mb-3">
                                 <button onClick={handleClickToCart} style={{ backgroundColor: "#ff0099" }} className="btn btn-main">Thêm vào giỏ hàng</button>

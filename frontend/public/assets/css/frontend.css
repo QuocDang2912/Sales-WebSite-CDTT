@@ -5,7 +5,12 @@
 }
 .bg-main
 {
-    background-color:var(--bg-main);
+    background-color:#0070D2;
+    color:white;
+}
+.bg-main-post
+{
+    background-color:#0070D2;
     color:white;
 }
 .text-main

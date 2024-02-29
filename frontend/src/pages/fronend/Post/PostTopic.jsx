@@ -46,7 +46,7 @@ export default function PostTopic() {
             <section className="hdl-maincontent py-2">
                 <div className="container">
                     <div className="row">
-                        <div className="col-md-3 order-2 order-md-1">
+                        {/* <div className="col-md-3 order-2 order-md-1">
                             <ul className="list-group mb-3 list-category">
                                 <li className="list-group-item bg-main py-3">Danh mục sản phẩm</li>
                                 <li className="list-group-item">
@@ -63,8 +63,8 @@ export default function PostTopic() {
                                 </li>
                             </ul>
 
-                        </div>
-                        <div className="col-md-9 order-1 order-md-2">
+                        </div> */}
+                        <div className="col-md-12 order-1 order-md-2">
                             <div className="post-topic-title bg-main">
                                 <h3 className="fs-5 py-3 text-center">Tất cả bài viết</h3>
                             </div>

@@ -28,8 +28,12 @@ export default function Login() {
             // lưu vào redux và local
             dispatch(setCurrent(result.user))
             localStorage.setItem('user', JSON.stringify(result.user))
-            
-            navigate("/");
+            if (result.user.roles === "customer") {
+                navigate("/");
+            } else {
+                navigate("/admin");
+
+            }
         } catch (error) {
             console.error("Error during login:", error);
             // Handle login failure
