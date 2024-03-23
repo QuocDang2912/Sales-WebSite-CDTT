@@ -7,6 +7,7 @@ import 'react-owl-carousel2/lib/styles.css';
 import Loading from '../../../../components/Loading'
 import CategoryServie from '../../../../services/CategoryService'
 import BrandService from '../../../../services/BrandService'
+import ProductItem from '../../../../components/ProductItem'
 
 
 export default function ProductAll() {
@@ -97,52 +98,14 @@ export default function ProductAll() {
                                         <a className="text-main" href="index.html">Trang chủ</a>
                                     </li>
                                     <li className="breadcrumb-item active" aria-current="page">
-                                        tất cả Sản phẩm
+                                        Tất cả Sản phẩm
                                     </li>
                                 </ol>
                             </nav>
                         </div>
-                        {/* <div className="col-5">
-                            <div className=' filter_price'>
-                                <div >
-                                    <form onSubmit={handleSubmit}>
-                                        <label>minPrice:
-                                            <input
-                                                type="number"
-
-                                                // value={minPrice}
-                                                // onChange={(e) => setminPrice(e.target.value)}
-
-                                                name="minPrice"
-                                                value={filter.minPrice || ""}
-                                                onChange={handleChange}
-                                            />
-                                        </label>
-                                        <label>maxPrice:
-                                            <input
-                                                name="maxPrice"
-                                                value={filter.maxPrice || ""}
-                                                onChange={handleChange}
-                                            />
-                                        </label>
-                                        <input type="submit" />
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-4">
-                            <div className="filter-sort">
-                                <form onSubmit={handleSubmit}>
-                                    <select value={sort_order} onChange={(e) => { setsort_order(e.target.value) }}>
-                                        <option value="asc">tăng dần</option>
-                                        <option value="desc">giảm dần</option>
-                                    </select>
-                                </form>
-                            </div>
-                        </div> */}
-                        <div className="col-5">
-                            <div className='filter_price'>
-                                <form onSubmit={handleSubmit}>
+                        <div className="col-9" style={{ display: "flex", marginTop: "7px" }}>
+                            <div className='filter_price' >
+                                <form onSubmit={handleSubmit} >
                                     <label style={{ marginBottom: "10px" }}>Min Price:
                                         <input
                                             type="number"
@@ -158,22 +121,21 @@ export default function ProductAll() {
                                             name="maxPrice"
                                             value={filter.maxPrice}
                                             onChange={handleChange}
-                                            style={{ border: '1px solid #ced4da', outline: 'none', padding: '5px' }}
+                                            style={{ border: '1px solid #ced4da', outline: 'none', padding: '5px', marginRight: '10px' }}
                                         />
                                     </label>
-                                    <input type="submit" value="Filter" style={{ marginLeft: '10px', backgroundColor: '#007bff', color: 'white', border: 'none', padding: '5px 10px', borderRadius: '5px', cursor: 'pointer' }} />
+                                    <input type="submit" value="Filter" style={{ backgroundColor: '#007bff', color: 'white', border: 'none', marginRight: '10px', borderRadius: '5px', cursor: 'pointer', padding: "7px 10px" }} />
                                 </form>
                             </div>
-                        </div>
-                        <div className="col-4">
                             <div className="filter-sort">
                                 <label>Sort Order:</label>
                                 <select value={sort_order} onChange={(e) => setsort_order(e.target.value)} style={{ marginLeft: '10px', padding: '5px', borderRadius: '5px' }}>
-                                    <option value="asc">Ascending</option>
-                                    <option value="desc">Descending</option>
+                                    <option value="asc">Asc</option>
+                                    <option value="desc">Des</option>
                                 </select>
                             </div>
                         </div>
+
                     </div>
 
                 </div>
@@ -183,7 +145,7 @@ export default function ProductAll() {
                     <div className="row">
                         <div className="col-md-3 order-2 order-md-1">
                             <ul className="list-group mb-3 list-category">
-                                <li style={{ backgroundColor: "#0070D2" }} className="list-group-item bg-main py-3">Danh mục sản phẩm</li>
+                                <li style={{ backgroundColor: "#0070D2", color: "white" }} className="list-group-item bg-main py-3">Danh mục sản phẩm</li>
 
                                 {category && category.length > 0 && category.map((cate) => {
                                     return (
@@ -194,7 +156,7 @@ export default function ProductAll() {
                                 })}
                             </ul>
                             <ul className="list-group mb-3 list-brand">
-                                <li style={{ backgroundColor: "#0070D2" }} className="list-group-item bg-main py-3">Thương hiệu</li>
+                                <li style={{ backgroundColor: "#0070D2", color: "white" }} className="list-group-item bg-main py-3">Thương hiệu</li>
 
                                 {brand && brand.length > 0 && brand.map((brand) => {
                                     return (
@@ -207,41 +169,17 @@ export default function ProductAll() {
                         </div>
                         <div className="col-md-9 order-1 order-md-2">
 
-                            <div className="category-title bg-main">
+                            {/* <div className="category-title bg-main">
                                 <h3 className="fs-5 py-3 text-center"> Tất Cả SẢN PHẨM</h3>
-                            </div>
+                            </div> */}
+                            <h2 class="section-title heading-border ls-20 border-0"> Products ALL</h2>
                             <div className="product-category mt-3">
                                 <div className="row product-list">
                                     {
-                                        ProductAll && ProductAll.length > 0 &&
                                         ProductAll.map((product, index) => {
-                                            let priceSale = product.pricesale ? product.pricesale : 0
-
                                             return (
-                                                <div className="col-6 col-md-3 mb-4" key={index}>
-                                                    <div className="product-item border">
-                                                        <Link to={`/product_detail/${product.slug}`}>
-
-                                                            <div className="product-item-image">
-                                                                <p>
-                                                                    <img style={{ width: "350px", height: "350px" }} src={require("../../../../assets/images.jpg")} className="img-fluid" alt='' id="img2" />
-                                                                    <img style={{ width: "350px", height: "350px" }} className="img-fluid" src={urlImage + "product/" + product.image} alt='' id="img1" />
-                                                                </p>
-                                                            </div>
-                                                            <h2 className="product-item-name text-main text-center fs-5 py-1">
-                                                                <p>{product.name}</p>
-
-                                                            </h2>
-                                                            <h3 className="product-item-price fs-6 p-2 d-flex">
-                                                                <div className="flex-fill"><del>
-                                                                    {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(priceSale)}
-                                                                </del></div>
-                                                                <div className='flex-fill text-end text-main' >
-                                                                    {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.price)}
-                                                                </div>
-                                                            </h3>
-                                                        </Link>
-                                                    </div>
+                                                <div className='col-6 col-md-3 mb-4' key={index}>
+                                                    <ProductItem product={product} />
                                                 </div>
                                             )
                                         })

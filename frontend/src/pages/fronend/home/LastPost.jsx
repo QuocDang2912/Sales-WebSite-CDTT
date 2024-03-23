@@ -14,72 +14,65 @@ export default function LastPost() {
         (async () => {
             try {
                 const result = await PostServie.postnew();
-
+                console.log("🚀 ~ result:", result.postnhat)
                 setPost(result.postnhat);
                 setPost1(result.postsau);
                 setLoading(false)
             } catch (error) {
                 console.log("🚀 ~ error:", error)
             }
-
         })();
     }, []);
 
     return (
-        <section className="hdl-lastpost bg-main-post mt-3 py-4">
-            <div className="container">
-                <div className="row">
-                    <div className="col-md-12">
-                        <h3>BÀI VIẾT MỚI</h3>
-                        <div className="row">
-                            {post &&
-                                post.map((post, index) => {
-                                    return (
-                                        <div className="col-md-6">
-                                            <Link to={`/post_detail/${post.slug}`}>
+        <>
+            <h2 class="section-title categories-section-title heading-border border-0 ls-0 "
+                data-animation-delay="100" >Last Post
+            </h2>
 
-                                                <span>
-                                                    <img alt='' className="img-fluid" src={urlImage + "post/" + post.image} />
-                                                </span>
-                                                <h3 className="post-title fs-4 py-2">
-                                                    <span>{post.title}</span>
-                                                </h3>
-                                            </Link>
-                                            <p> {post.detail}</p>
+            <div className='blog-section row'>
+                {post &&
+                    post.map((post, index) => {
+                        return (
+
+                            <article className="post col-6 col-md-3 mb-4" key={index}>
+                                <Link to={`/post_detail/${post.slug}`}>
+                                    <div className="post-media">
+                                        <a href="single.html">
+                                            <img style={{ width: "300px", height: "280px" }} className="img-fluid" alt='' src={urlImage + "post/" + post.image} />
+                                        </a>
+                                        <div className="post-date">
+                                            <span className="day">26</span>
+                                            <span className="month">Feb</span>
                                         </div>
-                                    );
-                                })}
+                                    </div>
+                                </Link>
+                                {/* End .post-media */}
+                                <div className="post-body">
+                                    <Link to={`/post_detail/${post.slug}`}>
+                                        <h2 className="post-title">
+                                            <a href="single.html">{post.title}</a>
+                                        </h2>
+                                        <div className="post-content">
+                                            <p>
+                                                {
+                                                    post.detail.length > 150 ? (post.detail.slice(0, 150) + "...") : post.detail
+                                                }
+                                            </p>
+                                        </div>
+                                    </Link>
+                                    {/* End .post-content */}
+                                    <a href="single.html" className="post-comment">0 Comments</a>
+                                </div>
 
-                            <div className="col-md-6">
-                                {post1 && post1.length > 0 &&
-                                    post1.map((post1, index) => {
-                                        return (
-                                            <div className="row mb-3">
-                                                <Link to={`/post_detail/${post1.slug}`}>
-                                                    <div className="col-md-4">
-                                                        <a>
-                                                            <img className="img-fluid" src={urlImage + "post/" + post1.image} alt='' />
-                                                        </a>
-                                                    </div>
-                                                    <div className="col-md-8">
-                                                        <h3 className="post-title fs-5">
-                                                            <span>{post1.title}</span>
-                                                        </h3>
-                                                    </div>
-                                                </Link>
-                                                <p>{post1.detail}</p>
-
-                                            </div>
-                                        );
-                                    })}
-                                {loading ? <Loading /> : ""}
-
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
+                            </article>
+                        );
+                    })}
+                {loading ? <Loading /> : ""}
             </div>
-        </section>
+
+
+        </>
+
     );
 }

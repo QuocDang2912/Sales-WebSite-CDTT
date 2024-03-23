@@ -6,17 +6,21 @@ import { urlImage } from "../../../../Api/config";
 import Loading from "../../../../components/Loading";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../../../state/CartSlice";
+import ProductItem from "../../../../components/ProductItem";
 
 export default function ProductDetail() {
     const { slug } = useParams()
     console.log("🚀 ~ ProductDetail ~ slug:", slug)
     const [product, setProduct] = useState([]);
     const [product_other, setProductOther] = useState([]);
+
+    const [qty, setQty] = useState(1)
     const [loading, setLoading] = useState(true)
     useEffect(() => {
         const fetchBrand = async () => {
             try {
                 const result = await ProductServie.product_detail(slug);
+                console.log("🚀 ~ fetchBrand ~ result:", result)
 
                 setProduct(result.product);
                 setProductOther(result.product_other)
@@ -33,11 +37,14 @@ export default function ProductDetail() {
     // redux
     const dispatch = useDispatch()
 
-    const handleClickToCart = () => {
+    const handleClickToCart = (e) => {
+        console.log("🚀 qty:", qty)
+        e.preventDefault();
+
         dispatch(
             addToCart(
                 {
-                    item: { ...product, count: 1 }
+                    item: { ...product, count: +qty }
                 }
             )
         )
@@ -64,89 +71,58 @@ export default function ProductDetail() {
                     <div className="row">
                         <div className="col-md-6">
                             <div className="image">
-                                <img style={{ height: 500, width: 550 }}
-                                    id="productimage" classname="img-fluid w-100" src={urlImage + "product/" + product.image} alt="" />
+                                <img style={{ height: "500px" }}
+                                    id="productimage" className="img-fluid w-100" src={urlImage + "product/" + product.image} alt="" />
                             </div>
-                            <div className="list-image mt-3">
-                                <div className="row">
-                                </div>
-                            </div>
+
                         </div>
                         <div className="col-md-6">
-                            <h1 style={{ color: "black" }} className="text-main">{product.name}</h1>
-                            <h2 className=" py-4">
-                                <span style={{ textDecoration: "underline", }}>
-                                    giá bán :
-                                </span>
+                            <form onSubmit={handleClickToCart}>
+                                <h1 style={{ color: "black" }} className="text-main">{product.name}</h1>
+                                <h3 class="fs-5"> {product.description}</h3>
+                                <h2 className=" py-4">
+                                    <span style={{ textDecoration: "underline", }}>
+                                        Giá  :
+                                    </span>
 
-                                <span style={{ color: "red" }}>
-                                    {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.price)}
-                                </span>
-                            </h2>
-                            <h2 className=" py-4">
-                                giảm giá :  {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.pricesale)}
-                            </h2>
-                            {/* <div className="mb-3">
-                                <label htmlFor>Số lượng</label>
-                                <input type="number" defaultValue={1} name="qty" className="form-control" style={{ width: 200 }} />
-                            </div> */}
+                                    <span style={{ color: "red" }}>
+                                        {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.price)}
+                                    </span>
+                                </h2>
+                                <h2 className=" py-4">
+                                    Giảm Giá :  {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.pricesale)}
+                                </h2>
+                                <div className="mb-3">
+                                    <label htmlFor>Số lượng</label>
+                                    <input onChange={(e) => setQty(e.target.value)} value={qty} type="number" min={1} defaultValue={1} name="qty" className="form-control" style={{ width: 200 }} />
+                                </div>
+                                <div className="mb-3">
+                                    <button style={{ backgroundColor: "#ff0099" }} className="btn btn-main">Thêm vào giỏ hàng</button>
+                                </div>
+                            </form>
 
-                            <div className="mb-3">
-                                <button onClick={handleClickToCart} style={{ backgroundColor: "#ff0099" }} className="btn btn-main">Thêm vào giỏ hàng</button>
-                            </div>
                         </div>
+                    </div>
+                    <div class="row">
+                        <h2 class="text-main fs-4 pt-4">Chi tiết sản phẩm</h2>
+                        <p>
+                            {product.detail
+                            }
+                        </p>
                     </div>
                     <div className="row">
                         <h2 className="text-main fs-4 pt-4">Sản phẩm khác</h2>
                         <div className="product-category mt-3">
                             <div className="row product-list">
-                                {product_other &&
+                                {
                                     product_other.map((product, index) => {
-                                        let priceSale = product.pricesale ? product.pricesale : 0
-
                                         return (
-                                            <div className="col-6 col-md-3 mb-4">
-                                                <div className="product-item border">
-                                                    <div className="product-item-image">
-                                                        <Link to={`/product_detail/${product.slug}`}>
-                                                            <img
-
-                                                                src={urlImage + "product/" + product.image}
-                                                                className="img-fluid"
-                                                                style={{ height: 400, width: 310 }}
-                                                                alt=""
-                                                                id="img1"
-                                                            />
-                                                            <img
-                                                                src={urlImage + "product/" + product.image}
-                                                                className="img-fluid"
-                                                                style={{ height: 400, width: 310 }}
-                                                                alt=""
-                                                                id="img2"
-
-                                                            />
-                                                        </Link>
-                                                    </div>
-                                                    <h2 className="product-item-name text-main text-center fs-5 py-1">
-                                                        <Link to={`/product_detail/${product.slug}`}>{product.name}</Link>
-                                                    </h2>
-                                                    <h3 className="product-item-price fs-6 p-2 d-flex">
-                                                        <div className="flex-fill">
-                                                            <del>
-                                                                {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(priceSale)}
-                                                            </del>
-                                                        </div>
-                                                        <div className="flex-fill text-end text-main">
-                                                            {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.price)}
-                                                        </div>
-                                                    </h3>
-                                                </div>
+                                            <div className='col-6 col-md-3 mb-4' key={index}>
+                                                <ProductItem product={product} />
                                             </div>
-
-                                        );
+                                        )
                                     })
                                 }
-
                                 {loading ? <Loading /> : ""}
 
                             </div>
@@ -154,7 +130,7 @@ export default function ProductDetail() {
                     </div>
 
                 </div>
-            </section>
+            </section >
 
 
         </>

@@ -21,7 +21,7 @@ export default function ProductIndex() {
     (async () => {
 
       const result = await ProductServie.index();
-      console.log("🚀 ~ file: ProductIndex.jsx:19 ~ result:", result)
+      console.log("🚀 ~ file: ProductIndex.jsx:19 ~ result sseps:", result)
       setproducts(result.products);
       setLoading(false);
     })();

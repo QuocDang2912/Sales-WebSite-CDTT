@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { FaSearch, FaShoppingCart, FaPhone, FaRegUser } from "react-icons/fa";
+import { FaSearch, FaPhoneSquare, FaUser } from "react-icons/fa";
 import { setCurrent } from '../../state/UserSlice';
 
 
@@ -35,28 +35,36 @@ export default function Header() {
     }
     let showUser = JSON.stringify(user) == '{}' ?
         <>
-            <li className="nav-item">
+            <li className="nav-item" style={{ fontSize: "20px" }}>
                 <Link className="nav-link" to={"/login"}>
                     Đăng nhập
                 </Link>
                 {/* <a className="nav-link" href="login.html">Đăng nhập</a> */}
             </li>
-            <li className="nav-item">
+            <li className="nav-item" style={{ fontSize: "20px" }}>
                 <Link className="nav-link" to={"/register"}>
                     Đăng Ký
                 </Link>
             </li>
         </>
         : <>
-            <li className="nav-item">
+            <li style={{ fontSize: "20px" }} className="nav-item">
+                <a className="nav-link" href="login.html" >
+                    <FaPhoneSquare style={{ color: "#0070D2" }} />
+                    {user.phone}
+                </a>
+            </li>
+            <li style={{ fontSize: "20px", color: "gray" }} className="nav-item">
                 <a className="nav-link" >
-                    <FaRegUser className=' dropdown-toggle ' data-bs-toggle="dropdown" aria-expanded="false" />
+                    <FaUser style={{ color: "#0070D2" }} className=' dropdown-toggle ' data-bs-toggle="dropdown" aria-expanded="false" />
                     {user.name}
 
                     <ul className="dropdown-menu">
-                        <li><a className="dropdown-item" onClick={handleLogout}>logout</a></li>
                         <li>
-                            <Link to={`/profile`} className="dropdown-item" >thông tin</Link>
+                            <a onClick={handleLogout} className='drop-hover'>Logout</a>
+                        </li>
+                        <li>
+                            <Link to={`/profile`} className="dropdown-item drop-hover" >Thông Tin</Link>
                         </li>
                     </ul>
                 </a>
@@ -88,33 +96,29 @@ export default function Header() {
                                 style={{ border: '2px solid #ced4da', outline: 'none' }}
 
                             />
-                            <span style={{ backgroundColor: "#0070D2" }} className="input-group-text bg-main" id="basic-addon2">
-                                <FaSearch onClick={handleSearch} />
+                            <span style={{ backgroundColor: "#0070D2", color: "white" }} className="input-group-text bg-main" id="basic-addon2">
+                                <FaSearch onClick={handleSearch} style={{ marginLeft: "3px" }} />
+                                Search
                             </span>
                         </div>
                     </div>
                     <div className="col-12 col-sm-12 d-none d-md-block col-md-4 text-center py-2">
                         <div className="call-login--register border-bottom">
                             <ul className="nav nav-fills py-0 my-0">
-                                <li className="nav-item">
-                                    <a className="nav-link" href="login.html">
-                                        <i className="fa fa-phone-square" aria-hidden="true" />
-                                        {user.phone}
-                                    </a>
-                                </li>
+
                                 {showUser}
                             </ul>
                         </div>
 
                         <div className="fs-6 py-2">
-                            ĐỔI TRẢ HÀNG HOẶC HOÀN TIỀN <span className="text-main">TRONG 3 NGÀY</span>
+                            ĐỔI TRẢ HÀNG HOẶC HOÀN TIỀN <span style={{ color: "#0070D2" }} className="text-main">TRONG 3 NGÀY</span>
                         </div>
                     </div>
                     <div className="col-6 col-sm-6 col-md-1 text-end py-4 py-md-2">
                         <Link to={"/cart"}>
-                            <div className="box-cart float-end">
-                                <i className="fa fa-shopping-bag" aria-hidden="true" />
-                                <span>{totalItem}</span>
+                            <div style={{ border: "1px solid #0070D2" }} className="box-cart float-end">
+                                <i style={{ color: "#0070D2" }} className="fa fa-shopping-bag" aria-hidden="true" />
+                                <span >{totalItem}</span>
                             </div>
                         </Link>
                     </div>

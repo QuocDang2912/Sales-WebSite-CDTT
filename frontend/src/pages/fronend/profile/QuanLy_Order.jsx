@@ -26,7 +26,8 @@ export default function QuanLy_Order() {
             async () => {
                 try {
                     const getOrder_From_User = await OrderServie.getOrdersByUserId(user.id) // lấy id_order  từ user_id
-                    console.log("🚀 ~ getOrder_From_User:", getOrder_From_User.orders[0].id)
+                    console.log("🚀 ~ getOrder_From_User:", getOrder_From_User)
+                    console.log("🚀 ~ getOrder_From_User 22222:", getOrder_From_User.orders[0].id)
 
                     const Show_Order = await OrderServie.show(getOrder_From_User.orders[0].id)
                     console.log("🚀 ~ Show_Order:", Show_Order)

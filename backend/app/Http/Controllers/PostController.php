@@ -204,20 +204,50 @@ class PostController extends Controller
         ];
         return response()->json($result, 200);
     }
+    // post new bún bò
+    // public function post_new()
+    // {
+    //     $postnhat = Post::where('status', '!=', 0)
+    //         ->where('type', '=', 'post')
+    //         ->orderBy('created_at', 'desc')
+    //         ->select('id', 'title', 'detail', 'status', 'image', 'slug')
+    //         ->limit(1)
+    //         ->get();
+    //     $postsau = Post::where('status', '!=', 0)
+    //         ->where('type', '=', 'post')
+    //         ->orderBy('created_at', 'desc')
+    //         ->select('id', 'title', 'detail', 'status', 'image', 'slug')
+    //         ->skip(1) // Bỏ qua 1 bài viết (bài mới nhất)
+    //         ->take(2) // Lấy 2 bài viết (từ số 2 đến số 3)
+    //         ->limit(2)
+    //         ->get();
+    //     $total = Post::count();
+    //     $resul = [
+    //         'status' => true,
+    //         'postnhat' => $postnhat,
+    //         'postsau' => $postsau,
+    //         'message' => 'Tai du lieu thanh cong',
+    //         'total' => $total
+    //     ];
+    //     return response()->json($resul, 200);
+    // }
+    // end post new bún bò
+
+    // post new của tôi
     public function post_new()
     {
         $postnhat = Post::where('status', '!=', 0)
             ->where('type', '=', 'post')
             ->orderBy('created_at', 'desc')
-            ->select('id', 'title', 'detail', 'status', 'image', 'slug')
-            ->limit(1)
+            ->select('id', 'title', 'detail', 'status', 'image', 'slug', 'created_at')
+            ->limit(4)
             ->get();
         $postsau = Post::where('status', '!=', 0)
             ->where('type', '=', 'post')
             ->orderBy('created_at', 'desc')
             ->select('id', 'title', 'detail', 'status', 'image', 'slug')
-            ->skip(1) // Bỏ qua 1 bài viết (bài mới nhất)
-            ->take(2) // Lấy 2 bài viết (từ số 2 đến số 3)
+            ->skip(4) // Bỏ qua 1 bài viết (bài mới nhất)
+            ->take(5) // Lấy 2 bài viết (từ số 2 đến số 3)
             ->limit(2)
             ->get();
         $total = Post::count();

@@ -23,15 +23,14 @@ export default function ProductSale() {
     return (
         <>
             <div className="product-category mt-3 container">
-                <div className="category-title bg-main">
-                    <h3 className="fs-5 py-3 text-center">SẢN PHẨM Sales</h3>
-                </div>
+                <h2 class="section-title heading-border ls-20 border-0"> Products Sale</h2>
+
                 <div class="row product-list">
                     {
                         product.map((product, index) => {
                             return (
                                 <div className='col-6 col-md-3 mb-4' key={index}>
-                                    <ProductItem product={product} />
+                                    <ProductItem product={product}  />
                                 </div>
                             )
                         })

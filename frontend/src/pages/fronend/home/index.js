@@ -6,6 +6,8 @@ import ProductNew from './ProductNew'
 import ProductSale from './ProductSale'
 import ProductByCategory from './ProductByCategory'
 import ProductHotBuy from './ProductHotBuy'
+import ThreeInfo from './ThreeInfo'
+import BrowseOurCategory from './BrowseOurCategory'
 
 export default function Home() {
     return (
@@ -14,13 +16,15 @@ export default function Home() {
             <Slides />
             <section className='hdl-maincontent'>
                 <div className='container'>
+                    <ThreeInfo />
                     <ProductNew />
                     <ProductSale />
                     <ProductHotBuy />
-                    <ProductByCategory />
+                    {/* <ProductByCategory /> */}
+                    <BrowseOurCategory />
+                    <LastPost />
                 </div>
             </section>
-            {/* <LastPost /> */}
         </>
     )
 }

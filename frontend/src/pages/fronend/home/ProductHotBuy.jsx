@@ -23,14 +23,12 @@ const ProductHotBuy = () => {
     return (
         <>
             <div className="container">
-                <div className="category-title bg-main">
-                    <h3 className="fs-5 py-3 text-center">SẢN PHẨM BÁN CHẠY</h3>
-                </div>
+                <h2 class="section-title heading-border ls-20 border-0"> Products Hot Buy</h2>
                 <div className="row product-list">
                     {products && products.map((product, index) => {
                         return (
                             <div className="col-6 col-md-3 mb-4" key={index}>
-                                <ProductItem product={product} />
+                                <ProductItem product={product}  />
                             </div>
                         );
                     })}

@@ -159,6 +159,9 @@ Route::prefix('order')->group(function () {
 
     // store của tôi
     Route::post('store', [OrderController::class, 'store']);
+
+    // lấy ra order thông qua user_id
+    Route::get('getOrdersByUserId/{userId}', [OrderController::class, 'getOrdersByUserId']);
 });
 
 Route::prefix('orderdetail')->group(function () {
@@ -205,10 +208,16 @@ Route::prefix('product')->group(function () {
     Route::get('sale', [ProductController::class, 'sale']);
     Route::post('storesale', [ProductController::class, 'storesale']);
 
-    // product category
+
+    // product category => chưa có filter , sort
     Route::get('product_category/{slug}', [ProductController::class, 'product_category']);
-    // product brand
+    // có filter và sort
+    Route::get('product_category_filter/{slug}', [ProductController::class, 'product_category_filter']);
+
+    // product brand => chưa có filter , sort
     Route::get('product_brand/{slug}', [ProductController::class, 'product_brand']);
+    // có filter và sort
+    Route::get('product_brand_filter/{slug}', [ProductController::class, 'product_brand_filter']);
 
 
 
@@ -217,27 +226,16 @@ Route::prefix('product')->group(function () {
     Route::post('storeimport', [ProductController::class, 'storeimport']);
 
 
+    // product all
     // all product phân trang
     Route::get('product_all', [ProductController::class, 'product_all']);
+    // product all đã hoàn thành  lọc theo khoảng giá , sort
+    Route::get('product_all_filter', [ProductController::class, 'product_all_filter']);
     // all trong trong admin order export có product sale
     Route::get('product_all1', [ProductController::class, 'product_all1']);
 
     // search
     Route::get('search/{search}', [ProductController::class, 'search']);
-
-
-    // lọc theo khoảng giá product all 
-    Route::post('filter_productAll', [ProductController::class, 'filter_productAll']);
-
-
-    // lọc theo brann ,category của bò
-    Route::post('product_category_price', [ProductController::class, 'product_category_price']);
-    Route::post('product_brand_price', [ProductController::class, 'product_brand_price']);
-
-
-
-    // lọc theo khoảng giá
-    Route::get('product_all_cc', [ProductController::class, 'product_all_cc']);
 });
 
 Route::prefix('post')->group(function () {

@@ -4,11 +4,12 @@ import { Link, useParams } from 'react-router-dom'
 import { urlImage } from '../../../Api/config'
 import Loading from '../../../components/Loading'
 
+import TopicServie from '../../../services/TopicService'
 export default function PostDetail() {
     const [post, setPost] = useState([])
     const [related_posts, setrelated_posts] = useState([])
     const [loading, setLoading] = useState(true)
-
+    const [topic, setTopic] = useState([])
     const { slug } = useParams()
     useEffect(() => {
 
@@ -16,6 +17,10 @@ export default function PostDetail() {
             const res = await PostServie.PostDetail(slug)
             setPost(res.post)
             setrelated_posts(res.related_posts)
+            // show topic 
+            const fetchTopic = await TopicServie.index()
+            setTopic(fetchTopic.topics)
+
             setLoading(false)
 
         }
@@ -44,34 +49,14 @@ export default function PostDetail() {
                     <div className="row">
                         <div className="col-md-3 order-2 order-md-1">
                             <ul className="list-group mb-3 list-category">
-                                <li className="list-group-item bg-main py-3">Danh mục sản phẩm</li>
-                                <li className="list-group-item">
-                                    <a href="product_category.html">Thời trang nam</a>
-                                </li>
-                                <li className="list-group-item">
-                                    <a href="product_category.html">Thời trang nữ</a>
-                                </li>
-                                <li className="list-group-item">
-                                    <a href="product_category.html">Thời trang trẻ em</a>
-                                </li>
-                                <li className="list-group-item">
-                                    <a href="product_category.html">Thời trang thể thao</a>
-                                </li>
-                            </ul>
-                            <ul className="list-group mb-3 list-brand">
-                                <li className="list-group-item bg-main py-3">Thương hiệu</li>
-                                <li className="list-group-item">
-                                    <a href="product_brand.html">Việt Nam</a>
-                                </li>
-                                <li className="list-group-item">
-                                    <a href="product_brand.html">Hàn Quốc</a>
-                                </li>
-                                <li className="list-group-item">
-                                    <a href="product_brand.html">Thái Lan</a>
-                                </li>
-                                <li className="list-group-item">
-                                    <a href="product_brand.html">Quản Châu</a>
-                                </li>
+                                <li style={{ backgroundColor: "#0070D2", color: "white" }} className="list-group-item bg-main py-3">Bài Viết theo Topic</li>
+                                {topic && topic.length > 0 && topic.map((topic) => {
+                                    return (
+                                        <li key={topic.id} className="list-group-item">
+                                            <Link to={`/posttopic/${topic.slug}`}>{topic.name}</Link>
+                                        </li>
+                                    )
+                                })}
                             </ul>
                         </div>
                         <div className="col-md-9 order-1 order-md-2">
@@ -91,7 +76,7 @@ export default function PostDetail() {
                                                 <Link to={`/post_detail/${post.slug}`}>
 
                                                     <span>{post.title}</span>
-                                                    <img style={{ width: "150px", height: "150px", margin: 10 }} className="img-fluid" src={urlImage + "post/" + post.image} alt='' />
+                                                    {/* <img style={{ width: "150px", height: "150px", margin: 10 }} className="img-fluid" src={urlImage + "post/" + post.image} alt='' /> */}
                                                     <br />
                                                 </Link>
                                             </li>

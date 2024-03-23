@@ -76,38 +76,7 @@ class OrderController extends Controller
         return response()->json($resul, 200);
     }
 
-    public function show($id)
-    {
-        $order = Order::find($id);
-        $orderdetail = Orderdetail::where('orderdetail.order_id', $id)
-            ->join('product', 'product.id', '=', 'orderdetail.product_id')
-            ->select('product.image', 'product.name', 'orderdetail.qty', 'orderdetail.price', 'orderdetail.amount')
-            ->get();
-        // $customer = User::where([['id', $order->user_id], ['roles', '=', '1']])->first(); // của thầy ['roles', '=', '1'] 
-        $customer = User::where([['id', $order->user_id], ['roles', '=', 'customer']])->first(); // của mình 
-        $total = 0;
-        foreach ($orderdetail as $r) {
-            $total += ($r->qty * $r->price);
-        }
-        if ($order == null) {
-            $resul = [
-                'status' => false,
-                'order' => null,
-                'message' => 'khong tim thay'
 
-            ];
-            return response()->json($resul, 404);
-        }
-        $resul = [
-            'status' => true,
-            'order' => $order,
-            'orderdetail' => $orderdetail,
-            'user' => $customer,
-            'message' => 'Tai du lieu thanh cong1',
-            'total' => $total
-        ];
-        return response()->json($resul, 200);
-    }
 
     function status($id)
     {
@@ -269,4 +238,80 @@ class OrderController extends Controller
         ];
         return response()->json($resul, 200);
     }
+
+
+    public function show($id)
+    {
+        $order = Order::find($id);
+        $orderdetail = Orderdetail::where('orderdetail.order_id', $id)
+            ->join('product', 'product.id', '=', 'orderdetail.product_id')
+            ->select('product.image', 'product.name', 'orderdetail.qty', 'orderdetail.price', 'orderdetail.amount')
+            ->get();
+        // $customer = User::where([['id', $order->user_id], ['roles', '=', '1']])->first(); // của thầy ['roles', '=', '1'] 
+        $customer = User::where([['id', $order->user_id], ['roles', '=', 'customer']])->first(); // của mình 
+        $total = 0;
+        foreach ($orderdetail as $r) {
+            $total += ($r->qty * $r->price);
+        }
+        if ($order == null) {
+            $resul = [
+                'status' => false,
+                'order' => null,
+                'message' => 'khong tim thay'
+
+            ];
+            return response()->json($resul, 404);
+        }
+        $resul = [
+            'status' => true,
+            'order' => $order,
+            'orderdetail' => $orderdetail,
+            'user' => $customer,
+            'message' => 'Tai du lieu thanh cong1',
+            'total' => $total
+        ];
+        return response()->json($resul, 200);
+    }
+
+    public function getOrdersByUserId($userId)      // hàm lấy được id đơn hàng của user , rồi tiếp khi lấy được id của order
+    // rồi thì trở lên hàm show của giao diện
+    {
+        $orders = Order::where('user_id', $userId)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        if ($orders->isEmpty()) {
+            $result = [
+                'status' => false,
+                'orders' => null,
+                'message' => 'Không có đơn hàng cho người dùng này'
+            ];
+            return response()->json($result, 404);
+        }
+
+        $result = [
+            'status' => true,
+            'orders' => $orders,
+            'message' => 'Lấy dữ liệu thành công'
+        ];
+        return response()->json($result, 200);
+    }
+    // dữ liệu trả về
+    // "orders": [
+    //     {
+    //         "id": 19,  => id của order
+    //         "user_id": 18,
+    //         "delivery_name": "alice",
+    //         "delivery_gender": "0",
+    //         "delivery_email": "quoc@gmail.com",
+    //         "delivery_phone": "333333",
+    //         "delivery_address": "quảng ngãi",
+    //         "note": "1",
+    //         "created_at": "2024-01-22T17:10:19.000000Z",
+    //         "updated_at": "2024-01-26T18:12:49.000000Z",
+    //         "created_by": 1,
+    //         "updated_by": 1,
+    //         "status": 1
+    //     }
+    // ],
 }
