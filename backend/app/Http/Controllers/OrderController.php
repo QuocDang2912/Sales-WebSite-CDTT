@@ -238,8 +238,6 @@ class OrderController extends Controller
         ];
         return response()->json($resul, 200);
     }
-
-
     public function show($id)
     {
         $order = Order::find($id);

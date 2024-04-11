@@ -34,9 +34,9 @@ export default function ProductNew() {
     // redux
     const dispatch = useDispatch()
 
-    const handleClickToCart = (e) => {
-
-        e.preventDefault();
+    const handleClickToCart = (product, e) => {
+        console.log("🚀 ~ handleClickToCart ~ e:", e)
+        console.log("🚀 ~ handleClickToCart ~ product:", product)
 
         dispatch(
             addToCart(
@@ -51,7 +51,7 @@ export default function ProductNew() {
     return (
         <>
             <div className="product-category mt-3 container">
-                <h2 class="section-title heading-border ls-20 border-0">New Products</h2>
+                <h2 class="section-title heading-border ls-20 border-0">Sản phẩm mới</h2>
                 <div class="row product-list">
                     {
                         product.map((product, index) => {
@@ -84,19 +84,19 @@ export default function ProductNew() {
                                                         {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.price)}
                                                     </span>
                                                 </div>
-                                                <div   className="product-action" style={{
-                                                    border: "1px solid #ddd",
-                                                }}>
-                                                    <a onClick={handleClickToCart} href="#st" className="btn-icon btn-add-cart">
-                                                        <span style={{ textAlign: "center" }}>
-                                                            <BsCartPlus style={{ marginBottom: "6px", marginRight: "3px", fontSize: "1.7rem" }} />
-                                                        </span>
-                                                        <span>ADD TO CART
-                                                        </span>
-                                                    </a>
-                                                </div>
                                             </div>
                                         </Link>
+                                        <div className="product-action" style={{
+                                            border: "1px solid #ddd",
+                                        }}>
+                                            <a onClick={() => handleClickToCart(product)} href="#s" className="btn-icon btn-add-cart">
+                                                <span style={{ textAlign: "center" }}>
+                                                    <BsCartPlus style={{ marginBottom: "6px", marginRight: "3px", fontSize: "1.7rem" }} />
+                                                </span>
+                                                <span>ADD TO CART
+                                                </span>
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             )

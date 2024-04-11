@@ -45,7 +45,7 @@ export default function ProductByCategory() {
     return (
         <div className="container">
             <div className="category-title bg-main">
-                <h3 className="fs-5 py-3 text-center">SẢN PHẨM theo danh mục</h3>
+                <h3 className="fs-5 py-3 text-center">Sản phẩm theo danh mục</h3>
             </div>
             {categories.map((category) => (
                 <div key={category.id} className="product-category mt-3">

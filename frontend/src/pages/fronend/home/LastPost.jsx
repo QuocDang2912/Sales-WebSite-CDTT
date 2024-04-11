@@ -27,7 +27,7 @@ export default function LastPost() {
     return (
         <>
             <h2 class="section-title categories-section-title heading-border border-0 ls-0 "
-                data-animation-delay="100" >Last Post
+                data-animation-delay="100" >Bài viết mới nhất
             </h2>
 
             <div className='blog-section row'>
@@ -62,7 +62,7 @@ export default function LastPost() {
                                         </div>
                                     </Link>
                                     {/* End .post-content */}
-                                    <a href="single.html" className="post-comment">0 Comments</a>
+                                    <a href="single.html" className="post-comment">0 Bình luận</a>
                                 </div>
 
                             </article>

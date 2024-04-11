@@ -6,8 +6,10 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\EvaluateController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderdetailController;
@@ -17,7 +19,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\TopicController;
 
 use App\Http\Controllers\UserController;
-
+use Mockery\Loader\EvalLoader;
 
 /*
 |--------------------------------------------------------------------------
@@ -165,13 +167,7 @@ Route::prefix('order')->group(function () {
 });
 
 Route::prefix('orderdetail')->group(function () {
-    // Route::get('index/{status}', [OrderController::class, 'index']);
-    // Route::get('show/{id}', [OrderController::class, 'show']);
-    // Route::post('update/{id}', [OrderController::class, 'update']);
-    // Route::get('status/{id}', [OrderController::class, 'status']);
-    // Route::get('delete/{id}', [OrderController::class, 'delete']);
-    // Route::get('restore/{id}', [OrderController::class, 'restore']);
-    // Route::delete('destroy/{id}', [OrderController::class, 'destroy']);
+
 
     // của me
     Route::post('store', [OrderdetailController::class, 'store']);
@@ -282,16 +278,25 @@ Route::prefix('page')->group(function () {
 
 
 
-Route::get('brand_list', [BrandController::class, 'brand_list']);
-Route::get('category_parentid/{id}', [CategoryController::class, 'category_parentid']);
-Route::get('menu_parentid/{id}', [MenuController::class, 'menu_parentid']);
-Route::get('banner_slider/{position}', [BannerController::class, 'banner_slider']);
 
+Route::prefix('comment')->group(function () {
+    Route::get('index/{postId}', [CommentController::class, 'index']);
+    Route::get('show/{id}', [CommentController::class, 'show']);
+    Route::post('store', [CommentController::class, 'store']);
+    Route::post('update/{id}', [CommentController::class, 'update']);
+    Route::delete('destroy/{id}', [CommentController::class, 'destroy']);
+    Route::get('status/{id}', [CommentController::class, 'status']);
+    Route::put('delete/{id}', [CommentController::class, 'delete']);
+    Route::get('thungrac', [CommentController::class, 'thungrac']);
+});
 
-
-
-Route::get('post_lastnew', [PostController::class, 'post_lastnew']);
-Route::get('post_all/{slug}', [PostController::class, 'post_all']);
-Route::get('post_topic/{slug}', [PostController::class, 'post_topic']);
-
-Route::get('post_page/{slug}', [PostController::class, 'post_page']);
+Route::prefix('evaluate')->group(function () {
+    Route::get('index', [EvaluateController::class, 'index']);
+    Route::get('show/{id}', [EvaluateController::class, 'show']);
+    Route::post('store', [EvaluateController::class, 'store']);
+    Route::post('update/{id}', [EvaluateController::class, 'update']);
+    Route::delete('destroy/{id}', [EvaluateController::class, 'destroy']);
+    Route::get('status/{id}', [EvaluateController::class, 'status']);
+    Route::put('delete/{id}', [EvaluateController::class, 'delete']);
+    Route::get('thungrac', [EvaluateController::class, 'thungrac']);
+});

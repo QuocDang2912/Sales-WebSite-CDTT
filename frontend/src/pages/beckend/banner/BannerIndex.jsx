@@ -37,7 +37,6 @@ export default function BannerIndex() {
     }, [reload])
     const handleSubmit = (e) => {
         e.preventDefault();
-
         const image = document.getElementById("image");
         const banner = new FormData();
         banner.append("name", name);

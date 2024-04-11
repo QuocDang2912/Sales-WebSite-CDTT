@@ -23,7 +23,7 @@ const ProductHotBuy = () => {
     return (
         <>
             <div className="container">
-                <h2 class="section-title heading-border ls-20 border-0"> Products Hot Buy</h2>
+                <h2 class="section-title heading-border ls-20 border-0"> Sản phẩm bán chạy</h2>
                 <div className="row product-list">
                     {products && products.map((product, index) => {
                         return (

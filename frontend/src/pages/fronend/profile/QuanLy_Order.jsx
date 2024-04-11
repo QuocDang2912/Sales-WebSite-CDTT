@@ -37,7 +37,6 @@ export default function QuanLy_Order() {
                     setTotal(Show_Order.total)
 
                     // show order từ id_order
-
                 } catch (error) {
                     console.log(error)
                 }

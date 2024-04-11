@@ -28,9 +28,7 @@ function App() {
               return <Route path={route.path} key={index} element={<Page />} />
             })
           }
-
         </Route>
-
         {/*  test */}
 
       </Routes>
