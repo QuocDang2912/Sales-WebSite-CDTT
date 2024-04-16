@@ -32,3 +32,9 @@ Route::get('index', [BrandController::class, 'index']);
 Route::get('index', [BannerController::class, 'index']);
 Route::get('index', [CategoryController::class, 'index']);
 Route::get('index', [Topic::class, 'index']);
+
+
+
+Route::get('chinh-sach-rieng-tu', function () {
+    return '<h1>Chính sách riêng tư</h1>';
+});

@@ -1,16 +1,28 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { urlImage } from '../../../Api/config'
-import { reset } from '../../../state/CartSlice'
-import { useState } from 'react';
+import { decreaseCount, increaseCount, removeFromCart, reset } from '../../../state/CartSlice'
+import { useState, useEffect } from 'react';
 import OrderServie from '../../../services/OrderService'
 import OrderDetailService from '../../../services/OrderDetailService'
 import { ToastContainer, toast } from 'react-toastify'
 import 'bootstrap/dist/css/bootstrap.min.css'
+import axios from 'axios';
+
 export default function Checkout() {
+    // lấy thông tin user  trên redux
+    let user = useSelector((state) => state.user.current)
 
-    const [inputs, setInputs] = useState({});
-
+    const [inputs, setInputs] = useState({
+        user_id: user.id, delivery_name: user.name
+        ,
+        delivery_gender: user.gender, delivery_email: user.email
+        , delivery_phone: user.phone
+        ,
+        note: user.roles,
+        status: 1
+    });
 
     // state call api địa chỉ
     const [cityData, setCityData] = useState([]);
@@ -19,12 +31,12 @@ export default function Checkout() {
     const [selectedWard, setSelectedWard] = useState('');
     // state call api địa chỉ
 
+
     // redux
 
     const dispatch = useDispatch()
 
     let cartItem = useSelector((state) => state.cart.items) // lấy ra mảng item
-    console.log("🚀 ~ CartPage ~ cartItem:", cartItem)
 
     const total = cartItem.reduce((totalPrice, item) => { // toongr tien
         return totalPrice + item.count * (item.pricesale ? (item.price - item.pricesale) : item.price)
@@ -33,7 +45,6 @@ export default function Checkout() {
     // convert arr form orderdetail
 
     const convert_arr_form_ordedetail = []
-    console.log("🚀 ~ Checkout ~ convert_arr_form_ordedetail:", convert_arr_form_ordedetail)
 
     cartItem.map((item) => {
         return convert_arr_form_ordedetail.push(
@@ -47,27 +58,139 @@ export default function Checkout() {
         )
     })
 
-    // lấy thông tin user  trên redux
-    let user = useSelector((state) => state.user.current)
-    console.log("🚀 ~ Header ~ user:", user)
 
 
-    // lấy dữ liệu
+
+    // lấy dữ liệu form
     const handleChange = (event) => {
         const name = event.target.name;
         const value = event.target.value;
         setInputs(values => ({
-            ...values, [name]: value || "", user_id: user.id, delivery_name: user.name
-            ,
-            delivery_gender: user.gender, delivery_email: user.email
-            , delivery_phone: user.phone
-            ,
-            note: user.roles,
-            status: 1
+            ...values, [name]: value || "",
+            // user_id: user.id, delivery_name: user.name
+            // ,
+            // delivery_gender: user.gender, delivery_email: user.email
+            // , delivery_phone: user.phone
+            // ,
+            // note: user.roles,
+            // status: 1
         }))
     }
 
+    console.log('inputs:', inputs)
 
+
+    // call api địa chỉ
+    useEffect(() => {
+        const fetchCityData = async () => {
+            try {
+                const response = await axios.get("https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json");
+                setCityData(response.data);
+            } catch (error) {
+                console.error("Error fetching city data:", error);
+            }
+        };
+        fetchCityData();
+    }, []);
+
+    const handleCityChange = (event) => {
+        setSelectedCity(event.target.value);
+        setSelectedDistrict('');
+        setSelectedWard('');
+    };
+
+    const handleDistrictChange = (event) => {
+        setSelectedDistrict(event.target.value);
+        setSelectedWard('');
+    };
+    // tác động đến ô input khi chọn ở ô select
+    useEffect(() => {
+        const selectedCityName = cityData.find(city => city.Id === selectedCity)?.Name || '';
+        const selectedDistrictName = cityData.find(city => city.Id === selectedCity)?.Districts.find(district => district.Id === selectedDistrict)?.Name || '';
+        const selectedWardName = cityData.find(city => city.Id === selectedCity)?.Districts.find(district => district.Id === selectedDistrict)?.Wards.find(ward => ward.Id === selectedWard)?.Name || '';
+        const address = `${selectedWardName}, ${selectedDistrictName}, ${selectedCityName}`;
+        setInputs(prevInputs => ({ ...prevInputs, delivery_address: address }));
+    }, [selectedCity, selectedDistrict, selectedWard]);
+    // end call api địa chỉ
+
+
+    // test tính tiền ship
+    const shippingDistancesFromHCM = {
+        "Thành phố Hà Nội": 1719,
+        "Tỉnh Hà Giang": 1400,
+        "Tỉnh Cao Bằng": 1982,
+        "Tỉnh Bắc Kạn": 1557,
+        "Tỉnh Tuyên Quang": 1553,
+        "Tỉnh Lào Cai": 1197,
+        "Tỉnh Điện Biên": 1215,
+        "Tỉnh Lai Châu": 1197,
+        "Tỉnh Sơn La": 1380,
+        "Tỉnh Yên Bái": 1551,
+        "Tỉnh Hoà Bình": 1643,
+        "Tỉnh Thái Nguyên": 1643,
+        "Tỉnh Lạng Sơn": 1656,
+        "Tỉnh Quảng Ninh": 1566,
+        "Tỉnh Bắc Giang": 1668,
+        "Tỉnh Phú Thọ": 1670,
+        "Tỉnh Vĩnh Phúc": 1670,
+        "Tỉnh Bắc Ninh": 1688,
+        "Tỉnh Hải Dương": 1663,
+        "Thành phố Hải Phòng": 1618,
+        "Tỉnh Hưng Yên": 1657,
+        "Tỉnh Thái Bình": 1610,
+        "Tỉnh Hà Nam": 1708,
+        "Tỉnh Nam Định": 1629,
+        "Tỉnh Ninh Bình": 1626,
+        "Tỉnh Thanh Hóa": 1566,
+        "Tỉnh Nghệ An": 1428,
+        "Tỉnh Hà Tĩnh": 1379,
+        "Tỉnh Quảng Bình": 1231,
+        "Tỉnh Quảng Trị": 898,
+        "Tỉnh Thừa Thiên Huế": 1065,
+        "Thành phố Đà Nẵng": 977,
+        "Tỉnh Quảng Nam": 439,
+        "Tỉnh Quảng Ngãi": 835,
+        "Tỉnh Bình Định": 835,
+        "Tỉnh Phú Yên": 560,
+        "Tỉnh Khánh Hòa": 439,
+        "Tỉnh Ninh Thuận": 439,
+        "Tỉnh Bình Thuận": 188,
+        "Tỉnh Kon Tum": 837,
+        "Tỉnh Gia Lai": 837,
+        "Tỉnh Đắk Lắk": 837,
+        "Tỉnh Đắk Nông": 837,
+        "Tỉnh Lâm Đồng": 292,
+        "Tỉnh Bình Phước": 189,
+        "Tỉnh Tây Ninh": 99,
+        "Tỉnh Bình Dương": 40,
+        "Tỉnh Đồng Nai": 40,
+        "Tỉnh Bà Rịa - Vũng Tàu": 120,
+        "Thành phố Hồ Chí Minh": 0,
+        "Tỉnh Long An": 50,
+        "Tỉnh Tiền Giang": 70,
+        "Tỉnh Bến Tre": 85,
+        "Tỉnh Trà Vinh": 135,
+        "Tỉnh Vĩnh Long": 135,
+        "Tỉnh Đồng Tháp": 123,
+        "Tỉnh An Giang": 170,
+        "Tỉnh Kiên Giang": 244,
+        "Thành phố Cần Thơ": 170,
+        "Tỉnh Hậu Giang": 189,
+        "Tỉnh Sóc Trăng": 230,
+        "Tỉnh Bạc Liêu": 280,
+        "Tỉnh Cà Mau": 347
+    };
+
+    let distance_Kilomet = 0;
+    console.log("selectedCity:", selectedCity);
+    const selectedCityName = cityData.find(city => city.Id === selectedCity)?.Name;
+    if (selectedCityName && selectedCityName in shippingDistancesFromHCM) {
+        distance_Kilomet = shippingDistancesFromHCM[selectedCityName];
+        console.log("🚀 ~ Checkout ~ distance:", distance_Kilomet);
+    }
+    const shippingFee = distance_Kilomet * 100; // mỗi km tạm tính 100 (VND)
+
+    console.log("Phí vận chuyển:", shippingFee);
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -89,7 +212,7 @@ export default function Checkout() {
                     console.log("🚀 ~ Call_Order_detail:", Call_Order_detail)
 
 
-                    toast.success("thanh toán Thành công");
+                    toast.success("Đặt Hàng  Thành công");
 
                     // reset 
 
@@ -101,7 +224,7 @@ export default function Checkout() {
 
                 } catch (error) {
                     console.log("🚀 ~ ngu check out sai:", error)
-                    toast.error("vui lòng đăng nhập trước khi thanh toán");
+                    toast.error("Đặt Hàng Thất Bại");
 
 
                 }
@@ -111,7 +234,7 @@ export default function Checkout() {
         console.log(inputs);
     }
 
-
+    console.log("input", inputs)
 
     return (
         <div>
@@ -152,18 +275,27 @@ export default function Checkout() {
                                         </div>
                                         <div className="row">
                                             <div className="col-4">
-                                                <select name="tinhtp" id="tinhtp" className="form-control">
-                                                    <option value>Chọn Tỉnh/TP</option>
+                                                <select value={selectedCity} onChange={handleCityChange} className="form-select form-select-sm mb-3" aria-label=".form-select-sm">
+                                                    <option value="" selected>Chọn tỉnh thành</option>
+                                                    {cityData.map(city => (
+                                                        <option key={city.Id} value={city.Id}>{city.Name}</option>
+                                                    ))}
                                                 </select>
                                             </div>
                                             <div className="col-4">
-                                                <select name="quanhuyen" id="quanhuyen" className="form-control">
-                                                    <option value>Chọn Quận/Huyện</option>
+                                                <select value={selectedDistrict} onChange={handleDistrictChange} className="form-select form-select-sm mb-3" aria-label=".form-select-sm">
+                                                    <option value="" selected>Chọn quận huyện</option>
+                                                    {selectedCity && cityData.find(city => city.Id === selectedCity)?.Districts.map(district => (
+                                                        <option key={district.Id} value={district.Id}>{district.Name}</option>
+                                                    ))}
                                                 </select>
                                             </div>
                                             <div className="col-4">
-                                                <select name="phuongxa" id="phuongxa" className="form-control">
-                                                    <option value>Chọn Phường/Xã</option>
+                                                <select value={selectedWard} onChange={(event) => setSelectedWard(event.target.value)} className="form-select form-select-sm" aria-label=".form-select-sm">
+                                                    <option value="" selected>Chọn phường xã</option>
+                                                    {selectedDistrict && cityData.find(city => city.Id === selectedCity)?.Districts.find(district => district.Id === selectedDistrict)?.Wards.map(ward => (
+                                                        <option key={ward.Id} value={ward.Id}>{ward.Name}</option>
+                                                    ))}
                                                 </select>
                                             </div>
                                         </div>
@@ -262,7 +394,9 @@ export default function Checkout() {
                                 </tr>
                                     <tr>
                                         <th>Phí vận chuyển</th>
-                                        <td className="text-end">0</td>
+                                        <td className="text-end">
+                                            {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(shippingFee)}
+                                        </td>
                                     </tr>
                                     <tr>
                                         <th>Giảm giá</th>
