@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import UserService from "../../../services/UserService";
 import { useDispatch } from "react-redux";
 import { setCurrent } from "../../../state/UserSlice";
+
 
 export default function Login() {
     const [username, setUsername] = useState("");
@@ -47,48 +48,39 @@ export default function Login() {
     };
 
     return (
-        <section className="hdl-maincontent py-2">
-            <form onSubmit={handleSubmit} name="logincustomer">
-                <div className="container">
-                    <div className="row">
-                        <div className="col-md-4">
-                            <p>Để gửi bình luận, liên hệ hay để mua hàng cần phải có tài khoản</p>
+        <section class="section-conten padding-y" style={{ minHeight: "84vh" }}>
+            <div class="card mx-auto" style={{ maxWidth: "380px", marginTop: "100px" }}>
+                <div className="card-body">
+                    <h4 className="card-title mb-4">Đăng Nhập</h4>
+                    <form onSubmit={handleSubmit} name="logincustomer">
+                        <a href="#st" style={{ backgroundColor: "#405D9D", color: "#fff" }} className="btn btn-facebook btn-block mb-2"> <i className="fab fa-facebook-f" /> &nbsp;  Đăng nhập với Facebook</a>
+                        <a href="#st" style={{ backgroundColor: "#af0000", color: "#fff" }} className="btn btn-google btn-block mb-4"> <i className="fab fa-google" /> &nbsp;  Đăng nhập với Google</a>
+                        <div className="form-group">
+                            <input className="form-control1" placeholder="Username" type="text"
+                                name="username"
+                                value={username}
+                                onChange={handleUsernameChange}
+                                required
+                            />
                         </div>
-                        <div className="col-md-8">
-                            <div className="mb-3">
-                                <label htmlFor="username" className="text-main">Tên tài khoản (*)</label>
-                                <input
-                                    type="text"
-                                    name="username"
-                                    id="username"
-                                    className="form-control"
-                                    placeholder="Nhập tài khoản đăng nhập"
-                                    value={username}
-                                    onChange={handleUsernameChange}
-                                    required
-                                />
-                            </div>
-                            <div className="mb-3">
-                                <label htmlFor="password" className="text-main">Mật khẩu (*)</label>
-                                <input
-                                    type="password"
-                                    name="password"
-                                    id="password"
-                                    className="form-control" placeholder="Mật khẩu"
-                                    value={password}
-                                    onChange={handlePasswordChange}
-                                    required
-                                />
-                            </div>
-                            <div className="mb-3">
-                                <button type="submit" className="btn btn-main btn-success" name="LOGIN">Đăng nhập</button>
-                            </div>
-                            <p className={message ? "text-success" : "text-danger"}>{message}</p>
-                            <p><u className="text-main">Chú ý</u>: (*) Thông tin bắt buộc phải nhập</p>
+                        <div className="form-group">
+                            <input className="form-control1" placeholder="Password" type="password"
+                                name="password"
+                                value={password}
+                                onChange={handlePasswordChange}
+                                required
+                            />
                         </div>
-                    </div>
+                        <div className="form-group">
+                            <button type="submit" className="btn btn-primary btn-block">Đăng Nhập</button>
+                            <p className={message ? "text-danger" : "text-success"}>{message}</p>
+                        </div>
+                    </form>
                 </div>
-            </form>
+
+            </div>
+            <p class="text-center mt-4">Bạn đã có tài khoản ? <Link to={'/register'}>Đăng Ký</Link></p>
+            <br></br>
         </section>
     );
 }

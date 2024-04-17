@@ -99,7 +99,7 @@ export default function Menu() {
                                                     })}
                                                     <Link to={"/postall"}>
                                                         <li>
-                                                            <a className="dropdown-item text-main" >Tất cả sản phẩm</a>
+                                                            <a className="dropdown-item text-main" >Tất cả bài viết </a>
                                                         </li>
                                                     </Link>
                                                 </ul>

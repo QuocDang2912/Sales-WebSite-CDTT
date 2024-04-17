@@ -17,37 +17,6 @@ export default function Register() {
         const value = event.target.value;
         setInputs(values => ({ ...values, [name]: value, roles: "customer", status: 1 }))
     }
-    // const handleSubmit = (event) => {
-    //     (
-    //         async () => {
-
-    //             try {
-    //                 const res = await UserServie.store(inputs);
-    //                 toast.success("Đăng Ký Thành công");
-
-    //                 // Clear the form inputs after successful registration
-    //                 setInputs({
-    //                     name: '',
-    //                     phone: '',
-    //                     gender: '',
-    //                     username: '',
-    //                     email: '',
-    //                     password: '',
-    //                 });
-    //                 navi("/")
-
-
-    //                 console.log("🚀 ~ res:", res);
-    //             } catch (error) {
-    //                 console.error("ngu:", error);
-    //                 // Handle error if registration fails
-    //                 toast.error("Đăng Ký Thất bại");
-    //             }
-    //         }
-    //     )()
-    //     event.preventDefault();
-    //     console.log(inputs);
-    // }
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -108,8 +77,6 @@ export default function Register() {
             toast.error("Đăng Ký Thất bại");
         }
     };
-
-
     return (
         <div>
             <section className="bg-light">
@@ -117,7 +84,7 @@ export default function Register() {
                     <nav aria-label="breadcrumb">
                         <ol className="breadcrumb py-2 my-0">
                             <li className="breadcrumb-item">
-                                <a className="text-main" href="index.html">Trang chủ</a>
+                                <a className="text-main1" href="index.html">Trang chủ</a>
                             </li>
                             <li className="breadcrumb-item active" aria-current="page">
                                 Đăng ký tài khoản
@@ -152,7 +119,7 @@ export default function Register() {
                                 </div>
 
                                 <div className="mb-3">
-                                    <label><strong>Giới tính</strong></label>
+                                    <label className='text-main'>Giới tính(*)</label>
                                     <select name="gender"
                                         value={inputs.gender || ""}
                                         onChange={handleChange}

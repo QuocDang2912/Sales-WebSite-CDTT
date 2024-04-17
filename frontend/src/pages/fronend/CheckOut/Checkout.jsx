@@ -1,18 +1,20 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { urlImage } from '../../../Api/config'
-import { decreaseCount, increaseCount, removeFromCart, reset } from '../../../state/CartSlice'
+import { reset } from '../../../state/CartSlice'
 import { useState, useEffect } from 'react';
 import OrderServie from '../../../services/OrderService'
 import OrderDetailService from '../../../services/OrderDetailService'
 import { ToastContainer, toast } from 'react-toastify'
 import 'bootstrap/dist/css/bootstrap.min.css'
+import emailjs from '@emailjs/browser';
+
 import axios from 'axios';
 
 export default function Checkout() {
     // lấy thông tin user  trên redux
     let user = useSelector((state) => state.user.current)
+    console.log("🚀 ~ Checkout ~ user:", user)
 
     const [inputs, setInputs] = useState({
         user_id: user.id, delivery_name: user.name
@@ -76,9 +78,6 @@ export default function Checkout() {
             // status: 1
         }))
     }
-
-    console.log('inputs:', inputs)
-
 
     // call api địa chỉ
     useEffect(() => {
@@ -211,6 +210,30 @@ export default function Checkout() {
                     const Call_Order_detail = await OrderDetailService.store(form_orderDetail)
                     console.log("🚀 ~ Call_Order_detail:", Call_Order_detail)
 
+                    // gửi email khi đặc hàng thành công
+
+                    // tổng tiền
+                    const amount = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(total + shippingFee)
+
+                    emailjs.send("service_gjtj4yf", "template_4hu27vp", {
+                        // user_email: user.email,
+                        user_email: "anhquoc261003@gmail.com",
+                        user_name: user.name,
+                        address: inputs.delivery_address,
+                        result: amount
+                    }, {
+                        publicKey: 'IMiWlEiyoza8USljv',
+                    })
+                        .then(
+                            () => {
+                                console.log('SUCCESS!');
+                            },
+                            (error) => {
+                                console.log('FAILED...', error.text);
+                            },
+                        );
+
+                    // end gửi email khi đặc hàng thành công
 
                     toast.success("Đặt Hàng  Thành công");
 
@@ -234,7 +257,8 @@ export default function Checkout() {
         console.log(inputs);
     }
 
-    console.log("input", inputs)
+
+
 
     return (
         <div>
@@ -349,7 +373,8 @@ export default function Checkout() {
                                                         <img style={{ height: 80, width: 100 }} classname="img-fluid " src={urlImage + "product/" + item.image} alt="" />
                                                     </td>
                                                     <td className="align-middle">{item.name}</td>
-                                                    <input type="text" value={item.count} id="qty" className="form-control text-center" />
+                                                    {/* <input type="text" value={item.count} id="qty" className="form-control text-center" /> */}
+                                                    <td class="text-center align-middle">{item.count}</td>
 
                                                     <td className="text-center align-middle">
                                                         {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(item.price)}
@@ -400,13 +425,12 @@ export default function Checkout() {
                                     </tr>
                                     <tr>
                                         <th>Giảm giá</th>
-                                        <td className="text-end">0</td>
+                                        <td className="text-end">0 đ</td>
                                     </tr>
                                     <tr>
                                         <th>Tổng cộng</th>
                                         <td className="text-end" style={{ color: "red" }}>
                                             <span>
-
                                                 {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(total)}
                                             </span>
                                         </td>

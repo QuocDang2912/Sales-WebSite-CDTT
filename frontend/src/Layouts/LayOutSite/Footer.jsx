@@ -27,8 +27,7 @@ export default function Footer() {
                   khách hàng.
                 </p>
                 <p className="pt-1">
-                  Địa chỉ: B216A, KP Bình Phước, Phường Bình Nhâm, TP. Thuận An,
-                  Bình Dương
+                  Địa chỉ: 78 đường số 2, Tăng Nhơn Phú B, Quận 9 , Thành Phố Hồ Chí Minh
                 </p>
                 <p className="pt-1">
                   Điện thoại: 0985 608 759(call, zalo) - Email:

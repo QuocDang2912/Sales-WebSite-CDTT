@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import PostServie from '../../../services/PostService'
 import { Link, useParams } from 'react-router-dom'
-import { urlImage } from '../../../Api/config'
 import Loading from '../../../components/Loading'
-import { useDispatch, useSelector } from "react-redux";
-
-import TopicServie from '../../../services/TopicService'
+import { useSelector } from "react-redux";
 import CommentService from '../../../services/Comment'
 
 
@@ -15,8 +12,6 @@ export default function PostDetail() {
     const [related_posts, setrelated_posts] = useState([])
     const [loading, setLoading] = useState(true)
     const [reload, setReLoad] = useState(0);
-    const [topic, setTopic] = useState([])
-
     // post cmt
     const [inputs, setInputs] = useState({});
     const [commeent, setComment] = useState([])
@@ -25,20 +20,24 @@ export default function PostDetail() {
     useEffect(() => {
 
         const fetch = async () => {
-            const res = await PostServie.PostDetail(slug)
-            setPost(res.post)
-            setrelated_posts(res.related_posts)
-            // show topic 
-            const fetchTopic = await TopicServie.index()
-            setTopic(fetchTopic.topics)
 
-            // call comment
+            try {
+                const res = await PostServie.PostDetail(slug)
+                setPost(res.post)
+                setrelated_posts(res.related_posts)
 
-            const callComment = await CommentService.index(post.id)
-            console.log("🚀 ~ fetch ~ callComment:", callComment)
-            setComment(callComment.comments)
-            setLoading(false)
 
+                // call comment
+
+                const callComment = await CommentService.index(post.id)
+                console.log("🚀 ~ fetch ~ callComment:", callComment)
+                setComment(callComment.comments)
+                setLoading(false)
+            } catch (error) {
+
+                console.log(error)
+
+            }
         }
         fetch()
 
@@ -49,9 +48,6 @@ export default function PostDetail() {
 
 
     let user = useSelector((state) => state.user.current);
-
-
-
 
 
     const handleChange = (event) => {
@@ -93,10 +89,6 @@ export default function PostDetail() {
         })();
     }
 
-
-
-
-
     function renderComments(comments, isChild = false, levelCount = 0) {
         // Mức độ thụt vào cho mỗi cấp (đơn vị: px)
         const indentationSize = 50;
@@ -134,15 +126,6 @@ export default function PostDetail() {
         );
     }
 
-
-
-
-
-
-
-
-
-
     return (
         <div>
             <section className="bg-light">
@@ -162,25 +145,11 @@ export default function PostDetail() {
             <section className="hdl-maincontent py-2">
                 <div className="container">
                     <div className="row">
-                        <div className="col-md-3 order-2 order-md-1">
-                            <ul className="list-group mb-3 list-category">
-                                <li style={{ backgroundColor: "#0070D2", color: "white" }} className="list-group-item bg-main py-3">Bài Viết theo Topic</li>
-                                {topic && topic.length > 0 && topic.map((topic) => {
-                                    return (
-                                        <li key={topic.id} className="list-group-item">
-                                            <Link to={`/posttopic/${topic.slug}`}>{topic.name}</Link>
-                                        </li>
-                                    )
-                                })}
-                            </ul>
-                        </div>
-                        <div className="col-md-9 order-1 order-md-2">
+                        <div className="col-md-8 order-2 order-md-1">
                             <h1 className="fs-2 text-main">{post.title}</h1>
                             <p style={{ marginBottom: "70px" }}>
                                 {post.detail}
                             </p>
-
-
                             <h3>Phần Bình Luận</h3>
                             <div className="comment-respond">
                                 <form onSubmit={handleSubmit} id='idreset'>
@@ -198,7 +167,8 @@ export default function PostDetail() {
                                 </form>
                             </div>
                             {commeent.length > 0 && renderComments(commeent)}
-
+                        </div>
+                        <div className="col-md-4 order-1 order-md-2">
                             <h3 className="fs-4 text-main">
                                 <strong>Bài viết khác</strong>
                             </h3>
@@ -207,28 +177,29 @@ export default function PostDetail() {
                                     related_posts && related_posts.length > 0 &&
                                     related_posts.map((post, index) => {
                                         return (
-                                            <li key={index}>
+                                            <div>
                                                 <Link to={`/post_detail/${post.slug}`}>
 
-                                                    <span>{post.title}</span>
-                                                    {/* <img style={{ width: "150px", height: "150px", margin: 10 }} className="img-fluid" src={urlImage + "post/" + post.image} alt='' /> */}
-                                                    <br />
+                                                    <h2 className="post-item-title text-main fs-3">
+                                                        <p>
+                                                            {post.title}
+                                                        </p>
+                                                    </h2>
+                                                    <p style={{ color: "black" }}>{post.detail}</p>
                                                 </Link>
-                                            </li>
+                                            </div>
 
                                         )
                                     })
                                 }
                                 {loading ? <Loading /> : ""}
-
                             </ul>
+
                         </div>
                     </div>
-                </div>
-            </section>
+                </div >
+            </section >
         </div >
-
-
     )
 }
 

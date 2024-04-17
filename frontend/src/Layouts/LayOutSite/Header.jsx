@@ -112,9 +112,10 @@ export default function Header() {
                 style={{ backgroundColor: "#0070D2", color: "white" }}
                 className="input-group-text bg-main"
                 id="basic-addon2"
+                onClick={handleSearch}
               >
                 <FaSearch
-                  onClick={handleSearch}
+
                   style={{ marginLeft: "3px" }}
                 />
                 Search
