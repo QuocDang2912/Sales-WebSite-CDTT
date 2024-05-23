@@ -135,7 +135,7 @@ export default function Contact() {
                 </div>
                 <div className="mb-3">
                   <button
-                    style={{ backgroundColor: "#ff0099" }}
+                    style={{ backgroundColor: "red" }}
                     className="btn btn-main"
                   >
                     Gửi liên hệ

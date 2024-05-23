@@ -26,17 +26,23 @@ const OrderServie = {
     delete: (data, id) => {
         return httpAxios.put(`order/delete/${id}`, data);
     },
+    restore: (data, id) => {
+        return httpAxios.put(`order/restore/${id}`, data);
+    },
     destroy: (id) => {
         return httpAxios.delete(`order/destroy/${id}`);
     },
-    status: (id) => {
-        return httpAxios.get(`order/status/${id}`);
-    },
 
-    // get lấy id của order từ user id
+    // get lấy các order từ user id
     getOrdersByUserId: (userId) => {
         return httpAxios.get(`order/getOrdersByUserId/${userId}`);
     },
+
+
+    // momo
+    momo_pay: (data) => {
+        return httpAxios.post(`order/momo_pay`, data);
+    }
 
 }
 export default OrderServie;

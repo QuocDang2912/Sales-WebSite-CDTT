@@ -24,7 +24,6 @@ export default function Header() {
 
   let user = useSelector((state) => state.user.current);
 
-
   // REDUX
 
   // logout
@@ -34,63 +33,73 @@ export default function Header() {
   };
   let showUser =
     JSON.stringify(user) == "{}" ? (
-      <>
-        <li className="nav-item" style={{ fontSize: "20px" }}>
-          <Link className="nav-link" to={"/login"}>
-            Đăng nhập
-          </Link>
-          {/* <a className="nav-link" href="login.html">Đăng nhập</a> */}
-        </li>
-        <li className="nav-item" style={{ fontSize: "20px" }}>
-          <Link className="nav-link" to={"/register"}>
-            Đăng Ký
-          </Link>
-        </li>
-      </>
+      <div className="icon-container">
+  <i className="far fa-user"></i>
+  <div className="button-container">
+    <Link className="nav-link" to={"/login"} style={{color:"#006ba1"}}>
+      Đăng nhập
+    </Link>
+    <Link className="nav-link" to={"/register"} style={{color:"#006ba1"}}>
+      Đăng ký
+    </Link>
+  </div>
+</div>
+
     ) : (
       <>
-        <li style={{ fontSize: "20px" }} className="nav-item">
-          <a className="nav-link" href="login.html">
-            <FaPhoneSquare style={{ color: "#0070D2" }} />
-            {user.phone}
-          </a>
-        </li>
-        <li style={{ fontSize: "20px", color: "gray" }} className="nav-item">
-          <a className="nav-link">
-            <FaUser
-              style={{ color: "#0070D2" }}
-              className=" dropdown-toggle "
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            />
-            {user.name}
+  {/* First list item */}
+  <li style={{ fontSize: "20px",width:"140px", marginLeft:"30px", marginTop:"-20px"}} className="nav-item">
+    <a className="nav-link" href="#">
+      {/* Phone icon */}
+      <FaPhoneSquare style={{ color: "#006ba1" }} />
+      {/* User's phone number */}
+      {user.phone}
+    </a>
+  </li>
 
-            <ul className="dropdown-menu">
-              <li>
-                <a onClick={handleLogout} className="drop-hover">
-                  Đăng xuất
-                </a>
-              </li>
-              <li>
-                <Link to={`/profile`} className="dropdown-item drop-hover">
-                  Thông Tin
-                </Link>
-              </li>
-            </ul>
+  {/* Second list item */}
+  <li style={{ fontSize: "20px", color: "gray",marginLeft:"30px" , marginTop:"-15px" }} className="nav-item">
+    <a className="nav-link">
+      {/* User icon */}
+      <FaUser
+        style={{ color: "#006ba1" }}
+        className="dropdown-toggle"
+        data-bs-toggle="dropdown"
+        aria-expanded="false"
+      />
+      {/* User's name */}
+      {user.name}
+
+      {/* Dropdown menu for user options */}
+      <ul className="dropdown-menu">
+        {/* Logout option */}
+        <li>
+          <a onClick={handleLogout} className="drop-hover">
+            Đăng xuất
           </a>
         </li>
-      </>
+        {/* Profile option */}
+        <li>
+          <Link to={`/profile`} className="dropdown-item drop-hover">
+            Thông Tin
+          </Link>
+        </li>
+      </ul>
+    </a>
+  </li>
+</>
+
     );
 
   return (
-    <section className="hdl-header1">
+    <section className="hdl-header1" style={{ backgroundColor: "white" }}>
       <div className="container">
         <div className="row">
           <div className="col-6 col-sm-6 col-md-2 py-1">
-            <a href="index.html">
+            <a href="/">
               <img
-                style={{ width: "200px", height: "120px" }}
-                src={require("../../assets/images.jpg")}
+                style={{ width: "150px", height: "105px" }}
+                src={require("../../assets/logo2.png")}
                 className="img-fluid"
                 alt="Logo"
               />
@@ -106,38 +115,93 @@ export default function Header() {
                 placeholder="Nhập nội dung tìm kiếm"
                 aria-label="Recipient's username"
                 aria-describedby="basic-addon2"
-                style={{ border: "2px solid #ced4da", outline: "none" }}
+                style={{
+                  border: "2px solid #ced4da",
+                  outline: "none",
+                  marginTop: "20px",
+                }}
               />
               <span
-                style={{ backgroundColor: "#0070D2", color: "white" }}
+                style={{
+                  backgroundColor: "#006ba1",
+                  color: "white",
+                  marginTop: "20px",
+                }}
                 className="input-group-text bg-main"
                 id="basic-addon2"
-                onClick={handleSearch}
               >
                 <FaSearch
-
+                  onClick={handleSearch}
                   style={{ marginLeft: "3px" }}
                 />
                 Search
               </span>
             </div>
           </div>
-          <div className="col-12 col-sm-12 d-none d-md-block col-md-4 text-center py-2">
-            <div className="call-login--register border-bottom">
+
+          <div className="header-contact d-none d-lg-flex col-lg-3 align-items-center py-2">
+            <img
+              alt="phone"
+              src={require("../../assets/images/phone.png")}
+              width="30"
+              height="30"
+              className="pb-1"
+              style={{
+                marginTop:"-10px",
+                marginLeft:"50px"
+              }}
+            />
+            <div className="contact-info pl-2">
+              <h6
+                className="mb-1"
+                style={{
+                  color: "#006ba1",
+                  fontSize: "16px",
+                  fontWeight: "bold",
+                  marginTop:"-10px"
+                }}
+              >
+                Liên hệ ngay
+              </h6>
+              <a
+                href="tel:#"
+                className="text-dark font1 d-block"
+                style={{ fontSize: "18px", width:"150px",fontWeight: "bold", }}
+              >
+                +84 985 608 759
+              </a>
+            </div>
+            <div className="heart">
+                <i
+                  className="far fa-heart"
+                  aria-hidden="true"
+                />
+              </div>
+            <div className="call-login--register">
+              <ul className="nav nav-fills py-0 my-0">{showUser}</ul>
+            </div>
+            <Link to={"/cart"}>
+              <div className="box-cart float-end ml-2">
+                <i
+                  style={{ color: "#006ba1" }}
+                  className="fa fa-shopping-bag"
+                  aria-hidden="true"
+                />
+                <span>{totalItem}</span>
+              </div>
+            </Link>
+          </div>
+
+          {/* <div className="col-12 col-sm-12 d-none d-md-block col-md-4 text-center py-2">
+            <div className="call-login--register">
               <ul className="nav nav-fills py-0 my-0">{showUser}</ul>
             </div>
 
-            <div className="fs-6 py-2">
-              Đổi trả hoặc hoàn tiền{" "}
-              <span style={{ color: "#0070D2" }} className="text-main">
-                TRONG 3 NGÀY
-              </span>
-            </div>
           </div>
           <div className="col-6 col-sm-6 col-md-1 text-end py-4 py-md-2">
             <Link to={"/cart"}>
               <div
-                style={{ border: "1px solid #0070D2" }}
+                // style={{ border: "1px solid #0070D2" }}
                 className="box-cart float-end"
               >
                 <i
@@ -148,7 +212,7 @@ export default function Header() {
                 <span>{totalItem}</span>
               </div>
             </Link>
-          </div>
+          </div> */}
         </div>
       </div>
     </section>

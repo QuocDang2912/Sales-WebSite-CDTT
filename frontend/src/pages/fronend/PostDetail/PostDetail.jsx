@@ -23,6 +23,7 @@ export default function PostDetail() {
 
             try {
                 const res = await PostServie.PostDetail(slug)
+                console.log("🚀 ~ fetch ~ res:", res)
                 setPost(res.post)
                 setrelated_posts(res.related_posts)
 

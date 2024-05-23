@@ -111,19 +111,18 @@ const ProductSale = () => {
 
             {/* Modal chọn sản phẩm */}
             <Modal
-
                 show={showProductModal}
                 size="lg"
-                // aria-labelledby="contained-modal-title-vcenter"
-                centered
+                aria-labelledby="example-modal-sizes-title-lg"
+                // centered
                 onHide={() => setShowProductModal(false)}
+                dialogClassName="custom-modal-dialog"
             >
                 <Modal.Header closeButton
                 >
-                    <Modal.Title >Chọn sản phẩm</Modal.Title>
+                    <Modal.Title id="example-modal-sizes-title-lg">Chọn sản phẩm</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-
                     <table className="table table-bordered table-striped">
                         <thead>
                             <tr>

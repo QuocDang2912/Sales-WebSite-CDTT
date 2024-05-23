@@ -92,106 +92,108 @@ export default function ProductCategory() {
   return (
     <div>
       <section className="bg-light">
-        <div className="container">
-          <div className="row">
-            <div className="col-3">
-              <nav aria-label="breadcrumb">
-                <ol className="breadcrumb py-2 my-0">
-                  <li className="breadcrumb-item">
-                    <a className="text-main" href="index.html">
-                      Trang chủ
-                    </a>
-                  </li>
-                  <li className="breadcrumb-item active" aria-current="page">
-                    Sản phẩm theo danh mục
-                  </li>
-                </ol>
-              </nav>
-            </div>
-            <div
-              className="col-9"
-              style={{ display: "flex", marginTop: "7px" }}
-            >
-              <div className="filter_price">
-                <form onSubmit={handleSubmit}>
-                  <label style={{ marginBottom: "10px" }}>
-                    Từ:
+        <div style={{ backgroundColor: "white" }}>
+          <div className="container">
+            <div className="row">
+              <div className="col-3">
+                <nav aria-label="breadcrumb">
+                  <ol className="breadcrumb py-2 my-0">
+                    <li className="breadcrumb-item">
+                      <a className="text-main" href="index.html">
+                        Trang chủ
+                      </a>
+                    </li>
+                    <li className="breadcrumb-item active" aria-current="page">
+                      Sản phẩm theo danh mục
+                    </li>
+                  </ol>
+                </nav>
+              </div>
+              <div
+                className="col-9"
+                style={{ display: "flex", marginTop: "7px" }}
+              >
+                <div className="filter_price">
+                  <form onSubmit={handleSubmit}>
+                    <label style={{ marginBottom: "10px" }}>
+                      Từ:
+                      <input
+                        type="number"
+                        name="minPrice"
+                        value={filter.minPrice}
+                        onChange={handleChange}
+                        style={{
+                          border: "1px solid #ced4da",
+                          outline: "none",
+                          padding: "5px",
+                          marginRight: "10px",
+                          marginLeft: "5px",
+                          width: "130px",
+                        }}
+                      />
+                    </label>
+                    <label>
+                      Đến:
+                      <input
+                        type="number"
+                        name="maxPrice"
+                        value={filter.maxPrice}
+                        onChange={handleChange}
+                        style={{
+                          border: "1px solid #ced4da",
+                          outline: "none",
+                          padding: "5px",
+                          marginRight: "10px",
+                          marginLeft: "5px",
+                          width: "130px",
+                        }}
+                      />
+                    </label>
                     <input
-                      type="number"
-                      name="minPrice"
-                      value={filter.minPrice}
-                      onChange={handleChange}
+                      type="submit"
+                      value="Lọc"
                       style={{
-                        border: "1px solid #ced4da",
-                        outline: "none",
-                        padding: "5px",
+                        backgroundColor: "#006ba1",
+                        color: "white",
+                        border: "none",
                         marginRight: "10px",
-                        marginLeft: "5px",
-                        width: "130px",
+                        borderRadius: "5px",
+                        cursor: "pointer",
+                        padding: "7px 10px",
                       }}
                     />
-                  </label>
-                  <label>
-                    Đến:
-                    <input
-                      type="number"
-                      name="maxPrice"
-                      value={filter.maxPrice}
-                      onChange={handleChange}
-                      style={{
-                        border: "1px solid #ced4da",
-                        outline: "none",
-                        padding: "5px",
-                        marginRight: "10px",
-                        marginLeft: "5px",
-                        width: "130px",
-                      }}
-                    />
-                  </label>
-                  <input
-                    type="submit"
-                    value="Lọc"
+                  </form>
+                </div>
+                <div className="filter-sort">
+                  <label>Sắp xếp theo:</label>
+                  <select
+                    value={sort_order}
+                    onChange={(e) => setsort_order(e.target.value)}
                     style={{
-                      backgroundColor: "#007bff",
-                      color: "white",
-                      border: "none",
-                      marginRight: "10px",
+                      marginLeft: "10px",
+                      padding: "5px",
                       borderRadius: "5px",
-                      cursor: "pointer",
-                      padding: "7px 10px",
                     }}
-                  />
-                </form>
-              </div>
-              <div className="filter-sort">
-                <label>Sắp xếp theo:</label>
-                <select
-                  value={sort_order}
-                  onChange={(e) => setsort_order(e.target.value)}
-                  style={{
-                    marginLeft: "10px",
-                    padding: "5px",
-                    borderRadius: "5px",
-                  }}
-                >
-                  <option value="asc">Tăng dần</option>
-                  <option value="desc">Gỉam dần</option>
-                </select>
-              </div>
-              <div className="filter-sort">
-                <label style={{ marginLeft: "10px" }}>Hiển thị theo:</label>
-                <select
-                  value={displayMode}
-                  onChange={toggleDisplayMode}
-                  style={{
-                    marginLeft: "10px",
-                    padding: "5px",
-                    borderRadius: "5px",
-                  }}
-                >
-                  <option value="grid">Lưới</option>
-                  <option value="list">Danh sách</option>
-                </select>
+                  >
+                    <option value="asc">Tăng dần</option>
+                    <option value="desc">Gỉam dần</option>
+                  </select>
+                </div>
+                <div className="filter-sort">
+                  <label style={{ marginLeft: "10px" }}>Hiển thị theo:</label>
+                  <select
+                    value={displayMode}
+                    onChange={toggleDisplayMode}
+                    style={{
+                      marginLeft: "10px",
+                      padding: "5px",
+                      borderRadius: "5px",
+                    }}
+                  >
+                    <option value="grid">Lưới</option>
+                    <option value="list">Danh sách</option>
+                  </select>
+                </div>
               </div>
             </div>
           </div>
@@ -203,7 +205,7 @@ export default function ProductCategory() {
             <div className="col-md-3 order-2 order-md-1">
               <ul className="list-group mb-3 list-category">
                 <li
-                  style={{ backgroundColor: "#0070D2" }}
+                  style={{ backgroundColor: "#a9d0e8" }}
                   className="list-group-item bg-main py-3"
                 >
                   Danh mục sản phẩm
@@ -222,7 +224,7 @@ export default function ProductCategory() {
               </ul>
               <ul className="list-group mb-3 list-brand">
                 <li
-                  style={{ backgroundColor: "#0070D2" }}
+                  style={{ backgroundColor: "#a9d0e8" }}
                   className="list-group-item bg-main py-3"
                 >
                   Thương hiệu
@@ -241,11 +243,20 @@ export default function ProductCategory() {
               </ul>
             </div>
             <div className="col-md-9 order-1 order-md-2">
-              <div className="category-title bg-main">
-                <h3 className="fs-5 py-3 text-center">{slug}</h3>
+              <div className="category-title">
+                {/* <h3 className="fs-5 py-3 text-center">{slug}</h3> */}
+                <h2 class="section-title heading-border ls-20 border-0">
+                    {" "}
+                    {slug}
+                  </h2>
               </div>
+              
               <div className="product-category mt-3">
-                <div className="row product-list">
+                <div
+                  className={`row product-list ${
+                    displayMode === "grid" ? "grid-view" : "list-view"
+                  }`}
+                >
                   {productCategory.map((product, index) => {
                     return (
                       <div
@@ -256,7 +267,10 @@ export default function ProductCategory() {
                         }`}
                         key={index}
                       >
-                        <ProductItem product={product} />
+                        <ProductItem
+                          product={product}
+                          displayMode={displayMode}
+                        />
                       </div>
                     );
                   })}

@@ -55,6 +55,8 @@ import CustomerEdit from '../pages/beckend/customer/CustomerEdit'
 import CustomerShow from '../pages/beckend/customer/CustomerShow'
 import CustomerTrash from '../pages/beckend/customer/CustomerTrash'
 import BannerTrash from '../pages/beckend/banner/BannerTrash'
+import OrderEdit from '../pages/beckend/order/OrderEdit'
+import DiscountCodeIndex from '../pages/beckend/DiscountCode/DiscountCodeIndex'
 
 
 const RouteAdmin = [
@@ -88,6 +90,7 @@ const RouteAdmin = [
     { path: '/admin/order/index', component: OrderIndex },
     { path: '/admin/orderExport/index', component: OrderExport },
     { path: '/admin/order/show/:id', component: OrderShow },
+    { path: '/admin/order/edit/:id', component: OrderEdit },
     { path: "/admin/order/trash", component: OrderTrash },
 
     // post 
@@ -135,6 +138,8 @@ const RouteAdmin = [
     { path: '/admin/customer/show/:id', component: CustomerShow },
     { path: "/admin/customer/trash", component: CustomerTrash },
 
+    // mã code DiscountCode
+    { path: '/admin/discountcode/index', component: DiscountCodeIndex },
 
 ]
 export default RouteAdmin

@@ -24,9 +24,6 @@ export default function Dashboard() {
                                     <Link to='/admin/product/index'>Tất cả sản phẩm</Link>
                                 </li>
                                 <li>
-                                    <a href="product_import.html">Nhập hàng</a>
-                                </li>
-                                <li>
                                     <Link to='/admin/category/index'>Loại(category)</Link>
                                 </li>
                                 <li>
@@ -80,6 +77,10 @@ export default function Dashboard() {
                             <FaProductHunt className="icon-left" />
                             <Link to='/admin/contact/index'>liên hệ(contact)</Link>
                         </li>
+                        <li class="hdlitem">
+                            <FaProductHunt className="icon-left" />
+                            <Link to='/admin/discountcode/index'>Mã code</Link>
+                        </li>
                         <li class="hdlitem item-sub" id="item4" onClick={() => handleItemClick('item4')}>
                             <FaProductHunt className="icon-left" />
                             <a href="#stst">Giao diện</a>
@@ -100,10 +101,6 @@ export default function Dashboard() {
                             <ul class="submenu">
                                 <li>
                                     <Link to='/admin/user/index'>user</Link>
-                                </li>
-
-                                <li>
-                                    <a href="config_index.html">Cấu hình</a>
                                 </li>
                             </ul>
                         </li>

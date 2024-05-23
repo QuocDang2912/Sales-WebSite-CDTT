@@ -1,7 +1,5 @@
 import React, { useEffect } from 'react'
 import { useState } from 'react'
-
-
 import { Link } from 'react-router-dom'
 import 'react-owl-carousel2/lib/styles.css';
 import PostServie from '../../../services/PostService';

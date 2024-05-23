@@ -9,6 +9,8 @@ import ProductServie from "../../../services/ProductService";
 import { urlImage } from "../../../Api/config";
 import OrderServie from "../../../services/OrderService";
 import OrderDetailService from "../../../services/OrderDetailService";
+import CustomerService from "../../../services/CustomerService";
+import style from "./Style.css"
 
 const OrderExport = () => {
     const [selectedCustomer, setSelectedCustomer] = useState(null);
@@ -19,11 +21,14 @@ const OrderExport = () => {
     const [user, setUser] = useState([]);
     const [product, setProduct] = useState([]);
     const [reload, setReLoad] = useState(0);
+    const [delivery_address, setDelivery_address] = useState('')
+    console.log("🚀 ~ OrderExport ~ delivery_address:", delivery_address)
     useEffect(() => {
         (async () => {
-            const result = await UserService.index();
-            console.log("🚀 ~ result:", result.user)
-            setUser(result.user);
+            // const result = await UserService.index();
+            const result = await CustomerService.index();
+            console.log("🚀 ~ result:", result.customner)
+            setUser(result.customner);
             setReLoad(false);
         })();
     }, [reload]);
@@ -108,8 +113,8 @@ const OrderExport = () => {
                 delivery_phone: selectedCustomer.phone,
                 // delivery_address: selectedCustomer.address,
                 // vì user của mình chưa có địa chỉ nên gán cứng
-                delivery_address: "quảng ngãi",
-                note: "oo",
+                delivery_address: delivery_address,
+                note: "Đã thanh toán",
                 // total: totalAmount,
                 status: 1
 
@@ -202,6 +207,16 @@ const OrderExport = () => {
                                 className="form-control"
                                 value={selectedCustomer.phone}
                                 readOnly
+                            />
+                        </div>
+                        <div className="col-md">
+                            <label>Địa chỉ (*)</label>
+                            <input
+                                type="text"
+                                name="address"
+                                className="form-control"
+                                value={delivery_address}
+                                onChange={(e) => setDelivery_address(e.target.value)}
                             />
                         </div>
                     </div>
@@ -340,7 +355,7 @@ const OrderExport = () => {
             {/* Modal chọn sản phẩm */}
             <Modal
                 show={showProductModal}
-                dialogClassName="custom-modal-lg"
+                dialogClassName="custom-modal-dialog"
                 onHide={() => setShowProductModal(false)}
             >
                 <Modal.Header closeButton>

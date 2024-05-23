@@ -6,11 +6,11 @@ import Menu from '../../pages/fronend/home/Menu'
 
 export default function LayOutSite() {
     return (
-        <>
+        <div style={{ backgroundColor: "white" }}>
             <Header />
             <Menu />
             <Outlet />
             <Footer />
-        </>
+        </div>
     )
 }

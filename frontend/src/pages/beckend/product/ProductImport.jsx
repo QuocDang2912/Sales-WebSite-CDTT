@@ -7,6 +7,8 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import ProductServie from "../../../services/ProductService";
 import { urlImage } from "../../../Api/config";
+import style from "./Style.css"
+
 const ProductImport = () => {
     const [productsale, setProductsale] = useState([]);
     const [showProductModal, setShowProductModal] = useState(false);
@@ -109,7 +111,7 @@ const ProductImport = () => {
             {/* Modal chọn sản phẩm */}
             <Modal
                 show={showProductModal}
-                dialogClassName="custom-modal-lg"
+                dialogClassName="custom-modal-dialog"
                 onHide={() => setShowProductModal(false)}
             >
                 <Modal.Header closeButton>

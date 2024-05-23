@@ -31,7 +31,7 @@ export default function Slides() {
                     <div className="carousel-inner">
                         {banners.map((banner, index) => (
                             <div key={index} className={`carousel-item ${index === activeIndex ? 'active' : ''}`}>
-                                <img style={{ height: "550px" }} src={urlImage + "banner/" + banner.image} className="d-block w-100" alt={`Slide ${index + 1}`} />
+                                <img style={{ height: "400px" }} src={urlImage + "banner/" + banner.image} className="d-block w-100" alt={`Slide ${index + 1}`} />
                             </div>
                         ))}
                         {loading ? <Loading /> : ""}

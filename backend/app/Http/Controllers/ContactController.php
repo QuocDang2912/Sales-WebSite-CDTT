@@ -12,7 +12,7 @@ class ContactController extends Controller
     {
         $contact = Contact::where('status', '!=', 0)
             ->orderBy('created_at', 'desc')
-            ->select('id', 'name',  'title', 'email', 'phone', 'status')
+            ->select('id', 'name',  'title', 'email', 'phone', 'content', 'status')
             ->get();
         $total = Contact::count();
         $result = [

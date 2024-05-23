@@ -97,15 +97,13 @@ export default function Cart() {
                         <tfoot>
                             <tr>
                                 <td colSpan={5}>
-
-                                    <Link to={"/checkout"} className="btn btn-main" style={{ backgroundColor: "red" }}>
+                                    <Link to={"/checkout"} className="btn btn-main" style={{ backgroundColor: "red", color: "white" }}>
                                         Thanh toán
                                     </Link>
                                 </td>
-                                <td colSpan={2} className="text-end">
+                                <td colSpan={3} className="text-end">
                                     <strong>Tổng tiền:
                                         {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(total)}
-
                                     </strong>
                                 </td>
                             </tr>

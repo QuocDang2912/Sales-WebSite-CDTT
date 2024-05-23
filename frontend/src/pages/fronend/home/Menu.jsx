@@ -24,7 +24,6 @@ export default function Menu() {
     }, [])
     return (
         <>
-
             <section className="hdl-mainmenu bg-main">
                 <div className="container">
                     <div className="row">

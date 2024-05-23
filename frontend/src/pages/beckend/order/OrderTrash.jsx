@@ -12,7 +12,7 @@ export default function OrderTrash() {
     const [orders, setOrders] = useState([]);
     const [reload, setReLoad] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
-    const [status1, setStatus1] = useState(2);
+
     useEffect(() => {
         (async () => {
             setLoad(false);
@@ -26,9 +26,9 @@ export default function OrderTrash() {
     const handleKp = async (id) => {
         try {
             const updatedBrand = {
-                status: status1
+                status: 1
             };
-            const result = await OrderService.delete(updatedBrand, id);
+            const result = await OrderService.restore(updatedBrand, id);
             setLoad(Date.now());
             toast("Khoi phuc thanh cong");
         } catch (error) {

@@ -29,9 +29,9 @@ const UserServie = {
     },
 
 
-    login: (data) => {
-        return httpAxios.post(`user/login`, data);
-    },
+    // login: (data) => {
+    //     return httpAxios.post(`user/login`, data);
+    // },
 
     changePass: (data, id) => {
         return httpAxios.post(`user/changePassword/${id}`, data);

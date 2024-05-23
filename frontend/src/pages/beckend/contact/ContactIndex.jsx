@@ -132,6 +132,7 @@ export default function ContactIndex() {
                                                 <th>Điện thoại</th>
                                                 <th>Email</th>
                                                 <th>Tiêu đề</th>
+                                                <th>Nội dung</th>
                                                 <th className="text-center" style={{ width: 30 }}>
                                                     ID
                                                 </th>
@@ -172,6 +173,7 @@ export default function ContactIndex() {
                                                             <td>{contact.phone}</td>
                                                             <td>{contact.email}</td>
                                                             <td>{contact.title}</td>
+                                                            <td>{contact.content}</td>
                                                             <td className="text-center">{contact.id}</td>
                                                         </tr>
                                                     );

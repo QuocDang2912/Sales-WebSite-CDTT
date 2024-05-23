@@ -25,29 +25,41 @@ export default function OrderShow() {
             // console.log(result.order);
         })();
     }, [id])
-    //deleteOrder
-    const handleDelete = (id) => {
-        (async function () {
-            const result = await OrderService.destroy(id);
-            if (result.status === true) {
-                toast.success(result.message);
-            }
-        })();
+
+    /// check trạng thái
+    let statusText;
+    switch (order.status) {
+        case 0:
+            statusText = "Đã hủy";
+            break;
+
+        case 1:
+            // statusText = "Đang giao hàng";
+            // break;
+            statusText = "Chờ xác nhận";
+            break;
+        case 2:
+            // statusText = "Đã giao";
+            // break;
+            statusText = "Đang giao hàng";
+            break;
+        case 3:
+            statusText = "Đã giao";
+            break;
+        default:
+            statusText = "Trạng thái không xác định";
     }
     return (
         <div className="content">
             <section className="content-header my-2">
                 <h1 className="d-inline">Chi tiết đơn hàng</h1>
                 <div className="mt-1 text-end">
-                    <Link to="/admin/order" className="btn btn-sm btn-success mx-1">
+                    <Link to="/admin/order/index" className="btn btn-sm btn-success mx-1">
                         <FaArrowLeft />Về danh sách
                     </Link>
-                    <Link to={'/admin/order/edit/ order.id'} className="px-1 text-primary">
+                    <Link to={`/admin/order/edit/${id}`} className="px-1 text-primary">
                         <FaEye />
                     </Link>
-                    <button onClick={() => handleDelete(order.id)} className="border-0 px-1 text-danger">
-                        <FaTrashAlt />
-                    </button>
                 </div>
             </section>
             <section className="content-body my-2">
@@ -79,10 +91,10 @@ export default function OrderShow() {
                         Ngày đặt: <strong>{order.created_at}</strong>
                     </div>
                     <div className="col-3">
-                        Hình thức đặt: <strong>type</strong>
+                        Trạng thái thanh toán: <strong>{order.note}</strong>
                     </div>
                     <div className="col-3">
-                        Trạng thái: <strong>{order.status}</strong>
+                        Trạng thái vận chuyển: <strong>{statusText}</strong>
                     </div>
                 </div>
                 <div className="row my-3">
@@ -91,6 +103,7 @@ export default function OrderShow() {
                             <thead>
                                 <tr>
                                     <th>Tên sản phẩm</th>
+                                    <th>Hình ảnh</th>
                                     <th style={{ width: "90px" }} className="text-center">Giá</th>
                                     <th style={{ width: "90px" }} className="text-center">Số lượng</th>
                                     <th style={{ width: "90px" }} className="text-center">Thành tiền</th>
@@ -101,6 +114,14 @@ export default function OrderShow() {
                                     return (
                                         <tr className="datarow" key={index}>
                                             <td>{orderdetail.name}</td>
+                                            <img
+                                                style={{ height: 200, width: 300 }}
+                                                classname="img-fluid "
+                                                src={
+                                                    urlImage + "product/" + orderdetail.image
+                                                }
+                                                alt=""
+                                            />
                                             <td>{orderdetail.price}</td>
                                             <td>{orderdetail.qty}</td>
                                             <td>{orderdetail.amount}</td>

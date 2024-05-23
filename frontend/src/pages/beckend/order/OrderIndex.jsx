@@ -14,10 +14,7 @@ export default function OrderIndex() {
     const [countall, setCountAll] = useState(0);
     const [counttrash, setCountTrash] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
-    const [status1, setStatus1] = useState(0);
-    const [reload, setReLoad] = useState(0);
-    //input
-    //end
+
     useEffect(function () {
         setIsLoading(true);
         (async function () {
@@ -34,7 +31,7 @@ export default function OrderIndex() {
     const handleDelete = async (id) => {
         try {
             const updatedBrand = {
-                status: status1
+                status: 0
             };
             const result = await OrderService.delete(updatedBrand, id);
             toast("Da xoa vao thung rac");
@@ -43,17 +40,6 @@ export default function OrderIndex() {
             console.error("Error deleting brand: ", error);
         }
     };
-    //status
-    const handleStatus = (id) => {
-        (async function () {
-            const result = await OrderService.status(id);
-            if (result.status === true) {
-                setLoad(Date.now());
-                toast.success('Thay doi trang thai thanh cong');
-            }
-        })();
-    }
-
 
     return (
         <div className="content">
@@ -143,15 +129,15 @@ export default function OrderIndex() {
                                     <td>
                                         <div className="name">
                                             <Link to={'/admin/order/edit/' + order.id}>
-                                                {order.name}
+                                                {order.delivery_name}
                                             </Link>
                                         </div>
                                         <div className="function_style">
-                                            <button
+                                            {/* <button
                                                 onClick={() => handleStatus(order.id)}
                                                 className={order.status === 1 ? "border-0 px-1 text-success" : "border-0 px-1 text-danger"}>
                                                 {order.status === 1 ? <FaToggleOn /> : <FaToggleOff />}
-                                            </button>
+                                            </button> */}
                                             <Link to="#" className="px-1 text-success">
                                             </Link>
                                             <Link to={'/admin/order/edit/' + order.id} className="px-1 text-primary">

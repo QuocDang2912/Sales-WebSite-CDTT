@@ -10,21 +10,31 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import emailjs from '@emailjs/browser';
 
 import axios from 'axios';
+import { useLocation } from 'react-router-dom';
+
+
 
 export default function Checkout() {
+    const location = useLocation();
+    const dispatch = useDispatch()
     // lấy thông tin user  trên redux
+
     let user = useSelector((state) => state.user.current)
-    console.log("🚀 ~ Checkout ~ user:", user)
+    // const [statusNote, setStatusNote] = useState("Chưa thanh toán")
+    // console.log("🚀 ~ Checkout ~ statusNote:", statusNote)
 
     const [inputs, setInputs] = useState({
-        user_id: user.id, delivery_name: user.name
-        ,
-        delivery_gender: user.gender, delivery_email: user.email
-        , delivery_phone: user.phone
-        ,
-        note: user.roles,
-        status: 1
+        user_id: user.id,
+        delivery_name: user.name,
+        delivery_gender: user.gender,
+        delivery_email: user.email,
+        delivery_phone: user.phone,
+        note: "Chưa thanh toán",
+        status: 1,
+        delivery_address: ""
     });
+    console.log("🚀 ~ Checkout ~ inputs:", inputs)
+    // redux
 
     // state call api địa chỉ
     const [cityData, setCityData] = useState([]);
@@ -34,15 +44,20 @@ export default function Checkout() {
     // state call api địa chỉ
 
 
-    // redux
 
-    const dispatch = useDispatch()
 
     let cartItem = useSelector((state) => state.cart.items) // lấy ra mảng item
 
     const total = cartItem.reduce((totalPrice, item) => { // toongr tien
+
         return totalPrice + item.count * (item.pricesale ? (item.price - item.pricesale) : item.price)
     }, 0)
+
+
+
+
+
+
 
     // convert arr form orderdetail
 
@@ -59,25 +74,11 @@ export default function Checkout() {
             }
         )
     })
-
-
-
-
     // lấy dữ liệu form
     const handleChange = (event) => {
-        const name = event.target.name;
-        const value = event.target.value;
-        setInputs(values => ({
-            ...values, [name]: value || "",
-            // user_id: user.id, delivery_name: user.name
-            // ,
-            // delivery_gender: user.gender, delivery_email: user.email
-            // , delivery_phone: user.phone
-            // ,
-            // note: user.roles,
-            // status: 1
-        }))
-    }
+        const { name, value } = event.target;
+        setInputs(prevInputs => ({ ...prevInputs, [name]: value }));
+    };
 
     // call api địa chỉ
     useEffect(() => {
@@ -85,12 +86,37 @@ export default function Checkout() {
             try {
                 const response = await axios.get("https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json");
                 setCityData(response.data);
+
+                const savedInputs = JSON.parse(localStorage.getItem('checkoutInputs'));
+                if (savedInputs) {
+                    setInputs(savedInputs);
+                    setSelectedCity(savedInputs.selectedCity || '');
+                    setSelectedDistrict(savedInputs.selectedDistrict || '');
+                    setSelectedWard(savedInputs.selectedWard || '');
+                }
+
+                const queryParams = new URLSearchParams(location.search);
+                const message = queryParams.get('message');
+                if (message === 'Successful.') {
+                    console.log("cc")
+                    const updatedInputs = { ...inputs, note: "Đã thanh toán" };
+                    setInputs(updatedInputs);
+                }
             } catch (error) {
                 console.error("Error fetching city data:", error);
             }
         };
         fetchCityData();
-    }, []);
+    }, [location.search]);
+
+
+    useEffect(() => {
+        const selectedCityName = cityData.find(city => city.Id === selectedCity)?.Name || '';
+        const selectedDistrictName = cityData.find(city => city.Id === selectedCity)?.Districts.find(district => district.Id === selectedDistrict)?.Name || '';
+        const selectedWardName = cityData.find(city => city.Id === selectedCity)?.Districts.find(district => district.Id === selectedDistrict)?.Wards.find(ward => ward.Id === selectedWard)?.Name || '';
+        const address = `${selectedWardName}, ${selectedDistrictName}, ${selectedCityName}`;
+        setInputs(prevInputs => ({ ...prevInputs, delivery_address: address }));
+    }, [selectedCity, selectedDistrict, selectedWard]);
 
     const handleCityChange = (event) => {
         setSelectedCity(event.target.value);
@@ -103,13 +129,7 @@ export default function Checkout() {
         setSelectedWard('');
     };
     // tác động đến ô input khi chọn ở ô select
-    useEffect(() => {
-        const selectedCityName = cityData.find(city => city.Id === selectedCity)?.Name || '';
-        const selectedDistrictName = cityData.find(city => city.Id === selectedCity)?.Districts.find(district => district.Id === selectedDistrict)?.Name || '';
-        const selectedWardName = cityData.find(city => city.Id === selectedCity)?.Districts.find(district => district.Id === selectedDistrict)?.Wards.find(ward => ward.Id === selectedWard)?.Name || '';
-        const address = `${selectedWardName}, ${selectedDistrictName}, ${selectedCityName}`;
-        setInputs(prevInputs => ({ ...prevInputs, delivery_address: address }));
-    }, [selectedCity, selectedDistrict, selectedWard]);
+
     // end call api địa chỉ
 
 
@@ -181,16 +201,15 @@ export default function Checkout() {
     };
 
     let distance_Kilomet = 0;
-    console.log("selectedCity:", selectedCity);
     const selectedCityName = cityData.find(city => city.Id === selectedCity)?.Name;
     if (selectedCityName && selectedCityName in shippingDistancesFromHCM) {
         distance_Kilomet = shippingDistancesFromHCM[selectedCityName];
-        console.log("🚀 ~ Checkout ~ distance:", distance_Kilomet);
     }
     const shippingFee = distance_Kilomet * 100; // mỗi km tạm tính 100 (VND)
 
-    console.log("Phí vận chuyển:", shippingFee);
 
+
+    // đặc vào giỏ hàng
     const handleSubmit = (event) => {
         event.preventDefault();
         (
@@ -198,17 +217,13 @@ export default function Checkout() {
                 try {
                     // đẩy lên order
                     const res = await OrderServie.store(inputs)
-                    console.log("🚀 ~ res:", res)
-                    console.log("🚀 ~ res:", res.order.id)
                     // đẩy lên order detail
                     // tạo form đúng với backend
                     const form_orderDetail = {
                         order_id: res.order.id,
                         products: convert_arr_form_ordedetail
                     }
-                    console.log("🚀 ~ form_orderDetail:", form_orderDetail)
                     const Call_Order_detail = await OrderDetailService.store(form_orderDetail)
-                    console.log("🚀 ~ Call_Order_detail:", Call_Order_detail)
 
                     // gửi email khi đặc hàng thành công
 
@@ -217,7 +232,7 @@ export default function Checkout() {
 
                     emailjs.send("service_gjtj4yf", "template_4hu27vp", {
                         // user_email: user.email,
-                        user_email: "anhquoc261003@gmail.com",
+                        user_email: "bngoc7498@gmail.com",
                         user_name: user.name,
                         address: inputs.delivery_address,
                         result: amount
@@ -240,6 +255,7 @@ export default function Checkout() {
                     // reset 
 
                     localStorage.removeItem('cart');
+                    localStorage.removeItem('checkoutInputs');
 
                     dispatch(
                         reset()
@@ -248,8 +264,6 @@ export default function Checkout() {
                 } catch (error) {
                     console.log("🚀 ~ ngu check out sai:", error)
                     toast.error("Đặt Hàng Thất Bại");
-
-
                 }
 
             }
@@ -257,6 +271,24 @@ export default function Checkout() {
         console.log(inputs);
     }
 
+    // test momo
+    const handleSubmit1 = async (event) => {
+        console.log("test momo")
+        event.preventDefault();
+        try {
+            const total_momo = total + shippingFee
+            // Save selections to localStorage
+            const savedInputs = { ...inputs, selectedCity, selectedDistrict, selectedWard };
+            localStorage.setItem('checkoutInputs', JSON.stringify(savedInputs));
+
+            const response = await OrderServie.momo_pay({ total_momo: total_momo })
+            window.location.href = response.payUrl;
+
+        } catch (error) {
+            console.error('Error:', error);
+            // Xử lý lỗi nếu có
+        }
+    }
 
 
 
@@ -336,9 +368,10 @@ export default function Checkout() {
                                         <label htmlFor="check2">Chuyển khoản qua ngân hàng</label>
                                     </div>
                                     <div className="p-4 border bankinfo">
-                                        <p>Ngân Hàng Vietcombank </p>
-                                        <p>STK: 99999999999999</p>
-                                        <p>Chủ tài khoản: Hồ Diên Lợi</p>
+                                        <form>
+                                            <input type='hidden' name='total_momo' /> {/* Set the value as per your requirement */}
+                                            <button onClick={handleSubmit1} type='submit'>Thanh toán Momo</button>
+                                        </form>
                                     </div>
                                 </div>
                                 <div className="text-end">
@@ -396,7 +429,7 @@ export default function Checkout() {
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <td colSpan={6} className="text-end">
+                                        <td colSpan={7} className="text-end">
                                             <strong>Tổng:
                                                 {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(total)}
                                             </strong>
@@ -431,11 +464,12 @@ export default function Checkout() {
                                         <th>Tổng cộng</th>
                                         <td className="text-end" style={{ color: "red" }}>
                                             <span>
-                                                {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(total)}
+                                                {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(total + shippingFee)}
                                             </span>
                                         </td>
                                     </tr>
-                                </tbody></table>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
