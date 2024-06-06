@@ -39,25 +39,35 @@ export default function ProductCategory() {
 
   useEffect(() => {
     (async () => {
-      const res = await ProductServie.productCategory_price(
-        slug,
-        currentPage,
-        minPrice,
-        maxPrice,
-        sort_order
-      );
-      console.log("🚀 ~ res:", res);
-      setProductCategory(res.products.data);
-      setCurrentPage(res.products.current_page);
-      setLastPage(res.products.last_page);
+      setLoading(true);
 
-      // call brand and category left giao diện
-      const fetCate = await CategoryServie.index();
-      const fetchbrand1 = await BrandService.index();
-      setCategory(fetCate.category);
-      setbrand(fetchbrand1.brands);
+      try {
+        const res = await ProductServie.productCategory_price(
+          slug,
+          currentPage,
+          minPrice,
+          maxPrice,
+          sort_order
+        );
+        console.log("🚀 Sản phẩm category:", res);
+        setProductCategory(res.products.data);
+        setCurrentPage(res.products.current_page);
+        setLastPage(res.products.last_page);
 
-      setLoading(false);
+        // call brand and category left giao diện
+        const fetCate = await CategoryServie.index();
+        const fetchbrand1 = await BrandService.index();
+        setCategory(fetCate.category);
+        setbrand(fetchbrand1.brands);
+      } catch (error) {
+        console.log("🚀 ~ error:", error)
+
+      } finally {
+        setLoading(false);
+
+      }
+
+
     })();
   }, [slug, currentPage, minPrice, maxPrice, sort_order]);
 
@@ -67,27 +77,12 @@ export default function ProductCategory() {
     setFilter((values) => ({ ...values, [name]: value }));
   };
 
-  const handleSubmit = (event) => {
-    // veef fix chưa tích hợp được
+  const handleSubmit = async (event) => {
+    console.log("cc")
     event.preventDefault();
-    console.log("filter", filter);
-    (async () => {
-      const res = await ProductServie.productCategory_price(
-        slug,
-        currentPage,
-        filter.minPrice,
-        filter.maxPrice,
-        sort_order
-      );
-      console.log("🚀 ~ res:", res);
-      setProductCategory(res.products.data);
-      setCurrentPage(res.products.current_page);
-      setLastPage(res.products.last_page);
-
-      setFilter({ minPrice: "", maxPrice: "" });
-
-      setLoading(false);
-    })();
+    setminPrice(filter.minPrice || 0);
+    setmaxPrice(filter.maxPrice || 0);
+    setCurrentPage(1); // Reset to first page after filter
   };
   return (
     <div>
@@ -246,25 +241,23 @@ export default function ProductCategory() {
               <div className="category-title">
                 {/* <h3 className="fs-5 py-3 text-center">{slug}</h3> */}
                 <h2 class="section-title heading-border ls-20 border-0">
-                    {" "}
-                    {slug}
-                  </h2>
+                  {" "}
+                  {slug}
+                </h2>
               </div>
-              
+
               <div className="product-category mt-3">
                 <div
-                  className={`row product-list ${
-                    displayMode === "grid" ? "grid-view" : "list-view"
-                  }`}
+                  className={`row product-list ${displayMode === "grid" ? "grid-view" : "list-view"
+                    }`}
                 >
                   {productCategory.map((product, index) => {
                     return (
                       <div
-                        className={`col-${
-                          displayMode === "grid"
-                            ? "6 col-md-3"
-                            : "12 text-center"
-                        }`}
+                        className={`col-${displayMode === "grid"
+                          ? "6 col-md-3"
+                          : "12 text-center"
+                          }`}
                         key={index}
                       >
                         <ProductItem
@@ -281,9 +274,8 @@ export default function ProductCategory() {
                 <nav aria-label="Page navigation">
                   <ul className="pagination">
                     <li
-                      className={`page-item ${
-                        currentPage === 1 ? "disabled" : ""
-                      }`}
+                      className={`page-item ${currentPage === 1 ? "disabled" : ""
+                        }`}
                     >
                       <a
                         className="page-link"
@@ -294,9 +286,8 @@ export default function ProductCategory() {
                     </li>
                     {Array.from({ length: lastPage }, (_, i) => (
                       <li
-                        className={`page-item ${
-                          i + 1 === currentPage ? "active" : ""
-                        }`}
+                        className={`page-item ${i + 1 === currentPage ? "active" : ""
+                          }`}
                         key={i}
                       >
                         <a
@@ -308,9 +299,8 @@ export default function ProductCategory() {
                       </li>
                     ))}
                     <li
-                      className={`page-item ${
-                        currentPage === lastPage ? "disabled" : ""
-                      }`}
+                      className={`page-item ${currentPage === lastPage ? "disabled" : ""
+                        }`}
                     >
                       <a
                         className="page-link"

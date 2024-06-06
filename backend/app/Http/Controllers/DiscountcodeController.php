@@ -96,13 +96,13 @@ class DiscountcodeController extends Controller
             $result = [
                 'status' => true,
                 'discountCode' => $discountCode,
-                'message' => 'Mã giảm giá hợp lệ.'
+                'message' => 'success'
             ];
         } else {
             $result = [
                 'status' => $code,
                 'discountCode' => null,
-                'message' => 'Mã giảm giá không hợp lệ hoặc đã hết hạn.'
+                'message' => 'error'
             ];
         }
 

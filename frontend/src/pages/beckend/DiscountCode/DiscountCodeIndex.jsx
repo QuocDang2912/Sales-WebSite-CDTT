@@ -2,19 +2,9 @@ import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Link } from "react-router-dom";
 import {
-    RiSaveFill,
-    RiEdit2Fill,
-    RiEyeFill,
-    RiDeleteBin5Fill,
+
     RiShareFill,
 } from "react-icons/ri";
-import {
-    FaEdit,
-    FaEye,
-    FaToggleOff,
-    FaToggleOn,
-    FaTrash,
-} from "react-icons/fa";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
@@ -48,7 +38,6 @@ export default function DiscountCodeIndex() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const image = document.getElementById("image");
         const brand = new FormData();
         brand.append("percentage", name);
         brand.append("title", title);
@@ -65,20 +54,7 @@ export default function DiscountCodeIndex() {
             setReLoad(result.Discountcode.id);
         })();
     };
-    //xoa
-    // const handleDelete = async (id) => {
-    //     try {
-    //         const updatedBrand = {
-    //             status: status1,
-    //         };
-    //         const result = await DiscountcodeService.delete(updatedBrand, id);
-    //         toast("Da xoa vao thung rac");
-    //         setReLoad(reload + 1); // Reload brands
-    //     } catch (error) {
-    //         console.error("Error deleting brand: ", error);
-    //     }
-    // };
-    ///status
+
 
 
     return (

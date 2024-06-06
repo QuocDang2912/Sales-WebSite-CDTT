@@ -44,7 +44,6 @@ const ProductServie = {
     },
 
     productAll_filter_price: (page, min, max, sort_order) => {  // hoàn thiện
-        console.log("🚀 ~ min:", min, "max:", max, "sort_order:", sort_order)
         if (min === 0 && max === 0) { // nếu trường hợp người dùng ko truyền thì gọi all product
             return httpAxios.get(`product/product_all_filter?page=${page}&sort_order=${sort_order}`);
 
@@ -67,7 +66,6 @@ const ProductServie = {
         return httpAxios.get(`product/product_category/${slug}?page=${page}`);
     },
     productCategory_price: (slug, page, min, max, sort_order) => {  // hoàn thiện
-        console.log("🚀 ~ min:", min, "max:", max, "sort_order:", sort_order)
         if (min === 0 && max === 0) { // nếu trường hợp người dùng ko truyền thì gọi all product
             return httpAxios.get(`product/product_category_filter/${slug}?page=${page}&sort_order=${sort_order}`);
 
@@ -86,7 +84,6 @@ const ProductServie = {
         return httpAxios.get(`product/product_brand/${slug}?page=${page}`);
     },
     productBrand_price: (slug, page, min, max, sort_order) => {  // hoàn thiện
-        console.log("🚀 ~ min:", min, "max:", max, "sort_order:", sort_order)
         if (min === 0 && max === 0) { // nếu trường hợp người dùng ko truyền thì gọi all product
             return httpAxios.get(`product/product_brand_filter/${slug}?page=${page}&sort_order=${sort_order}`);
 
@@ -134,6 +131,14 @@ const ProductServie = {
     storeProductStore: (productstore) => {
         return httpAxios.post(`product/storeimport`, productstore);
     },
+    // cập nhập productStore
+    updateProductStore: (productId, quantity) => {
+        return httpAxios.post(`product/updateProductStore`, {
+            product_id: productId,
+            quantity: quantity
+        });
+    },
+    // cập nhập productStore
 
 
     // search

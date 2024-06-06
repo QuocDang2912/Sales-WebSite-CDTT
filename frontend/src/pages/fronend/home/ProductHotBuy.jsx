@@ -11,6 +11,7 @@ const ProductHotBuy = () => {
         (async () => {
             try {
                 const result = await ProductService.producthotbuy(8);
+                console.log("🚀 Sản phẩm Hot:", result)
                 setProducts(result.products);
                 setLoading(false)
             } catch (error) {
@@ -28,7 +29,7 @@ const ProductHotBuy = () => {
                     {products && products.map((product, index) => {
                         return (
                             <div className="col-6 col-md-3 mb-4" key={index}>
-                                <ProductItem product={product}  />
+                                <ProductItem product={product} />
                             </div>
                         );
                     })}

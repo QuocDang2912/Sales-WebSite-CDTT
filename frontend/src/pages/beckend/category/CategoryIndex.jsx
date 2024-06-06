@@ -153,7 +153,7 @@ export default function CategoryIndex() {
                                                         className="form-select"
                                                     >
                                                         <option value={1}>None</option>
-                                                        <option value={2}>Tên danh mục</option>
+                                                        <option value={2}>2</option>
                                                     </select>
                                                 </div>
                                                 <div className="mb-3">

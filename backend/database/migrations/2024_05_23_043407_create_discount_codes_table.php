@@ -11,20 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('discount_codes', function (Blueprint $table) {
-            $table->id();
-            $table->string('title', 255);
-            $table->string('code')->unique();
-            $table->unsignedInteger('percentage');
-            $table->text('description')->nullable();
-            $table->text('type')->nullable();
-            $table->dateTime('expires_bd')->nullable();
-            $table->dateTime('expires_kt')->nullable();
-            $table->unsignedInteger('created_by')->default(1);
-            $table->unsignedInteger('updated_by')->nullable();
-            $table->unsignedTinyInteger('status')->default(1); // 1: Active, 0: Inactive
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('discount_codes')) {
+            Schema::create('discount_codes', function (Blueprint $table) {
+                $table->bigIncrements('id');
+                $table->string('title');
+                $table->string('code');
+                $table->unsignedInteger('percentage');
+                $table->text('description')->nullable();
+                $table->text('type')->nullable();
+                $table->dateTime('expires_bd')->nullable();
+                $table->dateTime('expires_kt')->nullable();
+                $table->unsignedInteger('created_by')->default(1);
+                $table->unsignedInteger('updated_by')->nullable();
+                $table->unsignedTinyInteger('status')->default(1);
+                $table->timestamps();
+            });
+        }
     }
 
     /**

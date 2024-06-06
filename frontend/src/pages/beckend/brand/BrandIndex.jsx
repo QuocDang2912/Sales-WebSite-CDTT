@@ -122,8 +122,8 @@ export default function BrandIndex() {
                                                         <strong>sắp xếp</strong>
                                                     </label>
                                                     <select onChange={(e) => setSortOrder(e.target.value)} value={status} className="form-select">
-                                                        <option value={1}>dđ</option>
-                                                        <option value={2}>dđ</option>
+                                                        <option value={1}>1</option>
+                                                        <option value={2}>2</option>
                                                     </select>
                                                 </div>
                                                 <div className="mb-3">

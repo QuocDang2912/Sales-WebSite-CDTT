@@ -25,7 +25,7 @@ class OrderdetailController extends Controller
             $orderdetail->price = $product['price'];
             $orderdetail->qty = $product['qty'];
             $orderdetail->discount = $product['discount'];
-            $orderdetail->amount = $product['amount'];
+
 
             $orderdetail->save();
 
@@ -49,14 +49,14 @@ class OrderdetailController extends Controller
     //             "price": 10.99,
     //             "qty": 2,
     //             "discount": 0.5,
-    //             "amount": 19.99
+    //            
     //           },
     //           {
     //             "product_id": 2,
     //             "price": 15.99,
     //             "qty": 1,
     //             "discount": 0.2,
-    //             "amount": 12.99
+    //           
     //           }
     //         ]
     // }
@@ -73,7 +73,7 @@ class OrderdetailController extends Controller
             $banner->qty = $item['qty'];
             $banner->discount = $item['discount'];
 
-            $banner->amount = $item['amount'];
+
 
             $banner->save();
         }

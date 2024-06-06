@@ -1,18 +1,40 @@
-import React, { useEffect, useRef } from 'react'
-import { Link } from 'react-router-dom'
+import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { urlImage } from '../../../Api/config'
-import { decreaseCount, increaseCount, removeFromCart, reset } from '../../../state/CartSlice'
-import { useState } from 'react';
+import { reset } from '../../../state/CartSlice'
+import { useState, useEffect } from 'react';
 import OrderServie from '../../../services/OrderService'
 import OrderDetailService from '../../../services/OrderDetailService'
 import { ToastContainer, toast } from 'react-toastify'
 import 'bootstrap/dist/css/bootstrap.min.css'
+import emailjs from '@emailjs/browser';
+
 import axios from 'axios';
+import { useLocation } from 'react-router-dom';
+
+
 
 export default function Checkout() {
+    const location = useLocation();
+    const dispatch = useDispatch()
+    // lấy thông tin user  trên redux
 
-    const [inputs, setInputs] = useState({});
+    let user = useSelector((state) => state.user.current)
+    // const [statusNote, setStatusNote] = useState("Chưa thanh toán")
+    // console.log("🚀 ~ Checkout ~ statusNote:", statusNote)
+
+    const [inputs, setInputs] = useState({
+        user_id: user.id,
+        delivery_name: user.name,
+        delivery_gender: user.gender,
+        delivery_email: user.email,
+        delivery_phone: user.phone,
+        note: "Chưa thanh toán",
+        status: 1,
+        delivery_address: ""
+    });
+    console.log("🚀 ~ Checkout ~ inputs:", inputs)
+    // redux
 
     // state call api địa chỉ
     const [cityData, setCityData] = useState([]);
@@ -21,20 +43,25 @@ export default function Checkout() {
     const [selectedWard, setSelectedWard] = useState('');
     // state call api địa chỉ
 
-    // redux
 
-    const dispatch = useDispatch()
+
 
     let cartItem = useSelector((state) => state.cart.items) // lấy ra mảng item
 
     const total = cartItem.reduce((totalPrice, item) => { // toongr tien
+
         return totalPrice + item.count * (item.pricesale ? (item.price - item.pricesale) : item.price)
     }, 0)
+
+
+
+
+
+
 
     // convert arr form orderdetail
 
     const convert_arr_form_ordedetail = []
-    console.log("🚀 ~ Checkout ~ convert_arr_form_ordedetail:", convert_arr_form_ordedetail)
 
     cartItem.map((item) => {
         return convert_arr_form_ordedetail.push(
@@ -47,40 +74,49 @@ export default function Checkout() {
             }
         )
     })
-
-    // lấy thông tin user  trên redux
-    let user = useSelector((state) => state.user.current)
-    console.log("🚀 ~ Checkout ~ user:", user.id)
-
-
-    // lấy dữ liệu
+    // lấy dữ liệu form
     const handleChange = (event) => {
-        const name = event.target.name;
-        const value = event.target.value;
-        setInputs(values => ({
-            ...values, [name]: value || "", user_id: user.id, delivery_name: user.name
-            ,
-            delivery_gender: user.gender, delivery_email: user.email
-            , delivery_phone: user.phone
-            ,
-            note: user.roles,
-            status: 1
-        }))
-    }
+        const { name, value } = event.target;
+        setInputs(prevInputs => ({ ...prevInputs, [name]: value }));
+    };
 
     // call api địa chỉ
-
     useEffect(() => {
         const fetchCityData = async () => {
             try {
                 const response = await axios.get("https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json");
                 setCityData(response.data);
+
+                const savedInputs = JSON.parse(localStorage.getItem('checkoutInputs'));
+                if (savedInputs) {
+                    setInputs(savedInputs);
+                    setSelectedCity(savedInputs.selectedCity || '');
+                    setSelectedDistrict(savedInputs.selectedDistrict || '');
+                    setSelectedWard(savedInputs.selectedWard || '');
+                }
+
+                const queryParams = new URLSearchParams(location.search);
+                const message = queryParams.get('message');
+                if (message === 'Successful.') {
+                    console.log("cc")
+                    const updatedInputs = { ...inputs, note: "Đã thanh toán" };
+                    setInputs(updatedInputs);
+                }
             } catch (error) {
                 console.error("Error fetching city data:", error);
             }
         };
         fetchCityData();
-    }, []);
+    }, [location.search]);
+
+
+    useEffect(() => {
+        const selectedCityName = cityData.find(city => city.Id === selectedCity)?.Name || '';
+        const selectedDistrictName = cityData.find(city => city.Id === selectedCity)?.Districts.find(district => district.Id === selectedDistrict)?.Name || '';
+        const selectedWardName = cityData.find(city => city.Id === selectedCity)?.Districts.find(district => district.Id === selectedDistrict)?.Wards.find(ward => ward.Id === selectedWard)?.Name || '';
+        const address = `${selectedWardName}, ${selectedDistrictName}, ${selectedCityName}`;
+        setInputs(prevInputs => ({ ...prevInputs, delivery_address: address }));
+    }, [selectedCity, selectedDistrict, selectedWard]);
 
     const handleCityChange = (event) => {
         setSelectedCity(event.target.value);
@@ -93,58 +129,8 @@ export default function Checkout() {
         setSelectedWard('');
     };
     // tác động đến ô input khi chọn ở ô select
-    useEffect(() => {
-        const selectedCityName = cityData.find(city => city.Id === selectedCity)?.Name || '';
-        const selectedDistrictName = cityData.find(city => city.Id === selectedCity)?.Districts.find(district => district.Id === selectedDistrict)?.Name || '';
-        const selectedWardName = cityData.find(city => city.Id === selectedCity)?.Districts.find(district => district.Id === selectedDistrict)?.Wards.find(ward => ward.Id === selectedWard)?.Name || '';
-        const address = `${selectedWardName}, ${selectedDistrictName}, ${selectedCityName}`;
-        setInputs(prevInputs => ({ ...prevInputs, delivery_address: address }));
-    }, [selectedCity, selectedDistrict, selectedWard]);
+
     // end call api địa chỉ
-
-
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        (
-            async () => {
-                try {
-                    // đẩy lên order
-                    const res = await OrderServie.store(inputs)
-                    console.log("🚀 ~ res:", res)
-                    console.log("🚀 ~ res:", res.order.id)
-                    // đẩy lên order detail
-                    // tạo form đúng với backend
-                    const form_orderDetail = {
-                        order_id: res.order.id,
-                        products: convert_arr_form_ordedetail
-                    }
-                    console.log("🚀 ~ form_orderDetail:", form_orderDetail)
-                    const Call_Order_detail = await OrderDetailService.store(form_orderDetail)
-                    console.log("🚀 ~ Call_Order_detail:", Call_Order_detail)
-
-
-                    toast.success("thanh toán Thành công");
-
-                    // reset 
-
-                    localStorage.removeItem('cart');
-
-                    dispatch(
-                        reset()
-                    )
-
-                } catch (error) {
-                    console.log("🚀 ~ ngu check out sai:", error)
-                    toast.error("vui lòng đăng nhập trước khi thanh toán");
-
-
-                }
-
-            }
-        )()
-        console.log(inputs);
-    }
-
 
 
     // test tính tiền ship
@@ -213,11 +199,96 @@ export default function Checkout() {
         "Tỉnh Bạc Liêu": 280,
         "Tỉnh Cà Mau": 347
     };
-    const distance = shippingDistancesFromHCM[selectedCity] || 0; // Lấy khoảng cách từ HCM đến tỉnh thành được chọn, nếu không có thì mặc định là 0
-    const shippingFee = distance * 100; // Giả sử mỗi km vận chuyển là 100 đơn vị tiền tệ (VND)
-    console.log("Phí vận chuyển:", shippingFee);
+
+    let distance_Kilomet = 0;
+    const selectedCityName = cityData.find(city => city.Id === selectedCity)?.Name;
+    if (selectedCityName && selectedCityName in shippingDistancesFromHCM) {
+        distance_Kilomet = shippingDistancesFromHCM[selectedCityName];
+    }
+    const shippingFee = distance_Kilomet * 100; // mỗi km tạm tính 100 (VND)
 
 
+
+    // đặc vào giỏ hàng
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        (
+            async () => {
+                try {
+                    // đẩy lên order
+                    const res = await OrderServie.store(inputs)
+                    // đẩy lên order detail
+                    // tạo form đúng với backend
+                    const form_orderDetail = {
+                        order_id: res.order.id,
+                        products: convert_arr_form_ordedetail
+                    }
+                    const Call_Order_detail = await OrderDetailService.store(form_orderDetail)
+
+                    // gửi email khi đặc hàng thành công
+
+                    // tổng tiền
+                    const amount = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(total + shippingFee)
+
+                    emailjs.send("service_gjtj4yf", "template_4hu27vp", {
+                        // user_email: user.email,
+                        user_email: "bngoc7498@gmail.com",
+                        user_name: user.name,
+                        address: inputs.delivery_address,
+                        result: amount
+                    }, {
+                        publicKey: 'IMiWlEiyoza8USljv',
+                    })
+                        .then(
+                            () => {
+                                console.log('SUCCESS!');
+                            },
+                            (error) => {
+                                console.log('FAILED...', error.text);
+                            },
+                        );
+
+                    // end gửi email khi đặc hàng thành công
+
+                    toast.success("Đặt Hàng  Thành công");
+
+                    // reset 
+
+                    localStorage.removeItem('cart');
+                    localStorage.removeItem('checkoutInputs');
+
+                    dispatch(
+                        reset()
+                    )
+
+                } catch (error) {
+                    console.log("🚀 ~ ngu check out sai:", error)
+                    toast.error("Đặt Hàng Thất Bại");
+                }
+
+            }
+        )()
+        console.log(inputs);
+    }
+
+    // test momo
+    const handleSubmit1 = async (event) => {
+        console.log("test momo")
+        event.preventDefault();
+        try {
+            const total_momo = total + shippingFee
+            // Save selections to localStorage
+            const savedInputs = { ...inputs, selectedCity, selectedDistrict, selectedWard };
+            localStorage.setItem('checkoutInputs', JSON.stringify(savedInputs));
+
+            const response = await OrderServie.momo_pay({ total_momo: total_momo })
+            window.location.href = response.payUrl;
+
+        } catch (error) {
+            console.error('Error:', error);
+            // Xử lý lỗi nếu có
+        }
+    }
 
 
 
@@ -297,9 +368,10 @@ export default function Checkout() {
                                         <label htmlFor="check2">Chuyển khoản qua ngân hàng</label>
                                     </div>
                                     <div className="p-4 border bankinfo">
-                                        <p>Ngân Hàng Vietcombank </p>
-                                        <p>STK: 99999999999999</p>
-                                        <p>Chủ tài khoản: Hồ Diên Lợi</p>
+                                        <form>
+                                            <input type='hidden' name='total_momo' /> {/* Set the value as per your requirement */}
+                                            <button onClick={handleSubmit1} type='submit'>Thanh toán Momo</button>
+                                        </form>
                                     </div>
                                 </div>
                                 <div className="text-end">
@@ -335,11 +407,11 @@ export default function Checkout() {
                                                     </td>
                                                     <td className="align-middle">{item.name}</td>
                                                     {/* <input type="text" value={item.count} id="qty" className="form-control text-center" /> */}
-                                                    <td class="text-center align-middle">
-                                                        {item.count}
-                                                    </td>
+                                                    <td class="text-center align-middle">{item.count}</td>
+
                                                     <td className="text-center align-middle">
                                                         {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(item.price)}
+
                                                     </td>
 
                                                     <td className="text-center align-middle">
@@ -357,7 +429,7 @@ export default function Checkout() {
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <td colSpan={6} className="text-end">
+                                        <td colSpan={7} className="text-end">
                                             <strong>Tổng:
                                                 {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(total)}
                                             </strong>
@@ -380,22 +452,24 @@ export default function Checkout() {
                                 </tr>
                                     <tr>
                                         <th>Phí vận chuyển</th>
-                                        <td className="text-end">0</td>
+                                        <td className="text-end">
+                                            {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(shippingFee)}
+                                        </td>
                                     </tr>
                                     <tr>
                                         <th>Giảm giá</th>
-                                        <td className="text-end">0</td>
+                                        <td className="text-end">0 đ</td>
                                     </tr>
                                     <tr>
                                         <th>Tổng cộng</th>
                                         <td className="text-end" style={{ color: "red" }}>
                                             <span>
-
-                                                {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(total)}
+                                                {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(total + shippingFee)}
                                             </span>
                                         </td>
                                     </tr>
-                                </tbody></table>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>

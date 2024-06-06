@@ -218,7 +218,7 @@ export default function QuanLy_Order() {
                                             {new Intl.NumberFormat("vi-VN", {
                                                 style: "currency",
                                                 currency: "VND",
-                                            }).format(order.total_amount)}
+                                            }).format(order.total)}
                                         </strong>
                                     </div>
                                     <div className="col-3">
@@ -255,6 +255,12 @@ export default function QuanLy_Order() {
                                                         style={{ width: "200px" }}
                                                         className="text-center"
                                                     >
+                                                        Giá giảm
+                                                    </th>
+                                                    <th
+                                                        style={{ width: "200px" }}
+                                                        className="text-center"
+                                                    >
                                                         Số lượng
                                                     </th>
                                                 </tr>
@@ -277,6 +283,7 @@ export default function QuanLy_Order() {
                                                                     alt=""
                                                                 />
                                                                 <td>{orderdetail.price}</td>
+                                                                <td>{orderdetail.discount}</td>
                                                                 <td>{orderdetail.qty}</td>
                                                             </tr>
                                                         );

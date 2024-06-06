@@ -10,6 +10,7 @@ export default function ProductSale() {
     (async () => {
       try {
         const res = await ProductServie.productsale(8);
+        console.log("🚀 Sản phẩm sale:", res)
         setProduct(res.product);
         setLoading(false);
       } catch (error) {

@@ -14,41 +14,46 @@ const ProductImport = () => {
     const [showProductModal, setShowProductModal] = useState(false);
     const [reload, setReLoad] = useState(0);
     const [product, setProduct] = useState([]);
-    //productsale
+    const [isAddingProduct, setIsAddingProduct] = useState(false); // Trạng thái thêm sản phẩm
+
     useEffect(() => {
+        // Load product sale
         (async () => {
             const result = await ProductServie.getStore();
-            console.log("🚀 ~ getStore:", result)
+            console.log("🚀 ~ getStore:", result);
             setProductsale(result.products);
-            setReLoad(false);
-        })();
-    }, [reload]);
-    //product
-    useEffect(() => {
-        (async () => {
-            const result = await ProductServie.index();
-            console.log("🚀 ~ getProduct:", result)
-            setProduct(result.products);
-            setReLoad(false);
         })();
     }, [reload]);
 
-    const handleImportProductById = (id) => {
-        const id1 = id;
+    useEffect(() => {
+        // Load product
+        (async () => {
+            const result = await ProductServie.index();
+            console.log("🚀 ~ getProduct:", result);
+            setProduct(result.products);
+        })();
+    }, [reload]);
+
+    const handleImportProductById = async (id) => {
+        setIsAddingProduct(true); // Đánh dấu đang thêm sản phẩm
         const qty = document.getElementById("qty" + id).value;
         const price = document.getElementById("price" + id).value;
         const productstore = {
-            id: id1,
+            id: id,
             qty: qty,
             price: price,
         };
-        (async function () {
-            const result = await ProductServie.storeProductStore(productstore);
-            // window.location.reload(); // Reload the page
-            // toast.success(result.message);
-            // console.error("aaa", productstore);
+        try {
+            await ProductServie.storeProductStore(productstore);
+            // Thêm sản phẩm thành công, cập nhật lại dữ liệu
+            setReLoad(reload + 1);
+            setIsAddingProduct(false); // Kết thúc việc thêm sản phẩm
             toast("nhap hang thanh cong");
-        })();
+        } catch (error) {
+            setIsAddingProduct(false); // Kết thúc việc thêm sản phẩm do lỗi
+            console.error("Error adding product:", error);
+            toast.error("Đã xảy ra lỗi khi thêm sản phẩm.");
+        }
     };
 
     return (

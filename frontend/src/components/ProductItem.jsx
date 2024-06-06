@@ -6,7 +6,9 @@ import { useDispatch } from "react-redux";
 import { addToCart } from "../state/CartSlice";
 import { toast } from "react-toastify";
 
-export default function ProductItem({ product, displayMode }) {
+export default function ProductItem({ product, displayMode, totalSum }) {
+  console.log("🚀 ~ ProductItem ~ totalSum:", totalSum)
+  // console.log("🚀 ~ ProductItem ~ product:", product)
   const dispatch = useDispatch();
 
   const handleClickToCart = (e) => {
@@ -23,9 +25,8 @@ export default function ProductItem({ product, displayMode }) {
 
   return (
     <div
-      className={`product-item border ${
-        displayMode === "list" ? "list-view" : ""
-      }`}
+      className={`product-item border ${displayMode === "list" ? "list-view" : ""
+        }`}
     >
       <div className="product-item-image">
         <Link to={`/product_detail/${product.slug}`}>
@@ -46,6 +47,21 @@ export default function ProductItem({ product, displayMode }) {
                 }}
               >
                 Sale
+              </div>
+            )}
+            {totalSum === '0' && (
+              <div
+                className="product-label label-sale"
+                style={{
+                  position: "absolute",
+                  top: "10px",
+                  left: "10px",
+                  backgroundColor: "red",
+                  color: "white",
+                  padding: "4px",
+                }}
+              >
+                hết hàng
               </div>
             )}
             <img

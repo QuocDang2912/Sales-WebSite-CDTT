@@ -17,6 +17,7 @@ export default function ProductNew() {
     (async () => {
       try {
         const res = await ProductService.productnew(8);
+        console.log("🚀 Sản phẩm mới:", res)
         setProducts(res.product);
         setLoading(false);
       } catch (error) {

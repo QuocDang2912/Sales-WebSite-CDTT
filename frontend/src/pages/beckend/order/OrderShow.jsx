@@ -85,7 +85,7 @@ export default function OrderShow() {
                 <h3>Chi tiết giỏ hàng</h3>
                 <div className="row my-2">
                     <div className="col-3">
-                        Tổng tiền: <strong>{total}</strong>
+                        Tổng tiền: <strong>{order.total}</strong>
                     </div>
                     <div className="col-3">
                         Ngày đặt: <strong>{order.created_at}</strong>
@@ -105,8 +105,8 @@ export default function OrderShow() {
                                     <th>Tên sản phẩm</th>
                                     <th>Hình ảnh</th>
                                     <th style={{ width: "90px" }} className="text-center">Giá</th>
+                                    <th style={{ width: "90px" }} className="text-center">Gía giảm</th>
                                     <th style={{ width: "90px" }} className="text-center">Số lượng</th>
-                                    <th style={{ width: "90px" }} className="text-center">Thành tiền</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -123,8 +123,9 @@ export default function OrderShow() {
                                                 alt=""
                                             />
                                             <td>{orderdetail.price}</td>
+                                            <td>{orderdetail.discount
+                                            }</td>
                                             <td>{orderdetail.qty}</td>
-                                            <td>{orderdetail.amount}</td>
                                         </tr>);
                                 })}
                             </tbody>

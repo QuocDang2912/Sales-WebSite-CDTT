@@ -14,7 +14,6 @@ export default function LastPost() {
         (async () => {
             try {
                 const result = await PostServie.postnew();
-                console.log("🚀 ~ result:", result.postnhat)
                 setPost(result.postnhat);
                 setPost1(result.postsau);
                 setLoading(false)

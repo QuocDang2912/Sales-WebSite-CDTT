@@ -20,7 +20,7 @@ use App\Http\Controllers\TopicController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DiscountcodeController;
 use App\Http\Controllers\UserController;
-use Mockery\Loader\EvalLoader;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -92,10 +92,6 @@ Route::prefix('contact')->group(function () {
     Route::get('status/{id}', [ContactController::class, 'status']);
 });
 
-
-
-
-
 Route::prefix('topic')->group(function () {
     Route::middleware('admin.auth')->group(function () {
         Route::post('store', [TopicController::class, 'store']);
@@ -132,7 +128,6 @@ Route::prefix('user')->group(function () {
     // Thay đổi mật khẩu
     Route::post('changePassword/{id}', [UserController::class, 'changePassword']);
 });
-
 
 Route::prefix('customer')->group(function () {
 
@@ -186,6 +181,15 @@ Route::prefix('order')->group(function () {
 
     // MOMO
     Route::post('momo_pay', [OrderController::class, 'momo_pay']);
+
+    // thống kê đơn hàng 
+    Route::post('filterByDateRange', [OrderController::class, 'filterByDateRange']);
+    //
+    // Route for 7-day filter
+    // Route::post('filterLast7Days', [OrderController::class, 'filterLast7Days']);
+
+    // thống kê lọc theo option tùy chọn
+    Route::post('filterByValue', [OrderController::class, 'filterByValue']);
 });
 
 Route::prefix('orderdetail')->group(function () {
@@ -226,11 +230,13 @@ Route::prefix('product')->group(function () {
     Route::get('import', [ProductController::class, 'import']);
     Route::post('storeimport', [ProductController::class, 'storeimport']);
 
-    Route::get('product_all', [ProductController::class, 'product_all']);
+    Route::get('product_all', [ProductController::class, 'product_all']); // chua co filter
     Route::get('product_all_filter', [ProductController::class, 'product_all_filter']);
     Route::get('product_all1', [ProductController::class, 'product_all1']);
 
     Route::get('search/{search}', [ProductController::class, 'search']);
+
+    Route::post('/updateProductStore', [ProductController::class, 'updateProductStore']);
 });
 
 Route::prefix('post')->group(function () {

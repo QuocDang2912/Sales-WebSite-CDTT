@@ -7,6 +7,7 @@ use App\Models\Orderdetail;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Carbon\Carbon;
 
 class OrderController extends Controller
 {
@@ -29,6 +30,7 @@ class OrderController extends Controller
         $order->created_at = date('Y-m-d H:i:s');
         $order->created_by = 1; //tam
         $order->status = $request->status;
+        $order->total = $request->total;
 
         if ($order->save()) {
             $result = [
@@ -231,7 +233,7 @@ class OrderController extends Controller
         $order = Order::find($id);
         $orderdetail = Orderdetail::where('orderdetail.order_id', $id)
             ->join('product', 'product.id', '=', 'orderdetail.product_id')
-            ->select('product.image', 'product.name', 'orderdetail.qty', 'orderdetail.price', 'orderdetail.amount')
+            ->select('product.image', 'product.name', 'orderdetail.qty', 'orderdetail.price', 'orderdetail.discount')
             ->get();
         // $customer = User::where([['id', $order->user_id], ['roles', '=', '1']])->first(); // của thầy ['roles', '=', '1'] 
         $customer = User::where([['id', $order->user_id], ['roles', '=', 'customer']])->first(); // của mình 
@@ -308,17 +310,8 @@ class OrderController extends Controller
             // Retrieve order details including product image associated with the current order
             $orderDetails = Orderdetail::where('order_id', $order->id)
                 ->join('product', 'product.id', '=', 'orderdetail.product_id')
-                ->select('product.image', 'product.name', 'orderdetail.qty', 'orderdetail.price', 'orderdetail.amount')
+                ->select('product.image', 'product.name', 'orderdetail.qty', 'orderdetail.price', 'orderdetail.discount')
                 ->get();
-
-            // Calculate total amount for the current order
-            $totalAmount = 0;
-            foreach ($orderDetails as $detail) {
-                $totalAmount += ($detail->qty * $detail->price);
-            }
-
-            // Add the total amount and order details to the current order object
-            $order->total_amount = $totalAmount;
             $order->order_details = $orderDetails;
         }
 
@@ -408,5 +401,103 @@ class OrderController extends Controller
         return response()->json($jsonResult, 200);
 
         // return redirect()->to($jsonResult['payUrl']);
+    }
+
+
+    // test thống kê:
+
+    // thống kê từ ngày bn -> bn
+    public function filterByDateRange(Request $request)
+    {
+        $validatedData = $request->validate([
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+        ]);
+
+        $startDate = $validatedData['start_date'];
+        $endDate = $validatedData['end_date'];
+
+        $orders = Order::whereBetween('order.created_at', [$startDate, $endDate])
+            ->join('user', 'user.id', '=', 'order.user_id')
+            ->orderBy('order.created_at', 'desc')
+            ->select('order.*', 'user.name as user_name')
+            ->get();
+        $totalAmount = $orders->sum('total');
+
+
+        return response()->json([
+            'status' => true,
+            'orders' => $orders,
+            'total_amount' => $totalAmount,
+            'message' => 'Data loaded successfully'
+        ], 200);
+    }
+    // 7 ngay
+    // public function filterLast7Days(Request $request)
+    // {
+    //     $endDate = Carbon::now();
+    //     $startDate = $endDate->copy()->subDays(7);
+
+    //     $orders = Order::whereBetween('order.created_at', [$startDate, $endDate])
+    //         ->join('user', 'user.id', '=', 'order.user_id')
+    //         ->orderBy('order.created_at', 'desc')
+    //         ->select('order.*', 'user.name as user_name')
+    //         ->get();
+
+    //     $totalAmount = $orders->sum('total');
+
+    //     return response()->json([
+    //         'status' => true,
+    //         'orders' => $orders,
+    //         'total_amount' => $totalAmount,
+    //         'message' => 'Data loaded successfully'
+    //     ], 200);
+    // }
+
+    // thống kê lọc theo option tùy chọn
+    public function filterByValue(Request $request)
+    {
+        $validatedData = $request->validate([
+            'value' => 'required|string|in:7ngay,namnay,thangnay',
+        ]);
+
+        $value = $validatedData['value'];
+
+        switch ($value) {
+            case '7ngay':
+                $endDate = Carbon::now();
+                $startDate = $endDate->copy()->subDays(7);
+                break;
+            case 'namnay':
+                $endDate = Carbon::now();
+                $startDate = Carbon::now()->startOfYear();
+                break;
+            case 'thangnay':
+                $endDate = Carbon::now();
+                $startDate = Carbon::now()->startOfMonth();
+                break;
+            default:
+                return response()->json([
+                    'status' => false,
+                    'message' => 'value ko hợp lệ'
+                ], 400);
+        }
+
+        $orders = Order::whereBetween('order.created_at', [$startDate, $endDate])
+            ->join('user', 'user.id', '=', 'order.user_id')
+            ->orderBy('order.created_at', 'desc')
+            ->select('order.*', 'user.name as user_name')
+            ->get();
+
+        $totalAmount = $orders->sum('total');
+        $count = $orders->count('id');
+
+        return response()->json([
+            'status' => true,
+            'orders' => $orders,
+            'total_amount' => $totalAmount,
+            'count' => $count,
+            'message' => 'Data successfully'
+        ], 200);
     }
 }

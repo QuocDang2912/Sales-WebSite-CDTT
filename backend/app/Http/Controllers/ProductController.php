@@ -371,83 +371,65 @@ class ProductController extends Controller
         ];
         return response()->json($result, 200);
     }
+
     public function storeimport(Request $request)
     {
-        $productstore = new ProductStore();
-        $productstore->product_id = $request->id;
-        $productstore->qty = $request->qty;
-        $productstore->price = $request->price;
-        $productstore->updated_at = date('Y-m-d H:i:s');
-        $productstore->updated_by = Auth::id() ?? 1;
-        if ($productstore->save()) {
-            $result = [
-                'status' => true,
-                'productstore' => $productstore,
-                'message' => 'Tải dữ liệu thành công',
-            ];
-            return response()->json($result, 200);
+        // Validate the incoming request data
+        $validatedData = $request->validate([
+            'id' => 'required|integer',
+            'qty' => 'required|integer|min:1', // Assuming qty should be at least 1
+            'price' => 'required|numeric|min:0', // Assuming price cannot be negative
+        ]);
+
+        // Find the product in productStore by id
+        $productstore = ProductStore::where('product_id', $validatedData['id'])->first();
+
+        // If the product already exists, update its price and quantity
+        if ($productstore) {
+            $productstore->price = $validatedData['price'];
+            $productstore->qty += $validatedData['qty'];
+            $productstore->save();
+        } else {
+            // Otherwise, create a new product entry in productStore
+            $productstore = new ProductStore();
+            $productstore->product_id = $validatedData['id'];
+            $productstore->qty = $validatedData['qty'];
+            $productstore->price = $validatedData['price'];
+            $productstore->updated_at = now();
+            $productstore->updated_by = Auth::id() ?? 1;
+            $productstore->save();
         }
+
+        // Return a success response
         $result = [
-            'status' => false,
-            'productstore' => null,
-            'message' => 'chưa nhập dc',
+            'status' => true,
+            'message' => 'Tải dữ liệu thành công',
         ];
         return response()->json($result, 200);
     }
 
 
-    // code chưa có page
-    // public function product_category($slug)
-    // {
+    // cập nhập productstore 
+    public function updateProductStore(Request $request)
+    {
+        // Validate the request data
+        $request->validate([
+            'product_id' => 'required|exists:productstore,product_id',
+            'quantity' => 'required|numeric|min:0',
+        ]);
 
-    //     $args = [
-    //         ['status', '=', 1],
-    //         ['parent_id', '=', 0]
-    //     ];
-    //     $args = [
-    //         ['status', '=', 1],
-    //         ['slug', '=', $slug]
-    //     ];
-    //     $cat = Category::where($args)->first();
-    //     $listcatid = array();
-    //     array_push($listcatid, $cat->id);
-    //     $args1 = [
-    //         ['status', '=', 1],
-    //         ['parent_id', '=', $cat->id]
-    //     ];
-    //     $list_category1 = Category::where($args1)->get();
-    //     if (count($list_category1) > 0) {
-    //         foreach ($list_category1 as $cat1) {
-    //             array_push($listcatid, $cat1->id);
-    //             $args2 = [
-    //                 ['status', '=', 1],
-    //                 ['parent_id', '=', $cat->id]
-    //             ];
-    //             $list_category2 = Category::where($args2)->get();
-    //             if (count($list_category2) > 0) {
-    //                 foreach ($list_category2 as $cat2) {
-    //                     array_push($listcatid, $cat2->id);
-    //                 }
-    //             }
-    //         }
-    //     }
-    //     $productstore = ProductStore::select('product_id', DB::raw('SUM(qty) as total_qty'))
-    //         ->groupBy('product_id');
-    //     $products = Product::where('product.status', '=', 1)
-    //         ->leftJoin('productsale', 'product.id', '=', 'productsale.product_id')
-    //         ->JoinSub($productstore, "productstore", function ($join) {
-    //             $join->on('product.id', '=', 'productstore.product_id');
-    //         })
-    //         ->orderBy('product.created_at', 'desc')
-    //         ->whereIn('product.category_id', $listcatid)
-    //         ->get();
-    //     $result = [
-    //         'status' => true,
-    //         'products' => $products,
-    //         'message' => 'Tải dữ liệu thành công',
-    //     ];
-    //     return response()->json($result, 200);
-    // }
+        // Find the product in the product store
+        $productStore = ProductStore::where('product_id', $request->product_id)->firstOrFail();
+
+        // Update the quantity
+        $productStore->qty = DB::raw("qty - {$request->quantity}");
+
+        // Save the changes
+        $productStore->save();
+
+        return response()->json(['message' => 'Product store updated successfully'], 200);
+    }
+    // cập nhập productstore 
 
 
     // trang chủ
@@ -506,7 +488,15 @@ class ProductController extends Controller
                 $join->on('productstore.product_id', '=', 'product.id');
             })
             ->orderBy('product.created_at', 'desc')
-            ->select("product.id", "product.name", "product.image", "product.price", "product.slug", "product.detail")
+            ->select(
+                "product.id",
+                "product.name",
+                "product.image",
+                "product.price",
+                "product.slug",
+                "product.detail",
+                'productstore.total_qty'
+            )
             ->limit($limit)
             ->get();
         $result = [
@@ -528,7 +518,16 @@ class ProductController extends Controller
             })
             ->leftJoin("productsale", "productsale.product_id", "=", "product.id")
             ->orderBy('product.created_at', 'desc')
-            ->select("product.id", "product.name", "product.image", "product.price", "product.slug", "product.detail", "productsale.pricesale")
+            ->select(
+                "product.id",
+                "product.name",
+                "product.image",
+                "product.price",
+                "product.slug",
+                "product.detail",
+                "productsale.pricesale",
+                'productstore.total_qty'
+            )
             ->limit($limit)
             ->get();
         $result = [
@@ -563,7 +562,8 @@ class ProductController extends Controller
                 'product.image',
                 'product.price',
                 'product.slug',
-                'productsale.pricesale' // Include sale information
+                'productsale.pricesale', // Include sale information
+                'productstore.sum_qty'
             )
             ->limit($limit)
             ->get();
@@ -579,82 +579,76 @@ class ProductController extends Controller
 
     // trang chủ
 
+
+
     public function product_detail($slug)
     {
+        // Query to aggregate total quantity for each product
         $productstore = ProductStore::select('product_id', DB::raw('SUM(qty) as total_sum'))
             ->groupBy('product_id');
 
+        // Main query to fetch the product by slug and join related tables
         $product = Product::where([['slug', '=', $slug], ['status', '=', 1]])
-            ->joinSub($productstore, 'product_store', function ($join) {
-                $join->on('product.id', '=', 'product_store.product_id');
+            ->leftJoinSub($productstore, 'productstore', function ($join) {
+                $join->on('product.id', '=', 'productstore.product_id');
             })
             ->leftJoin("productsale", function ($join) {
                 $join->on('productsale.product_id', '=', 'product.id')
                     ->where('productsale.date_begin', '<=', Carbon::now())
                     ->where('productsale.date_end', '>=', Carbon::now());
             })
-            ->select('product.*', 'productsale.pricesale', 'productsale.date_begin', 'productsale.date_end')
+            ->select('product.*', 'productsale.pricesale', 'productsale.date_begin', 'productsale.date_end', 'productstore.total_sum')
             ->first();
 
         if ($product == null) {
-            $result = [
+            return response()->json([
                 'status' => false,
                 'product' => null,
                 'message' => 'Không tìm thấy thông tin',
-            ];
-            return response()->json($result, 200);
+            ], 200);
         }
 
         // Check if the product has a discount
         if ($product->pricesale && Carbon::now()->between($product->date_begin, $product->date_end)) {
-            // Apply discount logic here, if needed
             $discountedPrice = $product->price - $product->pricesale;
             $product->discounted_price = $discountedPrice;
         }
 
-        // Rest of your code...
-
-        //product other
-        $listcatid = array();
-        array_push($listcatid, $product->category_id);
+        // Retrieve related products in the same category hierarchy
+        $listcatid = [$product->category_id];
         $args1 = [
             ['status', '=', 1],
             ['parent_id', '=', $product->category_id]
         ];
         $list_category1 = Category::where($args1)->get();
-        if (count($list_category1) > 0) {
-            foreach ($list_category1 as $cat1) {
-                array_push($listcatid, $cat1->id);
-                $args2 = [
-                    ['status', '=', 1],
-                    ['parent_id', '=', $cat1->id]
-                ];
-                $list_category2 = Category::where($args2)->get();
-                if (count($list_category2) > 0) {
-                    foreach ($list_category2 as $cat2) {
-                        array_push($listcatid, $cat2->id);
-                    }
-                }
+        foreach ($list_category1 as $cat1) {
+            $listcatid[] = $cat1->id;
+            $args2 = [
+                ['status', '=', 1],
+                ['parent_id', '=', $cat1->id]
+            ];
+            $list_category2 = Category::where($args2)->get();
+            foreach ($list_category2 as $cat2) {
+                $listcatid[] = $cat2->id;
             }
         }
+
         $product_other = Product::where([['product.status', '=', 1], ['product.id', '!=', $product->id]])
             ->leftJoin('productsale', 'product.id', '=', 'productsale.product_id')
-            ->JoinSub($productstore, 'productstore', function ($join) {
+            ->leftJoinSub($productstore, 'productstore', function ($join) {
                 $join->on('product.id', '=', 'productstore.product_id');
             })
-            ->select("product.*", "productsale.pricesale", "productsale.date_begin", "productsale.date_end")
+            ->select('product.*', 'productsale.pricesale', 'productsale.date_begin', 'productsale.date_end', 'productstore.total_sum')
             ->whereIn('product.category_id', $listcatid)
             ->orderBy('product.created_at', 'desc')
             ->get();
 
-
-        $result = [
+        return response()->json([
             'status' => true,
             'product' => $product,
             'product_other' => $product_other,
             'message' => 'Lấy thông tin sản phẩm thành công',
-        ];
-        return response()->json($result, 200);
+        ], 200);
     }
 
 
@@ -822,35 +816,33 @@ class ProductController extends Controller
 
 
 
-    public function product_all_filter(Request $request) // product_all có sort vs sắp sếp
+
+
+    public function product_all_filter(Request $request)
     {
         $perPage = 4; // Set the number of products per page
-
         $minPrice = $request->input('min_price');
         $maxPrice = $request->input('max_price');
+        $sortOrder = $request->input('sort_order', 'asc'); // Default sort order is 'asc'
 
-
-        // sắp xếp theo giá
-        $sortOrder = $request->input('sort_order'); // Thêm tham số sắp xếp từ người dùng, mặc định là 'asc': tăng dần
-
-
-        // Truy vấn để lấy tổng số lượng của từng sản phẩm trong ProductStore
+        // Query to get the total quantity of each product in ProductStore
         $productstore = ProductStore::select('product_id', DB::raw('SUM(qty) as total_qty'))
             ->groupBy('product_id');
 
-        // Truy vấn để nhận sản phẩm với thông tin bổ sung
-        $productsQuery = Product::where('product.status', '=', 1)
+        // Main product query with explicit field selection
+        $productsQuery = Product::select('product.*', 'productsale.pricesale', 'productstore.total_qty') // Explicit field selection
+            ->where('product.status', '=', 1)
             ->leftJoin('productsale', 'product.id', '=', 'productsale.product_id')
-            ->leftJoinSub($productstore, "productstore", function ($join) {
+            ->joinSub($productstore, 'productstore', function ($join) {
                 $join->on('product.id', '=', 'productstore.product_id');
             });
 
-        // Áp dụng điều kiện lọc theo khoảng giá
+        // Apply price range filter if provided
         if (!is_null($minPrice) && !is_null($maxPrice)) {
             $productsQuery->whereBetween('product.price', [$minPrice, $maxPrice]);
         }
 
-        // Áp dụng điều kiện sắp xếp
+        // Apply sorting order
         $productsQuery->orderBy('product.price', $sortOrder);
 
         // Paginate the results
@@ -862,9 +854,11 @@ class ProductController extends Controller
             'products' => $products,
             'message' => 'Tải dữ liệu thành công',
         ];
+
         // Return the response as a JSON with HTTP status code 200
         return response()->json($result, 200);
     }
+
 
 
     public function product_category_filter($slug, Request $request) // product_category có filter theo giá vs sort
@@ -878,45 +872,21 @@ class ProductController extends Controller
         // sắp xếp theo giá
         $sortOrder = $request->input('sort_order'); // Thêm tham số sắp xếp từ người dùng, mặc định là 'asc': tăng dần
 
-        $args = [
-            ['status', '=', 1],
-            ['parent_id', '=', 0]
-        ];
+
         $args = [
             ['status', '=', 1],
             ['slug', '=', $slug]
         ];
         $cat = Category::where($args)->first();
-        $listcatid = array();
-        array_push($listcatid, $cat->id);
-        $args1 = [
-            ['status', '=', 1],
-            ['parent_id', '=', $cat->id]
-        ];
-        $list_category1 = Category::where($args1)->get();
-        if (count($list_category1) > 0) {
-            foreach ($list_category1 as $cat1) {
-                array_push($listcatid, $cat1->id);
-                $args2 = [
-                    ['status', '=', 1],
-                    ['parent_id', '=', $cat->id]
-                ];
-                $list_category2 = Category::where($args2)->get();
-                if (count($list_category2) > 0) {
-                    foreach ($list_category2 as $cat2) {
-                        array_push($listcatid, $cat2->id);
-                    }
-                }
-            }
-        }
+
         $productstore = ProductStore::select('product_id', DB::raw('SUM(qty) as total_qty'))
             ->groupBy('product_id');
-        $products = Product::where('product.status', '=', 1)
+        $products = Product::select('product.*', 'productsale.pricesale', 'productstore.total_qty')
+            ->where([['product.category_id', '=', $cat->id], ['product.status', '=', 1]])
             ->leftJoin('productsale', 'product.id', '=', 'productsale.product_id')
             ->JoinSub($productstore, "productstore", function ($join) {
                 $join->on('product.id', '=', 'productstore.product_id');
-            })
-            ->whereIn('product.category_id', $listcatid);
+            });
 
         // Áp dụng điều kiện lọc theo khoảng giá
         if (!is_null($minPrice) && !is_null($maxPrice)) {
@@ -938,6 +908,7 @@ class ProductController extends Controller
         return response()->json($result, 200);
     }
 
+
     public function product_brand_filter($slug, Request $request) // chưa có filter theo giá vs sort
     {
         $perPage = 4; // Đặt số lượng sản phẩm trên mỗi trang , nếu có phân trang thì truyền
@@ -958,7 +929,8 @@ class ProductController extends Controller
 
         $productstore = ProductStore::select('product_id', DB::raw('SUM(qty) as total_qty'))
             ->groupBy('product_id');
-        $products = Product::where([['product.brand_id', '=', $brand->id], ['product.status', '=', 1]])
+        $products = Product::select('product.*', 'productsale.pricesale', 'productstore.total_qty')
+            ->where([['product.brand_id', '=', $brand->id], ['product.status', '=', 1]])
             ->leftJoin('productsale', 'product.id', '=', 'productsale.product_id')
             ->JoinSub($productstore, "productstore", function ($join) {
                 $join->on('product.id', '=', 'productstore.product_id');

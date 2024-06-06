@@ -26,10 +26,6 @@ export default function ProductAll() {
   // Định nghĩa state cho chế độ hiển thị
   const [displayMode, setDisplayMode] = useState("grid");
 
-  // Hàm để chuyển đổi chế độ hiển thị
-  const toggleDisplayMode = () => {
-    setDisplayMode(displayMode === "grid" ? "list" : "grid");
-  };
   // filter chung
   const [filter, setFilter] = useState({});
 
@@ -39,27 +35,36 @@ export default function ProductAll() {
 
   useEffect(() => {
     (async () => {
-      // const res = await ProductServie.productAll(currentPage); // chưa có filter price , cũng như mấy product cate,brand
-      const res = await ProductServie.productAll_filter_price(
-        currentPage,
-        minPrice,
-        maxPrice,
-        sort_order
-      );
-      console.log("🚀 ~ res:", res);
-      setProductALL(res.products.data);
-      setCurrentPage(res.products.current_page);
-      setLastPage(res.products.last_page);
+      setLoading(true);
 
-      // call brand and category left giao diện
-      const fetCate = await CategoryServie.index();
-      const fetchbrand1 = await BrandService.index();
-      setCategory(fetCate.category);
-      setbrand(fetchbrand1.brands);
+      try {
+        // const res = await ProductServie.productAll(currentPage); // chưa có filter price , cũng như mấy product cate,brand
+        const res = await ProductServie.productAll_filter_price(
+          currentPage,
+          minPrice,
+          maxPrice,
+          sort_order
+        );
+        console.log("🚀 Tất cả sản phẩm:", res);
+        setProductALL(res.products.data);
+        setCurrentPage(res.products.current_page);
+        setLastPage(res.products.last_page);
 
-      setLoading(false);
+        // call brand and category left giao diện
+        const fetCate = await CategoryServie.index();
+        const fetchbrand1 = await BrandService.index();
+        setCategory(fetCate.category);
+        setbrand(fetchbrand1.brands);
+      } catch (error) {
+        console.log("🚀 ~ error:", error)
+
+      }
+      finally {
+
+        setLoading(false);
+      }
     })();
-  }, [currentPage, sort_order]);
+  }, [currentPage, minPrice, maxPrice, sort_order]);
 
   const handleChange = (event) => {
     const name = event.target.name;
@@ -67,28 +72,18 @@ export default function ProductAll() {
     setFilter((values) => ({ ...values, [name]: value }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
+    console.log("cc")
     event.preventDefault();
-    console.log("filter", filter);
-    (async () => {
-      // const res = await ProductServie.productAll(currentPage); // chưa có filter price , cũng như mấy product cate,brand
-      const res = await ProductServie.productAll_filter_price(
-        currentPage,
-        filter.minPrice,
-        filter.maxPrice,
-        sort_order
-      );
-      console.log("🚀 ~ res:", res);
-      setProductALL(res.products.data);
-      setCurrentPage(res.products.current_page);
-      setLastPage(res.products.last_page);
-
-      setFilter({ minPrice: "", maxPrice: "" });
-
-      setLoading(false);
-    })();
+    setminPrice(filter.minPrice || 0);
+    setmaxPrice(filter.maxPrice || 0);
+    setCurrentPage(1); // Reset to first page after filter
   };
-
+  // // Hàm để chuyển đổi chế độ hiển thị
+  const toggleDisplayMode = () => {
+    setDisplayMode(displayMode === "grid" ? "list" : "grid");
+  };
+  console.log("product ALL _ SIUUUUUUUUUUUUUUUUUU", ProductAll)
   return (
     <div>
       <section className="bg-light">
@@ -253,16 +248,14 @@ export default function ProductAll() {
                 Tất cả sản phẩm
               </h2>
               <div className="product-category mt-3">
-              <div
-                  className={`row product-list ${
-                    displayMode === "grid" ? "grid-view" : "list-view"
-                  }`}
+                <div
+                  className={`row product-list ${displayMode === "grid" ? "grid-view" : "list-view"
+                    }`}
                 >
                   {ProductAll.map((product, index) => (
                     <div
-                      className={`col-${
-                        displayMode === "grid" ? "6 col-md-3" : "12 text-center"
-                      }`}
+                      className={`col-${displayMode === "grid" ? "6 col-md-3" : "12 text-center"
+                        }`}
                       key={index}
                     >
                       <ProductItem product={product} displayMode={displayMode} />
@@ -275,9 +268,8 @@ export default function ProductAll() {
                 <nav aria-label="Page navigation">
                   <ul className="pagination">
                     <li
-                      className={`page-item ${
-                        currentPage === 1 ? "disabled" : ""
-                      }`}
+                      className={`page-item ${currentPage === 1 ? "disabled" : ""
+                        }`}
                     >
                       <a
                         className="page-link"
@@ -288,9 +280,8 @@ export default function ProductAll() {
                     </li>
                     {Array.from({ length: lastPage }, (_, i) => (
                       <li
-                        className={`page-item ${
-                          i + 1 === currentPage ? "active" : ""
-                        }`}
+                        className={`page-item ${i + 1 === currentPage ? "active" : ""
+                          }`}
                         key={i}
                       >
                         <a
@@ -302,9 +293,8 @@ export default function ProductAll() {
                       </li>
                     ))}
                     <li
-                      className={`page-item ${
-                        currentPage === lastPage ? "disabled" : ""
-                      }`}
+                      className={`page-item ${currentPage === lastPage ? "disabled" : ""
+                        }`}
                     >
                       <a
                         className="page-link"

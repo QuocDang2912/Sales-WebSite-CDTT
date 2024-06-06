@@ -2,11 +2,17 @@ import React, { useEffect } from 'react'
 import { useState } from 'react'
 import { Link, useParams, useNavigate } from 'react-router-dom'
 import ProductServie from '../../../services/ProductService';
+import CategoryServie from '../../../services/CategoryService';
+
+import BrandService from '../../../services/BrandService';
 export default function ProductEdit() {
 
     const { id } = useParams()
     const navigate = useNavigate();
 
+    // call category 
+    const [categories, setCategories] = useState([])
+    const [brands, setBrands] = useState([])
 
     const [description, setDescription] = useState("");
     const [detail, setDetail] = useState("");
@@ -30,8 +36,27 @@ export default function ProductEdit() {
             setcategory_id(product.category_id);
             setStatus(product.status);
         }
-        fetch()
 
+        //
+        // fetChCategory 
+        (
+            async () => {
+                const fetChCategory = await CategoryServie.index()
+                console.log("🚀 ~ file: ProductCreate.jsx:46 ~ fetChCategory:", fetChCategory)
+                setCategories(fetChCategory.category)
+            }
+        )();
+
+        // fetBrand
+        (
+            async () => {
+                const fetBrand = await BrandService.index()
+                console.log("🚀 ~ file: ProductCreate.jsx:64 ~ fetBrand:", fetBrand)
+
+                setBrands(fetBrand.brands)
+            }
+        )();
+        fetch()
     }, [id])
 
 
@@ -115,8 +140,14 @@ export default function ProductEdit() {
                                     </div>
                                     <div class="box-body p-2 border-bottom">
                                         <select name="category_id" className="form-select" onChange={(e) => setcategory_id(e.target.value)}>
-                                            <option value="">Chọn danh mục</option>
-                                            <option value="1">Tên danh mục</option>
+                                            {
+                                                categories && categories.length > 0 &&
+                                                categories.map((item, index) => {
+                                                    return (
+                                                        <option key={index} value={item.id}>{item.name}</option>
+                                                    )
+                                                })
+                                            }
                                         </select>
                                     </div>
                                 </div>
@@ -126,8 +157,14 @@ export default function ProductEdit() {
                                     </div>
                                     <div class="box-body p-2 border-bottom">
                                         <select name="brand_id" className="form-select" onChange={(e) => setbrand_id(e.target.value)}>
-                                            <option value="">Chọn thương hiêu</option>
-                                            <option value="1">Tên danh mục</option>
+                                            {
+                                                brands && brands.length > 0 &&
+                                                brands.map((item, index) => {
+                                                    return (
+                                                        <option key={index} value={item.id}>{item.name}</option>
+                                                    )
+                                                })
+                                            }
                                         </select>
                                     </div>
                                 </div>

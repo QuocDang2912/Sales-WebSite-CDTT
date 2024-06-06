@@ -22,12 +22,14 @@ const OrderExport = () => {
     const [product, setProduct] = useState([]);
     const [reload, setReLoad] = useState(0);
     const [delivery_address, setDelivery_address] = useState('')
-    console.log("🚀 ~ OrderExport ~ delivery_address:", delivery_address)
+
+    console.log("🚀 ~ OrderExport ~ product:", product)
+
+
     useEffect(() => {
         (async () => {
             // const result = await UserService.index();
             const result = await CustomerService.index();
-            console.log("🚀 ~ result:", result.customner)
             setUser(result.customner);
             setReLoad(false);
         })();
@@ -36,7 +38,6 @@ const OrderExport = () => {
     useEffect(() => {
         (async () => {
             const result = await ProductServie.productAll1();
-            console.log("🚀 ~ result:", result.product)
             setProduct(result.product);
             setReLoad(false);
         })();
@@ -114,8 +115,8 @@ const OrderExport = () => {
                 // delivery_address: selectedCustomer.address,
                 // vì user của mình chưa có địa chỉ nên gán cứng
                 delivery_address: delivery_address,
-                note: "Đã thanh toán",
-                // total: totalAmount,
+                note: "Chưa thanh toán",
+                total: totalAmount,  // thêm 1 trường total ở api mới
                 status: 1
 
             };
@@ -125,18 +126,22 @@ const OrderExport = () => {
                 product_id: item.id,
                 price: item.price,
                 qty: item.quantity,
-                discount: 15,
-                amount: item.total,
+                discount: item.pricesale ? item.pricesale : 0,
             }));
             const createdOrderDetail = await OrderDetailService.store1(orderdetailData)
             console.log("ppppp", createdOrderDetail)
             toast.success("Đã lưu đơn đặt hàng");
-            console.log(
-                "Đã lưu đơn đặt hàng:",
-                "cus", selectedCustomer,
-                "saaa", createdOrder.order.id,
-                "s", totalAmount
-            );
+
+
+            // Cập nhật số lượng sản phẩm trong kho 1 chỗ này duy nhất
+            selectedProducts.forEach(async (product) => {
+                const resultupdateProductStore = await ProductServie.updateProductStore(product.id, product.quantity);
+                console.log("🚀 ~ awaitselectedProducts.forEach ~ resultupdateProductStore:", resultupdateProductStore);
+                setReLoad(true)
+            });
+            // Cập nhật số lượng sản phẩm trong kho
+
+
             // Reset dữ liệu sau khi lưu đơn đặt hàng
             setSelectedCustomer(null);
             setSelectedProducts([]);
@@ -144,9 +149,12 @@ const OrderExport = () => {
         } catch (error) {
             // Xử lý lỗi nếu có
             console.error('Error creating 222order:', error);
+            toast.error("Lưu đơn đặt hàng Thất bại");
+
         }
 
     };
+
 
     return (
         <div className="content">
@@ -260,6 +268,8 @@ const OrderExport = () => {
                                             <input
                                                 type="number"
                                                 value={product.quantity}
+                                                max={product.total_qty}  // input number cho max bằng giá trị qty của sản phẩm
+                                                min={1}
                                                 onChange={(e) =>
                                                     handleProductQuantityChange(
                                                         product.id,
@@ -393,13 +403,15 @@ const OrderExport = () => {
                                     <td>{product.date_end}</td>
                                     <td>{product.total_qty}</td>
                                     <td>
-                                        <button
-                                            type="button"
-                                            className="btn btn-primary"
-                                            onClick={() => handleSelectProduct(product)}
-                                        >
-                                            Chọn
-                                        </button>
+                                        {product.total_qty > 0 && (
+                                            <button
+                                                type="button"
+                                                className="btn btn-primary"
+                                                onClick={() => handleSelectProduct(product)}
+                                            >
+                                                Chọn
+                                            </button>
+                                        )}
                                     </td>
                                 </tr>
                             ))}

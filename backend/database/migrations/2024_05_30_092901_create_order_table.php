@@ -1,3 +1,4 @@
+
 <?php
 
 use Illuminate\Database\Migrations\Migration;
@@ -24,6 +25,7 @@ return new class extends Migration
             $table->unsignedInteger('created_by')->default(1);
             $table->unsignedInteger('updated_by')->nullable();
             $table->unsignedTinyInteger('status')->default(2);
+            $table->double('total')->nullable();
         });
     }
 
