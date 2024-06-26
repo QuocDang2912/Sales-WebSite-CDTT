@@ -63,8 +63,8 @@ class DiscountcodeController extends Controller
     }
     public function show($id)
     {
-        $brand = Discountcode::find($id);
-        if ($brand == null) {
+        $Discountcode = Discountcode::find($id);
+        if ($Discountcode == null) {
             $resul = [
                 'status' => false,
                 'Discountcode' => null,
@@ -74,12 +74,82 @@ class DiscountcodeController extends Controller
         }
         $resul = [
             'status' => true,
-            'Discountcode' => $brand,
+            'Discountcode' => $Discountcode,
             'message' => 'Tai du lieu thanh cong'
         ];
         return response()->json($resul, 200);
     }
+    function update(Request $request, $id)
+    {
+        $Discountcode = Discountcode::find($id);
+        if ($Discountcode == null) {
+            $result = [
+                'status' => false,
+                'Discountcode' => null, 'message' => 'Khong tim thay du lieu'
+            ];
+            return response()->json($result, 404);
+        }
 
+        $Discountcode->title = $request->title;
+        // $Discountcode->code = Str::random(12);
+        $Discountcode->code = $request->code;
+        $Discountcode->percentage = $request->percentage;
+        $Discountcode->description = $request->description;
+        $Discountcode->expires_bd = $request->expires_bd;
+        $Discountcode->expires_kt = $request->expires_kt;
+        $Discountcode->type = $request->type;
+        $Discountcode->created_at = date('Y-m-d H:i:s');
+        $Discountcode->updated_at = date('Y-m-d H:i:s');
+        $Discountcode->created_by = 1; //tam
+        $Discountcode->updated_by = 1; //tam
+        $Discountcode->status = $request->status;
+
+        if ($Discountcode->save()) {
+            $result = [
+                'status' => true,
+                'Discountcode' => $Discountcode,
+                'message' => 'Cap nhat du lieu thanh cong'
+            ];
+            return response()->json($result, 200);
+        }
+
+        // If save fails
+        $result = [
+            'status' => false,
+            'Discountcode' => null,
+            'message' => 'Khong the them du lieu'
+        ];
+        return response()->json($result, 200);
+    }
+    function destroy($id)
+    {
+        $Discountcode = Discountcode::find($id);
+        if ($Discountcode == null) {
+            $result = [
+                'status' => false,
+                'Discountcode' => null,
+                'message' => 'Khong tim thay du lieu'
+            ];
+            return response()->json($result, 404);
+        }
+
+        if ($Discountcode->delete()) {
+            $result = [
+                'status' => true,
+                'banner' => $Discountcode,
+                'message' => 'Xoa du lieu thanh cong'
+            ];
+            return response()->json($result, 200);
+        }
+
+        // If delete fails
+        $result = [
+            'status' => false,
+            'banner' => null,
+            'message' => 'Khong the xoa du lieu'
+        ];
+        return response()->json($result, 200);
+    }
     public function checkDiscountCode(Request $request)
     {
         // Lấy mã code từ request

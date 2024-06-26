@@ -24,11 +24,17 @@ export default function ContactIndex() {
 
     useEffect(() => {
         (async () => {
-            setLoad(false);
-            const result = await ContactService.index();
-            console.log("🚀 ~ result:", result)
-            setcontacts(result.contact);
-            setLoad(false);
+            try {
+                setLoad(false);
+                const result = await ContactService.index();
+                console.log("🚀 ~ result:", result)
+                setcontacts(result.contact);
+                setLoad(false);
+            } catch (error) {
+                console.log("🚀 ~ error:", error)
+
+            }
+
         })();
     }, [reload]);
 
@@ -38,6 +44,7 @@ export default function ContactIndex() {
                 status: status1
             };
             const result = await ContactService.delete(updatedContact, id);
+            console.log("🚀 ~ handleDelete ~ result:", result)
             //   toast("Da xoa vao thung rac");
             setReLoad(reload + 1); // Reload brands
         } catch (error) {
@@ -57,7 +64,7 @@ export default function ContactIndex() {
             <section className="hdl-content">
                 <div className="container-fluid">
                     <div className="row">
-                        <div className="col-md-10">
+                        <div className="col-md-12">
                             {/*CONTENT  */}
                             <div className="content">
                                 <section className="content-header my-2">
@@ -133,6 +140,7 @@ export default function ContactIndex() {
                                                 <th>Email</th>
                                                 <th>Tiêu đề</th>
                                                 <th>Nội dung</th>
+                                                <th>Trạng thái</th>
                                                 <th className="text-center" style={{ width: 30 }}>
                                                     ID
                                                 </th>
@@ -154,10 +162,11 @@ export default function ContactIndex() {
                                                                     <button
                                                                         onClick={() => handleStatus(contact.id)}
                                                                         className={
-                                                                            contact.status === 1 ? "border-0 px-1 text-success" : "border-0 px-1 text-danger"
+                                                                            contact.status === 2 ? "border-0 px-1 text-success" : "border-0 px-1 text-danger"
                                                                         }
+                                                                        style={{border: "none",backgroundColor: "transparent"}}
                                                                     >
-                                                                        {contact.status === 1 ? <FaToggleOn /> : <FaToggleOn />}
+                                                                        {contact.status === 2 ? <FaToggleOn /> : <FaToggleOn />}
                                                                     </button>
                                                                     <Link to={"/admin/contact/reply/" + contact.id} className="px-1 text-primary">
                                                                         <FaEdit />
@@ -165,7 +174,7 @@ export default function ContactIndex() {
                                                                     <Link to={"/admin/contact/show/" + contact.id} className="px-1 text-info">
                                                                         <FaEye />
                                                                     </Link>
-                                                                    <button onClick={() => handleDelete(contact.id)} className="px-1 text-danger">
+                                                                    <button onClick={() => handleDelete(contact.id)} className="px-1 text-danger" style={{border: "none",backgroundColor: "transparent"}}>
                                                                         <FaTrash />
                                                                     </button>
                                                                 </div>
@@ -174,6 +183,7 @@ export default function ContactIndex() {
                                                             <td>{contact.email}</td>
                                                             <td>{contact.title}</td>
                                                             <td>{contact.content}</td>
+                                                            <td>{contact.status === 1 ? "Chưa trả lời" : "Đã trả lời"}</td>
                                                             <td className="text-center">{contact.id}</td>
                                                         </tr>
                                                     );

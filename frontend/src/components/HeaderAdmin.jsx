@@ -25,7 +25,7 @@ export default function HeaderAdmin() {
         <ul className="menutop">
           <li>
             <a href="#st">
-              <i className="fa-brands fa-dashcube"></i> Shop Thời trang
+              <i className="fa-brands fa-dashcube"></i> Shop Thú cưng PetMart
             </a>
           </li>
           <li className="text-phai">

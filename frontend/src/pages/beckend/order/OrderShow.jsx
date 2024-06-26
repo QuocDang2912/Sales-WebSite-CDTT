@@ -14,6 +14,11 @@ export default function OrderShow() {
 
     const [user, setUser] = useState([]);
 
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`;
+    };
+
     useEffect(() => {
         (async function () {
             const result = await OrderService.show(id);
@@ -54,11 +59,11 @@ export default function OrderShow() {
             <section className="content-header my-2">
                 <h1 className="d-inline">Chi tiết đơn hàng</h1>
                 <div className="mt-1 text-end">
-                    <Link to="/admin/order/index" className="btn btn-sm btn-success mx-1">
-                        <FaArrowLeft />Về danh sách
+                    <Link to="/admin/order/index" className="btn btn-sm btn-primary mx-1">
+                        Về danh sách
                     </Link>
-                    <Link to={`/admin/order/edit/${id}`} className="px-1 text-primary">
-                        <FaEye />
+                    <Link to={`/admin/order/edit/${id}`} className="btn btn-sm btn-primary mx-1">
+                        Cập nhật trạng thái đơn hàng
                     </Link>
                 </div>
             </section>
@@ -85,10 +90,13 @@ export default function OrderShow() {
                 <h3>Chi tiết giỏ hàng</h3>
                 <div className="row my-2">
                     <div className="col-3">
-                        Tổng tiền: <strong>{order.total}</strong>
+                        Tổng tiền: <strong>
+                            {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(total)}
+
+                        </strong>
                     </div>
                     <div className="col-3">
-                        Ngày đặt: <strong>{order.created_at}</strong>
+                        Ngày đặt: <strong>{formatDate(order.created_at)}</strong>
                     </div>
                     <div className="col-3">
                         Trạng thái thanh toán: <strong>{order.note}</strong>
@@ -122,9 +130,15 @@ export default function OrderShow() {
                                                 }
                                                 alt=""
                                             />
-                                            <td>{orderdetail.price}</td>
-                                            <td>{orderdetail.discount
-                                            }</td>
+                                            <td>
+                                                {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(orderdetail.price)}
+
+                                            </td>
+                                            <td>
+                                                {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(orderdetail.discount)}
+
+
+                                            </td>
                                             <td>{orderdetail.qty}</td>
                                         </tr>);
                                 })}
@@ -134,6 +148,5 @@ export default function OrderShow() {
                 </div>
             </section>
         </div>
-
     )
 }

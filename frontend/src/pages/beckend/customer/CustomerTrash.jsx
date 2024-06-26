@@ -104,7 +104,6 @@ export default function CustomerTrash() {
                                                         </th>
 
                                                         <th>Tên thương hiệu</th>
-                                                        <th>Tên slug</th>
                                                         <th className="text-center" style={{ width: 30 }}>
                                                             ID
                                                         </th>
@@ -132,7 +131,6 @@ export default function CustomerTrash() {
                                                                             </Link>
                                                                         </div>
                                                                     </td>
-                                                                    <td>{brand.slug}</td>
                                                                     <td className="text-center">{brand.id}</td>
                                                                 </tr>
                                                             );

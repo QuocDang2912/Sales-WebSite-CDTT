@@ -31,7 +31,7 @@ export default function UserShow() {
                 <div className="container-fluid">
                     <div className="row">
 
-                        <div className="col-md-10">
+                        <div className="col-md-12">
                             {/*CONTENT  */}
                             <div className="content">
                                 <section className="content-header my-2">
@@ -39,7 +39,7 @@ export default function UserShow() {
                                     <div className="row mt-2 align-items-center">
                                         <div className="col-md-12 text-end">
                                             {/* <a href="brand_index.html" className="btn btn-primary btn-sm"> */}
-                                            <Link className="btn btn-primary btn-sm" to={'/admin/user/index'} style={{ color: "white" }}>về trang chính</Link>
+                                            <Link className="btn btn-primary btn-sm" to={'/admin/user/index'} style={{ color: "white" }}>Về trang chính</Link>
                                             {/* </a> */}
                                             {/* <a href="brand_edit.html" className="btn btn-success btn-sm">
                                                     <i className="fa fa-edit" /> Sửa

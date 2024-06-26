@@ -3,12 +3,13 @@ import { useSelector } from 'react-redux'
 import UserServie from '../../../services/UserService';
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from "react-router-dom";
 
 export default function ChangePass() {
 
     const [inputs, setInputs] = useState({});
 
-
+    const navi = useNavigate()
     let user = useSelector((state) => state.user.current)
     console.log("🚀 ~ profile ~ user:", user)
 
@@ -26,18 +27,19 @@ export default function ChangePass() {
             try {
                 const res = await UserServie.changePass(inputs, user.id)
                 console.log("🚀 ~ fetch ~ res:", res)
-                toast.success("đổi mk thành công");
+                toast.success("đổi mật khẩu thành công");
                 inputs({})
-
+                navi("/")
             } catch (error) {
-                toast.error("đổi mk thất bại");
+                console.log("🚀 ~ fetch ~ error:", error)
+                toast.error("đổi mật khẩu thất bại");
             }
         }
         fetch()
     }
 
 
-
+    document.title = "Đổi mật khẩu"; 
 
     return (
         <div>
@@ -56,7 +58,7 @@ export default function ChangePass() {
             <section className="hdl-maincontent py-2">
                 <div className="container">
                     <div className="row">
-                        <div className="call-login--register border-bottom">
+                        {/* <div className="call-login--register border-bottom">
                             <ul className="nav nav-fills py-0 my-0">
                                 <li className="nav-item">
                                     <a className="nav-link" href="login.html">
@@ -74,12 +76,12 @@ export default function ChangePass() {
                                     <a className="nav-link" href="profile.html">Hồ Diên Lợi</a>
                                 </li>
                             </ul>
-                        </div>
+                        </div> */}
                         <div className="col-md-9 order-1 order-md-2">
                             <form onSubmit={handleSubmit} >
 
 
-                                <h1 className="fs-2 text-main">Thông tin tài khoản</h1>
+                                <h1 className="fs-2 text-main">Đổi mật khẩu</h1>
                                 <table className="table table-borderless">
 
                                     <tbody>
@@ -108,7 +110,7 @@ export default function ChangePass() {
                                         </tr>
                                         <tr>
                                             <td>
-                                                <button style={{ backgroundColor: "#0070D2" }} className="btn btn-main" type="submit" name="CHANEGPASSWORD">
+                                                <button style={{ backgroundColor: "#0070D2",color:"white" }} className="btn btn-main" type="submit" name="CHANEGPASSWORD">
                                                     Đổi mật khẩu
                                                 </button>
                                             </td>

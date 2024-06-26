@@ -4,6 +4,7 @@ import UserServie from "../../../services/UserService";
 import { ToastContainer, toast } from "react-toastify";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
+import emailjs from "@emailjs/browser";
 
 const API_URL = "http://localhost:8000"; // Địa chỉ URL của API trên localhost
 
@@ -24,36 +25,8 @@ export default function Register() {
       status: 1,
     }));
   };
-  // const handleSubmit = (event) => {
-  //     (
-  //         async () => {
 
-  //             try {
-  //                 const res = await UserServie.store(inputs);
-  //                 toast.success("Đăng Ký Thành công");
 
-  //                 // Clear the form inputs after successful registration
-  //                 setInputs({
-  //                     name: '',
-  //                     phone: '',
-  //                     gender: '',
-  //                     username: '',
-  //                     email: '',
-  //                     password: '',
-  //                 });
-  //                 navi("/")
-
-  //                 console.log("🚀 ~ res:", res);
-  //             } catch (error) {
-  //                 console.error("ngu:", error);
-  //                 // Handle error if registration fails
-  //                 toast.error("Đăng Ký Thất bại");
-  //             }
-  //         }
-  //     )()
-  //     event.preventDefault();
-  //     console.log(inputs);
-  // }
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -83,12 +56,10 @@ export default function Register() {
     }
 
     if (
-      inputs.password.length < 8 ||
-      !/\d/.test(inputs.password) ||
-      !/[a-zA-Z]/.test(inputs.password)
+      inputs.password.length < 8
     ) {
       newErrors.password =
-        "Mật khẩu phải có ít nhất 8 kí tự và chứa cả số và chữ";
+        "Mật khẩu phải có ít nhất 8 kí tự ";
       formIsValid = false;
     }
 
@@ -101,7 +72,29 @@ export default function Register() {
       //const res = await UserServie.store(inputs);
 
       const response = await axios.post(`${API_URL}/api/auth/register`, inputs);
-      const result = response.data;
+      console.log("🚀 ~ handleSubmit ~ response:", response.data)
+      const data = response.data.user
+      emailjs
+        .send(
+          "service_gjtj4yf",
+          "template_awtm5os",
+          {
+            user_email: data.email,
+            user_name: data.name,
+            user_id: data.id
+          },
+          {
+            publicKey: "IMiWlEiyoza8USljv",
+          }
+        )
+        .then(
+          () => {
+            console.log("gửi email thành công!");
+          },
+          (error) => {
+            console.log("gửi email...", error.text);
+          }
+        );
       toast.success("Đăng Ký Thành công");
 
       // Clear the form inputs after successful registration
@@ -122,6 +115,8 @@ export default function Register() {
       toast.error("Đăng Ký Thất bại");
     }
   };
+  
+  document.title = "Đăng ký tài khoản"; 
 
   return (
     <div>
@@ -158,7 +153,7 @@ export default function Register() {
                     onChange={handleChange}
                     id="name"
                     className="form-control"
-                    placeholder="nhập họ tên"
+                    placeholder="Nhập họ tên"
                     required
                   />
                   <span style={{ color: "red" }}>{errors.name}</span>
@@ -182,7 +177,7 @@ export default function Register() {
 
                 <div className="mb-3">
                   <label>
-                  <label htmlFor="phone" className="text-main">Giới tính</label>
+                    <label htmlFor="phone" className="text-main">Giới tính</label>
                   </label>
                   <select
                     name="gender"
@@ -191,7 +186,7 @@ export default function Register() {
                     id="gender"
                     className="form-select"
                   >
-                    <option>Chọn giới tinh</option>
+                    <option>Chọn giới tính</option>
                     <option value={1}>Nam</option>
                     <option value={0}>Nữ</option>
                   </select>

@@ -24,6 +24,7 @@ export default function ContactTrash() {
         (async () => {
             setLoad(false);
             const result = await ContactService.thungrac();
+            console.log("🚀 ~ result:", result)
             setcontacts(result.contact);
             setLoad(false);
         })();
@@ -64,7 +65,7 @@ export default function ContactTrash() {
                             {/*CONTENT  */}
                             <div className="content">
                                 <section className="content-header my-2">
-                                    <h1 className="d-inline">Thương hiệu</h1>
+                                    <h1 className="d-inline">Liên hệ</h1>
                                     <hr style={{ border: "none" }} />
                                 </section>
                                 <section className="content-body my-5">
@@ -108,11 +109,8 @@ export default function ContactTrash() {
                                                         <th className="text-center" style={{ width: 30 }}>
                                                             <input type="checkbox" id="checkboxAll" />
                                                         </th>
-                                                        <th className="text-center" style={{ width: 90 }}>
-                                                            Hình ảnh
-                                                        </th>
-                                                        <th>Tên thương hiệu</th>
-                                                        <th>Tên slug</th>
+                                                        <th>email</th>
+                                                        <th>Họ Tên</th>
                                                         <th className="text-center" style={{ width: 30 }}>
                                                             ID
                                                         </th>
@@ -127,11 +125,7 @@ export default function ContactTrash() {
                                                                         <input type="checkbox" />
                                                                     </td>
                                                                     <td>
-                                                                        <img
-                                                                            className="img-fluid"
-                                                                            src={urlImage + "contact/" + contact.image}
-                                                                            alt={contact.image}
-                                                                        />
+                                                                        {contact.email}
                                                                     </td>
                                                                     <td>
                                                                         <div className="name">
@@ -152,9 +146,7 @@ export default function ContactTrash() {
                                                                                 <RiDeleteBin5Fill />
                                                                             </Link>
                                                                         </div>
-                                                                    </td>
-                                                                    <td>{contact.slug}</td>
-                                                                    <td className="text-center">{contact.id}</td>
+                                                                    </td>                                                                    <td className="text-center">{contact.id}</td>
                                                                 </tr>
                                                             );
                                                         })}

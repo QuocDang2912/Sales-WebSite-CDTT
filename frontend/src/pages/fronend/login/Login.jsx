@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrent } from "../../../state/UserSlice";
 import axios from "axios";
@@ -54,7 +54,8 @@ export default function Login() {
         navigate("/admin");
       }
     } catch (error) {
-      console.error("Error during login:", error);
+      console.log("🚀 ~ handleLogin ~ error:", error)
+      toast.error(error.response.data.error);
       setMessage(
         "Đăng nhập thất bại. Vui lòng kiểm tra lại tên đăng nhập và mật khẩu."
       );
@@ -82,6 +83,8 @@ export default function Login() {
     };
   }, [accessToken]); // Sử dụng accessToken trong dependency array để interceptor được cập nhật khi accessToken thay đổi
 
+  document.title = "Đăng nhập"; 
+
   return (
     <section
       className="hdl-maincontent py-2"
@@ -94,7 +97,7 @@ export default function Login() {
               <p>
                 Để gửi bình luận, liên hệ hay để mua hàng cần phải có tài khoản.
               </p>
-              <p>Tạo tài khoản để trải nghiệm ngay nào!</p>
+              <p>Đăng nhập tài khoản để trải nghiệm ngay nào!</p>
             </div>
             <div className="col-md-8">
               <div className="mb-3">
@@ -128,6 +131,14 @@ export default function Login() {
                 />
               </div>
               <div className="mb-3">
+                <u>
+                  <Link className="nav-link" to={"/userByEmail"} style={{ color: "#006ba1" }}>
+                    Quên mật khẩu
+                  </Link>
+                </u>
+
+              </div>
+              <div className="mb-3">
                 <button
                   type="submit"
                   className="btn btn-main btn-success"
@@ -141,6 +152,7 @@ export default function Login() {
                   Đăng nhập
                 </button>
               </div>
+
 
               <p className={message ? "text-success" : "text-danger"}>
                 {message}

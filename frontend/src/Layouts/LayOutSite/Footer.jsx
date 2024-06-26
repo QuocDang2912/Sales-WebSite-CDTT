@@ -7,8 +7,14 @@ export default function Footer() {
 
   useEffect(() => {
     const fetch = async () => {
-      const res = await PageService.index();
-      setPage(res.pages);
+      try {
+        const res = await PageService.index();
+        setPage(res.pages);
+      } catch (error) {
+        console.log("🚀 ~ fetch ~ error:", error)
+
+      }
+
     };
     fetch();
   }, []);
@@ -63,19 +69,22 @@ export default function Footer() {
                 </h3>
                 <ul className="footer-menu">
                   <li>
-                    <a href="index.html">Trang chủ</a>
+                    <Link to='/'>
+                      Trang chủ
+                    </Link>
+                    {/* <a href="index.html"></a> */}
+                  </li>
+
+                  <li>
+                    <a href="/productall">Sản phẩm</a>
                   </li>
                   <li>
-                    <a href="post_page.html">Giới thiệu</a>
+                    <a href="/postall">Bài viết</a>
                   </li>
                   <li>
-                    <a href="product.html">Sản phẩm</a>
-                  </li>
-                  <li>
-                    <a href="post_topic.html">Bài viết</a>
-                  </li>
-                  <li>
-                    <a href="contact.html">Liên hệ</a>
+                    <Link to='/contact'>
+                      Liên hệ
+                    </Link>
                   </li>
                 </ul>
               </div>

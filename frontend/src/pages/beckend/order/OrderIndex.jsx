@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import OrderService from "../../../services/OrderService";
 import { Link } from "react-router-dom";
-import { FaEdit, FaEye, FaToggleOff, FaToggleOn, FaTrashAlt } from 'react-icons/fa';
+import { FaEdit, FaEye, FaToggleOff, FaToggleOn, FaTrash } from 'react-icons/fa';
 
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
@@ -15,15 +15,26 @@ export default function OrderIndex() {
     const [counttrash, setCountTrash] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
 
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`;
+    };
+
     useEffect(function () {
         setIsLoading(true);
         (async function () {
-            setIsLoading(true);
-            const result = await OrderService.index('index');
-            console.log("🚀 ~ result:", result)
-            setOrders(result.order);
+            try {
+                setIsLoading(true);
+                const result = await OrderService.index('index');
+                console.log("🚀 ~ result:", result)
+                setOrders(result.order);
 
-            setIsLoading(false);
+                setIsLoading(false);
+            } catch (error) {
+                console.log("🚀 ~ error:", error)
+
+            }
+
             // console.log(result.orders);
         })();
     }, [load])
@@ -146,12 +157,12 @@ export default function OrderIndex() {
                                             <Link to={'/admin/order/show/' + order.id} className="px-1 text-info">
                                                 <FaEye />
                                             </Link>
-                                            <button onClick={() => handleDelete(order.id)} className="border-0 px-1 text-danger"><FaTrashAlt /></button>
+                                            <button onClick={() => handleDelete(order.id)} className="border-0 px-1 text-danger" style={{border: "none",backgroundColor: "transparent",}}><FaTrash /></button>
                                         </div>
                                     </td>
                                     <td>{order.delivery_phone}</td>
                                     <td>{order.delivery_email}</td>
-                                    <td>{order.created_at}</td>
+                                    <td>{formatDate(order.created_at)}</td>
                                     <td className="text-center">{order.id}</td>
                                 </tr>);
                         })}

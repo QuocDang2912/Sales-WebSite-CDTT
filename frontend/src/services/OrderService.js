@@ -42,7 +42,16 @@ const OrderServie = {
     // momo
     momo_pay: (data) => {
         return httpAxios.post(`order/momo_pay`, data);
-    }
+    },
 
+    // thống kê doanh số theo ngày
+    filterByDateRange: (data) => {
+        return httpAxios.post(`order/filterByDateRange`, data);
+    },
+
+    // thống kê doanh số theo ngày
+    filterByValue: (data) => {
+        return httpAxios.post(`order/filterByValue`, data);
+    }
 }
 export default OrderServie;

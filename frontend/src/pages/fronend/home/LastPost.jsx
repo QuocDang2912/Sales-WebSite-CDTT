@@ -6,7 +6,6 @@ import Loading from '../../../components/Loading';
 
 export default function LastPost() {
     const [post, setPost] = useState([]);
-    const [post1, setPost1] = useState([]);
     const [loading, setLoading] = useState(true)
 
     //
@@ -14,8 +13,8 @@ export default function LastPost() {
         (async () => {
             try {
                 const result = await PostServie.postnew();
+                console.log("🚀 ~ result:", result)
                 setPost(result.postnhat);
-                setPost1(result.postsau);
                 setLoading(false)
             } catch (error) {
                 console.log("🚀 ~ error:", error)
@@ -23,6 +22,13 @@ export default function LastPost() {
         })();
     }, []);
 
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const day = date.toLocaleDateString('en-GB', { day: '2-digit' });
+        const month = date.toLocaleDateString('en-GB', { month: 'short' }).replace('.', '');
+        // return { day, month: `T-${month}` };
+        return { day, month: `${month}` };
+    };
     return (
         <>
             <h2 class="section-title categories-section-title heading-border border-0 ls-0 "
@@ -32,6 +38,8 @@ export default function LastPost() {
             <div className='blog-section row'>
                 {post &&
                     post.map((post, index) => {
+                        const { day, month } = formatDate(post.created_at);
+
                         return (
 
                             <article className="post col-6 col-md-3 mb-4" key={index}>
@@ -41,8 +49,10 @@ export default function LastPost() {
                                             <img style={{ width: "300px", height: "280px" }} className="img-fluid" alt='' src={urlImage + "post/" + post.image} />
                                         </a>
                                         <div className="post-date">
-                                            <span className="day">26</span>
-                                            <span className="month">Feb</span>
+                                            {/* <span className="day">26</span>
+                                            <span className="month">T-07</span> */}
+                                            <span className="day">{day}</span>
+                                            <span className="month">{month}</span>
                                         </div>
                                     </div>
                                 </Link>
@@ -60,8 +70,6 @@ export default function LastPost() {
                                             </p>
                                         </div>
                                     </Link>
-                                    {/* End .post-content */}
-                                    <a href="single.html" className="post-comment">0 Bình luận</a>
                                 </div>
 
                             </article>

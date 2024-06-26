@@ -69,13 +69,13 @@ export default function CategoryEdit() {
                     <div className="container-fluid">
                         <div className="row">
 
-                            <div className="col-md-10">
+                            <div className="col-md-12">
                                 {/*CONTENT  */}
                                 <div className="content">
                                     <section className="content-header my-2">
                                         <h1 className="d-inline">Cập nhật danh mục</h1>
                                         <div className="text-end">
-                                            <Link className="btn btn-primary btn-sm" to={'/admin/category/index'} style={{ color: "white" }}>về trang chính</Link>
+                                            <Link className="btn btn-primary btn-sm" to={'/admin/category/index'} style={{ color: "white" }}> <i class="fa fa-arrow-left"></i>Quay lại</Link>
                                         </div>
                                     </section>
                                     <section className="content-body my-2">

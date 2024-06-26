@@ -13,7 +13,7 @@ class CategoryController extends Controller
     {
         $category = Category::where('status', '!=', 0)
             ->orderBy('created_at', 'desc')
-            ->select('id', 'name', 'slug', 'status', 'image', 'parent_id', 'sort_order')
+            ->select('id', 'name', 'slug', 'status', 'image', 'parent_id', 'description')
             ->get();
         $total = Category::count();
         $result = [
@@ -68,7 +68,6 @@ class CategoryController extends Controller
         // end upload
         $category->sort_order = $request->sort_order;
         $category->parent_id = $request->parent_id;
-
         $category->description = $request->description;
         $category->created_at = date('Y-m-d H:i:s');
         $category->created_by = 1; //tam

@@ -31,14 +31,6 @@ const ProductServie = {
         return httpAxios.get("product/thungrac");
     },
 
-
-
-
-
-
-    // productAll: () => {
-    //     return httpAxios.get(`product/product_all`);
-    // },
     productAll: (page) => { // all có page chưa có filter , sort
         return httpAxios.get(`product/product_all?page=${page}`);
     },
@@ -56,7 +48,6 @@ const ProductServie = {
     productAll1: () => {
         return httpAxios.get(`product/product_all1`);
     },
-
 
 
     // productCategory: (slug) => {
@@ -146,5 +137,16 @@ const ProductServie = {
         return httpAxios.get(`product/search/${sreach}`);
     },
 
+    // sale show update delete
+    showSale: (id) => {
+        return httpAxios.get(`product/showSale/${id}`);
+    },
+
+    updateSale: (data, id) => {
+        return httpAxios.post(`product/updateSale/${id}`, data);
+    },
+    destroySale: (id) => {
+        return httpAxios.delete(`product/destroySale/${id}`);
+    },
 }
 export default ProductServie;

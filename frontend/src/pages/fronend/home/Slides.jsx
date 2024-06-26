@@ -10,9 +10,15 @@ export default function Slides() {
 
     useEffect(() => {
         (async () => {
-            const res = await BennerService.index();
-            setBanners(res.banners);
-            setLoading(false)
+            try {
+                const res = await BennerService.index();
+                setBanners(res.banners);
+                setLoading(false)
+            } catch (error) {
+                console.log("🚀 ~ error:", error)
+
+            }
+
 
         })();
     }, []);

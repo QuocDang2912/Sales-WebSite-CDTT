@@ -13,12 +13,18 @@ export default function Menu() {
 
     useEffect(() => {
         const fetch = async () => {
-            const res = await CategoryServie.index()
-            const fetchbrand1 = await BrandService.index()
-            const fetchTopic = await TopicServie.index()
-            setTopic(fetchTopic.topics)
-            setCategory(res.category)
-            setbrand(fetchbrand1.brands)
+            try {
+                const res = await CategoryServie.index()
+                const fetchbrand1 = await BrandService.index()
+                const fetchTopic = await TopicServie.index()
+                setTopic(fetchTopic.topics)
+                setCategory(res.category)
+                setbrand(fetchbrand1.brands)
+            } catch (error) {
+                console.log("🚀 ~ fetch ~ error:", error)
+
+            }
+
         }
         fetch()
     }, [])
@@ -63,8 +69,6 @@ export default function Menu() {
                                                     <a className="nav-link text-white" aria-current="page" >Trang chủ</a>
                                                 </Link>
                                             </li>
-
-
                                             <li className="nav-item dropdown">
                                                 <a className="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                                     Thương hiệu sản phẩm
@@ -105,7 +109,7 @@ export default function Menu() {
                                             </li>
                                             <li className="nav-item">
                                                 <Link to={"/contact"}>
-                                                    <a className="nav-link text-white" aria-current="page" >liên hệ</a>
+                                                    <a className="nav-link text-white" aria-current="page" >Liên hệ</a>
                                                 </Link>                                            </li>
                                         </ul>
                                     </div>

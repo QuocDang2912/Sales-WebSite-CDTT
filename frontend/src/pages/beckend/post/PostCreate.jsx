@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import PostServie from '../../../services/PostService';
 import { Link, useNavigate } from 'react-router-dom';
+import TopicServie from '../../../services/TopicService';
 
 export default function PostCreate() {
 
@@ -10,6 +11,8 @@ export default function PostCreate() {
     const [type, setType] = useState("");
     const [topic_id, setTopic_id] = useState(1);
     const [status, setStatus] = useState(1);
+
+    const [topic, setTopic] = useState([])
 
     const navigate = useNavigate()
 
@@ -36,6 +39,19 @@ export default function PostCreate() {
             // document.getElementById('idreset').reset();
         })();
     };
+
+    useEffect(() => {
+        // fetch topic
+        (
+            async () => {
+                const fetToptic = await TopicServie.index()
+                console.log("🚀 ~ file: ProductCreate.jsx:46 ~ fetChCategory:", fetToptic)
+                setTopic(fetToptic.topics)
+            }
+        )();
+
+    }, [])
+
 
 
     return (
@@ -85,9 +101,17 @@ export default function PostCreate() {
                                         <strong>Chủ đề (*)</strong>
                                     </div>
                                     <div className="box-body p-2 border-bottom">
-                                        <select name="topic_id" className="form-select" onChange={(e) => setTopic_id(e.target.value)} value={topic_id}>
-                                            <option value>None</option>
-                                            <option value={1}>Tên chủ đề</option>
+                                        <select name="topic_id" className="form-select" onChange={(e) => setTopic_id(e.target.value)}>
+                                            {/* <option value>None</option>
+                                            <option value={1}>Tên chủ đề</option> */}
+                                            {
+                                                topic && topic.length > 0 &&
+                                                topic.map((item, index) => {
+                                                    return (
+                                                        <option key={index} value={item.id}>{item.name}</option>
+                                                    )
+                                                })
+                                            }
                                         </select>
                                     </div>
                                 </div>

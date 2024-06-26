@@ -15,18 +15,27 @@ export default function PostTopic() {
 
         (
             async () => {
-                const res = await PostServie.postTopic(slug, currentPage)
-                console.log("🚀 ~ res:", res)
-                console.log(res.posts.data)
-                setPostTopic(res.posts.data)
-                setCurrentPage(res.posts.current_page);
-                setLastPage(res.posts.last_page);
-                setLoading(false)
+                try {
+                    const res = await PostServie.postTopic(slug, currentPage)
+                    console.log("🚀 ~ res:", res)
+                    console.log(res.posts.data)
+                    setPostTopic(res.posts.data)
+                    setCurrentPage(res.posts.current_page);
+                    setLastPage(res.posts.last_page);
+                    setLoading(false)
+                } catch (error) {
+                    console.log("🚀 ~ error:", error)
+
+                }
+
 
             }
         )()
 
     }, [slug, currentPage])
+
+    document.title = "Chủ đề bài viết";
+
     return (
         <div>
             <section className="bg-light">
@@ -37,7 +46,7 @@ export default function PostTopic() {
                                 <a className="text-main" href="index.html">Trang chủ</a>
                             </li>
                             <li className="breadcrumb-item active" aria-current="page">
-                                tất cả bài viết
+                                Chủ đề bài viết
                             </li>
                         </ol>
                     </nav>
@@ -46,28 +55,7 @@ export default function PostTopic() {
             <section className="hdl-maincontent py-2">
                 <div className="container">
                     <div className="row">
-                        {/* <div className="col-md-3 order-2 order-md-1">
-                            <ul className="list-group mb-3 list-category">
-                                <li className="list-group-item bg-main py-3">Danh mục sản phẩm</li>
-                                <li className="list-group-item">
-                                    <a href="product_category.html">Thời trang nam</a>
-                                </li>
-                                <li className="list-group-item">
-                                    <a href="product_category.html">Thời trang nữ</a>
-                                </li>
-                                <li className="list-group-item">
-                                    <a href="product_category.html">Thời trang trẻ em</a>
-                                </li>
-                                <li className="list-group-item">
-                                    <a href="product_category.html">Thời trang thể thao</a>
-                                </li>
-                            </ul>
-
-                        </div> */}
                         <div className="col-md-12 order-1 order-md-2">
-                            <div className="post-topic-title bg-main">
-                                <h3 className="fs-5 py-3 text-center">Tất cả bài viết</h3>
-                            </div>
                             <div className="post-topic mt-3">
                                 {
                                     postTopic && postTopic.length > 0 &&

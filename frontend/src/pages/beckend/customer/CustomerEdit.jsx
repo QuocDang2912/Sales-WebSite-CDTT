@@ -50,7 +50,7 @@ export default function CustomerEdit() {
             console.log("🚀 ~ file: BrandEdit.jsx:43 ~ result:", result)
             alert(result.message);
             // toast.success(result.message);
-            navigate("/admin/user/index", { replace: true });
+            navigate("/admin/customer/index", { replace: true });
         })();
     }
 

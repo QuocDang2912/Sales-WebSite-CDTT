@@ -29,15 +29,15 @@ export default function ContactShow() {
                 <div className="container-fluid">
                     <div className="row">
 
-                        <div className="col-md-10">
+                        <div className="col-md-12">
                             {/*CONTENT  */}
                             <div className="content">
                                 <section className="content-header my-2">
-                                    <h1 className="d-inline">Chi tiết</h1>
+                                    <h1 className="d-inline">Chi tiết liên hệ</h1>
                                     <div className="row mt-2 align-items-center">
                                         <div className="col-md-12 text-end">
                                             {/* <a  className="btn btn-primary btn-sm"> */}
-                                            <Link className="btn btn-primary btn-sm" to={'/admin/contact/index'} style={{ color: "white" }}>về trang chính</Link>
+                                            <Link className="btn btn-primary btn-sm" to={'/admin/contact/index'} style={{ color: "white" }}>Về trang chính</Link>
                                             {/* </a> */}
                                         </div>
                                     </div>

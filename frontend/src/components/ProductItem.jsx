@@ -6,27 +6,37 @@ import { useDispatch } from "react-redux";
 import { addToCart } from "../state/CartSlice";
 import { toast } from "react-toastify";
 
-export default function ProductItem({ product, displayMode, totalSum }) {
-  console.log("🚀 ~ ProductItem ~ totalSum:", totalSum)
-  // console.log("🚀 ~ ProductItem ~ product:", product)
+export default function ProductItem({
+  product,
+  displayMode,
+  totalSum,
+  getCurrentCartQty,
+}) {
   const dispatch = useDispatch();
+  const currentCartQty = getCurrentCartQty(product.id); // Đã sửa: lấy số lượng hiện tại trong giỏ hàng
 
   const handleClickToCart = (e) => {
     e.preventDefault();
-    dispatch(
-      addToCart({
-        item: { ...product, count: 1 },
-      })
-    );
-    toast.success("Đã thêm sản phẩm vào giỏ hàng!");
+    if (currentCartQty < totalSum) {
+      // Đã sửa: kiểm tra số lượng hiện tại với tổng số lượng còn lại
+      dispatch(
+        addToCart({
+          item: { ...product, count: 1 },
+        })
+      );
+      toast.success("Đã thêm sản phẩm vào giỏ hàng!");
+    } else {
+      toast.error("Số lượng yêu cầu vượt quá số lượng hiện có trong kho.");
+    }
   };
 
   let priceSale = product.pricesale ? product.pricesale : 0;
 
   return (
     <div
-      className={`product-item border ${displayMode === "list" ? "list-view" : ""
-        }`}
+      className={`product-item border ${
+        displayMode === "list" ? "list-view" : ""
+      }`}
     >
       <div className="product-item-image">
         <Link to={`/product_detail/${product.slug}`}>
@@ -49,14 +59,13 @@ export default function ProductItem({ product, displayMode, totalSum }) {
                 Sale
               </div>
             )}
-            {totalSum === '0' && (
+            {totalSum === "0" && (
               <div
-                className="product-label label-sale"
+                className="product-label label-hot"
                 style={{
                   position: "absolute",
                   top: "10px",
                   left: "10px",
-                  backgroundColor: "red",
                   color: "white",
                   padding: "4px",
                 }}
@@ -72,9 +81,18 @@ export default function ProductItem({ product, displayMode, totalSum }) {
             />
             <div className="product-action">
               <a
-                onClick={handleClickToCart}
+                onClick={
+                  totalSum !== "0"
+                    ? handleClickToCart
+                    : (e) => e.preventDefault()
+                }
                 href="#st"
                 className="btn-icon btn-add-cart"
+                style={
+                  totalSum === "0"
+                    ? { pointerEvents: "none", opacity: 0.5 }
+                    : {}
+                }
               >
                 <span style={{ textAlign: "center" }}>
                   <BsCartPlus
@@ -96,24 +114,35 @@ export default function ProductItem({ product, displayMode, totalSum }) {
       <div className="product-details">
         <h3
           className="product-title"
-          style={{ fontSize: "22px", fontWeight: "500" }}
+          style={{ fontSize: "22px", fontWeight: "500", marginTop: "10px" }}
         >
           <Link to={`/product_detail/${product.slug}`}>{product.name}</Link>
         </h3>
         <div className="price-box">
-          <del className="old-price">
-            {new Intl.NumberFormat("vi-VN", {
-              style: "currency",
-              currency: "VND",
-            }).format(priceSale)}
-          </del>
-          <p className="separator">|</p>
-          <span className="product-price">
-            {new Intl.NumberFormat("vi-VN", {
-              style: "currency",
-              currency: "VND",
-            }).format(product.price)}
-          </span>
+          {priceSale > 0 ? (
+            <>
+              <del className="old-price">
+                {new Intl.NumberFormat("vi-VN", {
+                  style: "currency",
+                  currency: "VND",
+                }).format(product.price)}
+              </del>
+              <p className="separator">|</p>
+              <span className="product-price">
+                {new Intl.NumberFormat("vi-VN", {
+                  style: "currency",
+                  currency: "VND",
+                }).format(priceSale)}
+              </span>
+            </>
+          ) : (
+            <span className="product-price">
+              {new Intl.NumberFormat("vi-VN", {
+                style: "currency",
+                currency: "VND",
+              }).format(product.price)}
+            </span>
+          )}
         </div>
       </div>
     </div>

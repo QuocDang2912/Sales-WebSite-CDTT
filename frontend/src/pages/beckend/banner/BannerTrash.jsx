@@ -19,10 +19,16 @@ export default function BannerTrash() {
     const [status1, setStatus1] = useState(2);
     useEffect(() => {
         (async () => {
-            setLoad(false);
-            const result = await BennerService.thungrac();
-            setBrands(result.banner);
-            setLoad(false);
+            try {
+                setLoad(false);
+                const result = await BennerService.thungrac();
+                setBrands(result.banner);
+                setLoad(false);
+            } catch (error) {
+                console.log("🚀 ~ error:", error)
+
+            }
+
         })();
     }, [reload]);
 
@@ -59,14 +65,14 @@ export default function BannerTrash() {
                 <div className="container-fluid">
                     <div className="row">
                         <ToastContainer />
-                        <div className="col-md-8">
+                        <div className="col-md-12">
                             {/*CONTENT  */}
                             <div className="content">
                                 <section className="content-header my-2">
-                                    <h1 className="d-inline">Thương hiệu</h1>
+                                    <h1 className="d-inline">Thùng rác banner</h1>
                                     <hr style={{ border: "none" }} />
                                 </section>
-                                <section className="content-body my-5">
+                                <section className="content-body">
                                     <div className="row">
                                         <div className="col-md-12">
                                             <div className="row mt-3 align-items-center">

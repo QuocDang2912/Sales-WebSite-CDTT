@@ -46,7 +46,7 @@ export default function PageIndex() {
         <div class="content">
             <section class="content-header my-2">
                 <h1 class="d-inline">Quản lý trang đơn</h1>
-                <Link className="btn btn-primary btn-sm ms-4" to={"/admin/page/store"} style={{ color: "white" }}>
+                <Link className="btn btn-primary btn-sm ms-4" to={"/admin/page/create"} style={{ color: "white",marginLeft: "20px", marginTop: "-10px" }}>
                     {" "}
                     Thêm mới
                 </Link>
@@ -154,7 +154,7 @@ export default function PageIndex() {
                                                 >
                                                     {page.status === 1 ? <FaToggleOn /> : <FaToggleOff />}
                                                 </button>
-                                                <Link to={"/admin/page/update/" + page.id} className="px-1 text-primary">
+                                                <Link to={"/admin/page/edit/" + page.id} className="px-1 text-primary">
                                                     <FaEdit />
                                                 </Link>
                                                 <Link to={"/admin/page/show/" + page.id} className="px-1 text-info">

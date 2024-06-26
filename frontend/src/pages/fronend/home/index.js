@@ -4,15 +4,16 @@ import Slides from './Slides'
 import LastPost from './LastPost'
 import ProductNew from './ProductNew'
 import ProductSale from './ProductSale'
-import ProductByCategory from './ProductByCategory'
 import ProductHotBuy from './ProductHotBuy'
 import ThreeInfo from './ThreeInfo'
 import BrowseOurCategory from './BrowseOurCategory'
-
+import ProductAll1 from '../Product/ProductAll/ProductAll1'
 export default function Home() {
-    return (
-        <>
+    document.title = "Trang chủ";
 
+    return (
+
+        <>
             <Slides />
             <section className='hdl-maincontent'>
                 <div className='container'>
@@ -20,7 +21,7 @@ export default function Home() {
                     <ProductNew />
                     <ProductSale />
                     <ProductHotBuy />
-                    {/* <ProductByCategory /> */}
+                    <ProductAll1 />
                     <BrowseOurCategory />
                     <LastPost />
                 </div>

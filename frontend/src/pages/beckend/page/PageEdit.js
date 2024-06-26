@@ -61,8 +61,8 @@ export default function PageEdit() {
          <section class="content-header my-2">
             <h1 class="d-inline">Cập nhật trang đơn</h1>
             <div class="text-end">
-               <a href="/admin/page/index" class="btn btn-sm btn-success">
-                  <i class="fa fa-arrow-left"></i> Về danh sách
+               <a href="/admin/page/index" class="btn btn-sm btn-primary">
+                  <i class="fa fa-arrow-left"></i> Quay lại
                </a>
             </div>
          </section>

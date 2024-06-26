@@ -2,9 +2,12 @@ import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Link } from "react-router-dom";
 import {
-
-    RiShareFill,
-} from "react-icons/ri";
+    FaEdit,
+    FaEye,
+    FaToggleOff,
+    FaToggleOn,
+    FaTrash,
+} from "react-icons/fa";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
@@ -20,17 +23,24 @@ export default function DiscountCodeIndex() {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [expires_bd, setExpibd] = useState([]);
+    console.log("🚀 ~ DiscountCodeIndex ~ expires_bd:", expires_bd)
     const [expires_kt, setExpikt] = useState([]);
+    console.log("🚀 ~ DiscountCodeIndex ~ expires_kt:", expires_kt)
     const [status, setStatus] = useState(1);
     const [type, setType] = useState(0);
-    const [status1, setStatus1] = useState(0);
     useEffect(() => {
         (async () => {
-            setLoad(false);
-            const result = await DiscountcodeService.index();
-            console.log("🚀 ~ result:", result)
-            setBrands(result.Discountcode);
-            setLoad(false);
+            try {
+                setLoad(false);
+                const result = await DiscountcodeService.index();
+                console.log("🚀 ~ result:", result)
+                setBrands(result.Discountcode);
+                setLoad(false);
+            } catch (error) {
+                console.log("🚀 ~ error:", error)
+
+            }
+
         })();
     }, [reload]);
 
@@ -55,7 +65,15 @@ export default function DiscountCodeIndex() {
         })();
     };
 
-
+    const handleDelete = async (id) => {
+        try {
+            const result = await DiscountcodeService.destroy(id);
+            //   toast("Da xoa vao thung rac");
+            setReLoad(reload + 1); // Reload brands
+        } catch (error) {
+            console.error("Error deleting brand: ", error);
+        }
+    };
 
     return (
         <div>
@@ -63,14 +81,14 @@ export default function DiscountCodeIndex() {
                 <div className="container-fluid">
                     <div className="row">
                         <ToastContainer />
-                        <div className="col-md-10">
+                        <div className="col-md-12">
                             {/*CONTENT  */}
                             <div className="content">
                                 <section className="content-header my-2">
-                                    <h1 className="d-inline">Discount Code</h1>
+                                    <h1 className="d-inline">Thêm mã giảm giá</h1>
                                     <hr style={{ border: "none" }} />
                                 </section>
-                                <section className="content-body my-5">
+                                <section className="content-body">
                                     <div className="row">
                                         <div className="col-md-4">
                                             <form onSubmit={handleSubmit}>
@@ -122,7 +140,7 @@ export default function DiscountCodeIndex() {
                                                         onChange={(e) => setDescription(e.target.value)}
                                                         value={description}
                                                         rows="4"
-                                                        placeholder="mô tả"
+                                                        placeholder="Mô tả"
                                                         className="form-control"
                                                         required
                                                     />
@@ -178,13 +196,13 @@ export default function DiscountCodeIndex() {
                                                 <div className="col-12">
                                                     <ul className="manager">
                                                         <li>
-                                                            <a href="brand_index.html">Tất cả (123)</a>
+                                                            <a href="#">Tất cả (123)</a>
                                                         </li>
                                                         <li>
                                                             <a href="#">Xuất bản (12)</a>
                                                         </li>
                                                         <li>
-                                                            <a href="brand_trash.html">Rác (12)</a>
+                                                            <a href="#">Rác (12)</a>
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -221,36 +239,39 @@ export default function DiscountCodeIndex() {
 
                                                                     <td>
                                                                         <div className="name">
-                                                                            <a href="brand_index.html">
+                                                                            <a href="#">
                                                                                 {brand.code}
                                                                             </a>
                                                                         </div>
                                                                         <div className="function_style">
-                                                                            <Link
+                                                                            {/* <Link
                                                                                 to={`/admin/discountcode/share/${brand.id}`}
                                                                                 className={"border-0 px-1 text-success"}
                                                                             >
                                                                                 <RiShareFill />
-                                                                            </Link>
-                                                                            {/* <Link
-                                                                                to={`/admin/banner/update/${brand.id}`}
-                                                                                className="px-1 text-primary"
-                                                                            >
-                                                                                <RiEdit2Fill />
+                                                                            </Link> */}
+                                                                            <Link to={`/admin/discountcode/edit/${brand.id}`}>
+                                                                                <FaEdit
+                                                                                    style={{ color: "blue", fontSize: "16" }}
+                                                                                />
                                                                             </Link>
                                                                             <Link
-                                                                                to={`/admin/banner/show/${brand.id}`}
+                                                                                to={`/admin/discountcode/show/${brand.id}`}
                                                                                 className="px-1 text-info"
                                                                             >
-                                                                                <RiEyeFill />
-                                                                            </Link> */}
-                                                                            {/* <Link
-                                                                                to={``}
+                                                                                <FaEye />
+                                                                            </Link>
+
+                                                                            <button
                                                                                 onClick={() => handleDelete(brand.id)}
                                                                                 className="px-1 text-danger"
+                                                                                style={{
+                                                                                    border: "none",
+                                                                                    backgroundColor: "transparent",
+                                                                                }}
                                                                             >
-                                                                                <RiDeleteBin5Fill />
-                                                                            </Link> */}
+                                                                                <FaTrash />
+                                                                            </button>
                                                                         </div>
                                                                     </td>
                                                                     <td>{brand.percentage}</td>

@@ -114,10 +114,12 @@ Route::prefix('user')->group(function () {
         Route::post('store', [UserController::class, 'store']);
         Route::post('update/{id}', [UserController::class, 'update']);
         Route::delete('destroy/{id}', [UserController::class, 'destroy']);
-        Route::get('status/{id}', [UserController::class, 'status']);
         Route::put('delete/{id}', [UserController::class, 'delete']);
         Route::get('thungrac', [UserController::class, 'thungrac']);
     });
+
+
+    Route::get('status/{id}', [UserController::class, 'status']);
 
     // Route đăng nhập
     Route::post('login', [UserController::class, 'login']);
@@ -141,6 +143,10 @@ Route::prefix('customer')->group(function () {
     Route::post('store', [CustomerController::class, 'store']);
     Route::post('update/{id}', [CustomerController::class, 'update']);
     Route::get('status/{id}', [CustomerController::class, 'status']);
+    // lấy user thông qua email
+    Route::post('getUserByEmail', [CustomerController::class, 'getUserByEmail']);
+    // reset pâss
+    Route::post('resetPassword', [CustomerController::class, 'resetPassword']);
 });
 
 
@@ -203,8 +209,6 @@ Route::prefix('orderdetail')->group(function () {
 
 Route::prefix('product')->group(function () {
     Route::middleware('admin.auth')->group(function () {
-        Route::get('index', [ProductController::class, 'index']);
-        Route::get('show/{id}', [ProductController::class, 'show']);
         Route::post('store', [ProductController::class, 'store']);
         Route::post('update/{id}', [ProductController::class, 'update']);
         Route::delete('destroy/{id}', [ProductController::class, 'destroy']);
@@ -212,6 +216,9 @@ Route::prefix('product')->group(function () {
         Route::put('delete/{id}', [ProductController::class, 'delete']);
         Route::get('thungrac', [ProductController::class, 'thungrac']);
     });
+    Route::get('index', [ProductController::class, 'index']);
+    Route::get('show/{id}', [ProductController::class, 'show']);
+
     Route::get('productnew/{limit}', [ProductController::class, 'productnew']);
     Route::get('productsale/{limit}', [ProductController::class, 'productsale']);
     Route::get('producthotbuy/{limit}', [ProductController::class, 'producthotbuy']);
@@ -237,6 +244,11 @@ Route::prefix('product')->group(function () {
     Route::get('search/{search}', [ProductController::class, 'search']);
 
     Route::post('/updateProductStore', [ProductController::class, 'updateProductStore']);
+
+    /// sale show update 
+    Route::get('showSale/{id}', [ProductController::class, 'showSale']);
+    Route::post('updateSale/{id}', [ProductController::class, 'updateSale']);
+    Route::delete('destroySale/{id}', [ProductController::class, 'destroySale']);
 });
 
 Route::prefix('post')->group(function () {
@@ -322,4 +334,6 @@ Route::prefix('discount_codes')->group(function () {
     Route::post('store', [DiscountcodeController::class, 'store']);
     Route::get('show/{id}', [DiscountcodeController::class, 'show']);
     Route::post('check', [DiscountcodeController::class, 'checkDiscountCode']);
+    Route::post('update/{id}', [DiscountcodeController::class, 'update']);
+    Route::delete('destroy/{id}', [DiscountcodeController::class, 'destroy']);
 });

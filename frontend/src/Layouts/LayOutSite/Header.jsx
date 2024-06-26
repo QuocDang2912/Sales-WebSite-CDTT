@@ -34,61 +34,79 @@ export default function Header() {
   let showUser =
     JSON.stringify(user) == "{}" ? (
       <div className="icon-container">
-  <i className="far fa-user"></i>
-  <div className="button-container">
-    <Link className="nav-link" to={"/login"} style={{color:"#006ba1"}}>
-      Đăng nhập
-    </Link>
-    <Link className="nav-link" to={"/register"} style={{color:"#006ba1"}}>
-      Đăng ký
-    </Link>
-  </div>
-</div>
-
+        <i className="far fa-user"></i>
+        <div className="button-container">
+          <Link className="nav-link" to={"/login"} style={{ color: "#006ba1" }}>
+            Đăng nhập
+          </Link>
+          <Link
+            className="nav-link"
+            to={"/register"}
+            style={{ color: "#006ba1" }}
+          >
+            Đăng ký
+          </Link>
+        </div>
+      </div>
     ) : (
       <>
-  {/* First list item */}
-  <li style={{ fontSize: "20px",width:"140px", marginLeft:"30px", marginTop:"-20px"}} className="nav-item">
-    <a className="nav-link" href="#">
-      {/* Phone icon */}
-      <FaPhoneSquare style={{ color: "#006ba1" }} />
-      {/* User's phone number */}
-      {user.phone}
-    </a>
-  </li>
-
-  {/* Second list item */}
-  <li style={{ fontSize: "20px", color: "gray",marginLeft:"30px" , marginTop:"-15px" }} className="nav-item">
-    <a className="nav-link">
-      {/* User icon */}
-      <FaUser
-        style={{ color: "#006ba1" }}
-        className="dropdown-toggle"
-        data-bs-toggle="dropdown"
-        aria-expanded="false"
-      />
-      {/* User's name */}
-      {user.name}
-
-      {/* Dropdown menu for user options */}
-      <ul className="dropdown-menu">
-        {/* Logout option */}
-        <li>
-          <a onClick={handleLogout} className="drop-hover">
-            Đăng xuất
+        {/* First list item */}
+        <li
+          style={{
+            fontSize: "20px",
+            width: "140px",
+            marginLeft: "30px",
+            marginTop: "-20px",
+          }}
+          className="nav-item"
+        >
+          <a className="nav-link" href="#">
+            {/* Phone icon */}
+            <FaPhoneSquare style={{ color: "#006ba1" }} />
+            {/* User's phone number */}
+            {user.phone}
           </a>
         </li>
-        {/* Profile option */}
-        <li>
-          <Link to={`/profile`} className="dropdown-item drop-hover">
-            Thông Tin
-          </Link>
-        </li>
-      </ul>
-    </a>
-  </li>
-</>
 
+        {/* Second list item */}
+        <li
+          style={{
+            fontSize: "20px",
+            color: "gray",
+            marginLeft: "30px",
+            marginTop: "-15px",
+          }}
+          className="nav-item"
+        >
+          <a className="nav-link">
+            {/* User icon */}
+            <FaUser
+              style={{ color: "#006ba1" }}
+              className="dropdown-toggle"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            />
+            {/* User's name */}
+            {user.name}
+
+            {/* Dropdown menu for user options */}
+            <ul className="dropdown-menu">
+              {/* Logout option */}
+              <li>
+                <a onClick={handleLogout} className="drop-hover">
+                  Đăng xuất
+                </a>
+              </li>
+              {/* Profile option */}
+              <li>
+                <Link to={`/profile`} className="dropdown-item drop-hover">
+                  Thông Tin
+                </Link>
+              </li>
+            </ul>
+          </a>
+        </li>
+      </>
     );
 
   return (
@@ -147,8 +165,8 @@ export default function Header() {
               height="30"
               className="pb-1"
               style={{
-                marginTop:"-10px",
-                marginLeft:"50px"
+                marginTop: "-10px",
+                marginLeft: "50px",
               }}
             />
             <div className="contact-info pl-2">
@@ -158,7 +176,7 @@ export default function Header() {
                   color: "#006ba1",
                   fontSize: "16px",
                   fontWeight: "bold",
-                  marginTop:"-10px"
+                  marginTop: "-10px",
                 }}
               >
                 Liên hệ ngay
@@ -166,17 +184,14 @@ export default function Header() {
               <a
                 href="tel:#"
                 className="text-dark font1 d-block"
-                style={{ fontSize: "18px", width:"150px",fontWeight: "bold", }}
+                style={{ fontSize: "18px", width: "150px", fontWeight: "bold" }}
               >
                 +84 985 608 759
               </a>
             </div>
             <div className="heart">
-                <i
-                  className="far fa-heart"
-                  aria-hidden="true"
-                />
-              </div>
+              <i className="far fa-heart" aria-hidden="true" />
+            </div>
             <div className="call-login--register">
               <ul className="nav nav-fills py-0 my-0">{showUser}</ul>
             </div>

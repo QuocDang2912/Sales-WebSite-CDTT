@@ -14,19 +14,28 @@ export default function PostPage() {
     useEffect(() => {
 
         const fetch = async () => {
-            const res = await PageService.PostPage(slug)
-            console.log("🚀 ~ fetch ~ res:", res)
-            setPage(res.page)
+            try {
+                const res = await PageService.PostPage(slug)
+                console.log("🚀 ~ fetch ~ res:", res)
+                setPage(res.page)
 
-            const PageAll = await PageService.index()
-            console.log("🚀 ~ fetch ~ PageAll:", PageAll)
-            setPageAll(PageAll.pages)
+                const PageAll = await PageService.index()
+                console.log("🚀 ~ fetch ~ PageAll:", PageAll)
+                setPageAll(PageAll.pages)
 
-            setLoading(false)
+                setLoading(false)
+            } catch (error) {
+                console.log("🚀 ~ fetch ~ error:", error)
+
+            }
+
         }
         fetch()
 
     }, [slug])
+
+    document.title = "Trang đơn";
+
     return (
         <div>
             <section className="bg-light">
@@ -48,7 +57,7 @@ export default function PostPage() {
                     <div className="row">
                         <div className="col-md-3 order-2 order-md-1">
                             <ul className="list-group mb-3 list-page">
-                                <li className="list-group-item bg-main py-3">Các trang đơn  khác</li>
+                                <li className="list-group-item bg-main py-3">Các trang đơn khác</li>
 
                                 {
                                     pageAll && pageAll.length > 0 && pageAll.map((item) => {

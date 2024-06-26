@@ -57,6 +57,11 @@ import CustomerTrash from '../pages/beckend/customer/CustomerTrash'
 import BannerTrash from '../pages/beckend/banner/BannerTrash'
 import OrderEdit from '../pages/beckend/order/OrderEdit'
 import DiscountCodeIndex from '../pages/beckend/DiscountCode/DiscountCodeIndex'
+import Order_Statistical from '../pages/beckend/order/Order_Statistical'
+import DiscountCodeShow from '../pages/beckend/DiscountCode/DiscountcodeShow'
+import DiscountCodeEdit from '../pages/beckend/DiscountCode/DiscountCodeEdit'
+import ProductSaleUpdate from '../pages/beckend/product/ProductSaleUpdate'
+import ProductSaleShow from '../pages/beckend/product/ProductSaleShow'
 
 
 const RouteAdmin = [
@@ -92,6 +97,7 @@ const RouteAdmin = [
     { path: '/admin/order/show/:id', component: OrderShow },
     { path: '/admin/order/edit/:id', component: OrderEdit },
     { path: "/admin/order/trash", component: OrderTrash },
+    { path: "/admin/order/thong-ke", component: Order_Statistical },
 
     // post 
     { path: '/admin/post/index', component: PostIndex },
@@ -114,10 +120,10 @@ const RouteAdmin = [
     { path: '/admin/product/edit/:id', component: ProductEdit },
     { path: '/admin/product/show/:id', component: ProductShow },
     { path: "/admin/product/trash", component: ProductTrash },
-
-
     { path: '/admin/product/productsale', component: ProductSale },
     { path: '/admin/product/productImport', component: ProductImport },
+    { path: '/admin/product/saleEdit/:id', component: ProductSaleUpdate },
+    { path: '/admin/product/saleShow/:id', component: ProductSaleShow },
 
     // topic
     { path: '/admin/topic/index', component: TopicIndex },
@@ -140,6 +146,10 @@ const RouteAdmin = [
 
     // mã code DiscountCode
     { path: '/admin/discountcode/index', component: DiscountCodeIndex },
+    { path: '/admin/discountcode/show/:id', component: DiscountCodeShow },
+    { path: '/admin/discountcode/edit/:id', component: DiscountCodeEdit },
+
+
 
 ]
 export default RouteAdmin

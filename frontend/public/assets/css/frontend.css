@@ -323,7 +323,7 @@ ul.list-page li a:hover {
 }
 
 .product-item .product-label.label-hot {
-  background-color: #2ba968;
+  background-color: #999;
 }
 
 .product-item .product-label.label-sale {
@@ -950,4 +950,96 @@ i.far.fa-heart:hover {
 
 .separator {
   margin: 0 10px; /* Điều chỉnh khoảng cách giữa các phần tử */
+}
+
+/* css ProductItems */
+
+/* css ProductItems */
+/* HTML: <div class="loader"></div> */
+.loader {
+  width: 50px;
+  aspect-ratio: 1;
+  display:grid;
+  -webkit-mask: conic-gradient(from 15deg,#0000,#000);
+  animation: l26 1s infinite steps(12);
+}
+.loader,
+.loader:before,
+.loader:after{
+  background:
+    radial-gradient(closest-side at 50% 12.5%,
+     #f03355 96%,#0000) 50% 0/20% 80% repeat-y,
+    radial-gradient(closest-side at 12.5% 50%,
+     #f03355 96%,#0000) 0 50%/80% 20% repeat-x;
+}
+.loader:before,
+.loader:after {
+  content: "";
+  grid-area: 1/1;
+  transform: rotate(30deg);
+}
+.loader:after {
+  transform: rotate(60deg);
+}
+
+@keyframes l26 {
+  100% {transform:rotate(1turn)}
+}
+
+.short-divider {
+  width: 40px;
+  height: 0;
+  border-top: 2px solid 777;
+  margin: 1.5rem 0 2.2rem;
+  text-align: left;
+}
+
+.owl-theme .owl-nav {
+  display: flex;
+  justify-content: space-between;
+  position: absolute;
+  top: 30%;
+  width: 100%;
+  transform: translateY(-50%);
+  pointer-events: none; /* Allow clicks to pass through to carousel items */
+}
+
+.owl-theme .owl-nav .owl-prev,
+.owl-theme .owl-nav .owl-next {
+  color: white;
+  font-size: 5rem;
+  pointer-events: auto; /* Re-enable clicks on arrows */
+  background: none; /* No background color */
+  border: none; /* No border */
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.owl-theme .owl-nav .owl-prev {
+  position: absolute;
+  left: 0;
+  transform: translateX(-50%);
+}
+
+.owl-theme .owl-nav .owl-next {
+  position: absolute;
+  right: 0;
+  transform: translateX(50%);
+}
+.short-divider {
+  width: 40px;
+  height: 0;
+  border-top: 2px solid 777;
+  margin: 1.5rem 0 2.2rem;
+  text-align: left;
+}
+.icon-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #888; /* Màu xám */
+}
+
+.icon-button.active {
+  color: black; /* Màu khi được chọn */
 }

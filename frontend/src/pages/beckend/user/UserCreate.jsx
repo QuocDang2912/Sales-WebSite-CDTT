@@ -41,7 +41,7 @@ export default function UserCreate() {
                     <h1 className="d-inline">Thêm thành viên</h1>
                     <div className="row mt-2 align-items-center">
                         <div className="col-md-12 text-end">
-                            <Link className="btn btn-primary btn-sm" style={{ color: "white" }} to='/admin/user/index'>quay về trang chủ </Link>
+                            <Link className="btn btn-primary btn-sm" style={{ color: "white" }} to='/admin/user/index'><i class="fa fa-arrow-left"></i>Quay lại</Link>
                         </div>
                     </div>
                 </section>

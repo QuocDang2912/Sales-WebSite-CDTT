@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Validator;
 
 class CustomerController extends Controller
 {
@@ -161,7 +162,7 @@ class CustomerController extends Controller
             return response()->json($result, 404);
         }
 
-        $customner->status = ($customner->status == 1) ? 2 : 1;
+        $customner->status = 1;
         $customner->updated_at = date('Y-m-d H:i:s');
         $customner->updated_by = 1; //tam
         if ($customner->save()) {
@@ -226,5 +227,79 @@ class CustomerController extends Controller
             'total' => $total
         ];
         return response()->json($resul, 200);
+    }
+
+    // lấy user bằng email
+    public function getUserByEmail(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|string|email',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        $email = $request->email;
+        $user = User::where('email', $email)->first();
+
+        if ($user === null) {
+            $result = [
+                'status' => false,
+                'user' => null,
+                'message' => 'Khong tim thay du lieu'
+            ];
+            return response()->json($result, 404);
+        }
+
+        $result = [
+            'status' => true,
+            'user' => $user,
+            'message' => 'Tai du lieu thanh cong'
+        ];
+
+        return response()->json($result, 200);
+    }
+    // đổi reset 
+    public function resetPassword(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'id' => 'required|integer|exists:user,id',
+            'password' => 'required|string|min:8',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        $user = User::find($request->id);
+
+        if ($user === null) {
+            $result = [
+                'status' => false,
+                'message' => 'Khong tim thay du lieu'
+            ];
+            return response()->json($result, 404);
+        }
+
+        $user->password = bcrypt($request->password);
+        $user->updated_at = now();
+        $user->updated_by = 1; // You can set the ID of the admin or system that performed the update
+
+        if ($user->save()) {
+            $result = [
+                'status' => true,
+                'user' => $user,
+                'message' => 'Mat khau da duoc cap nhat thanh cong'
+            ];
+            return response()->json($result, 200);
+        }
+
+        // If save fails
+        $result = [
+            'status' => false,
+            'message' => 'Khong the cap nhat mat khau'
+        ];
+        return response()->json($result, 500);
     }
 }

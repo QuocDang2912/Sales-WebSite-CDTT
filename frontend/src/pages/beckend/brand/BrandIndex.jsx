@@ -23,10 +23,16 @@ export default function BrandIndex() {
 
     useEffect(() => {
         (async () => {
-            setLoad(false);
-            const result = await BrandService.index();
-            setBrands(result.brands);
-            setLoad(false);
+            try {
+                setLoad(false);
+                const result = await BrandService.index();
+                setBrands(result.brands);
+                setLoad(false);
+            } catch (error) {
+                console.log("🚀 ~ error:", error)
+
+            }
+
         })();
     }, [reload]);
 
@@ -74,7 +80,7 @@ export default function BrandIndex() {
             <section className="hdl-content">
                 <div className="container-fluid">
                     <div className="row">
-                        <div className="col-md-10">
+                        <div className="col-md-12">
                             {/*CONTENT  */}
                             <div className="content">
                                 <section className="content-header my-2">
@@ -106,7 +112,7 @@ export default function BrandIndex() {
                                                         onChange={(e) => setDescription(e.target.value)}
                                                         value={description}
                                                         rows="4"
-                                                        placeholder="mô tả"
+                                                        placeholder="Mô tả"
                                                         className="form-control"
                                                         required
                                                     />
@@ -218,6 +224,10 @@ export default function BrandIndex() {
                                                                                         ? "border-0 px-1 text-success"
                                                                                         : "border-0 px-1 text-danger"
                                                                                 }
+                                                                                style={{
+                                                                                    border: "none",
+                                                                                    backgroundColor: "transparent",
+                                                                                  }}
                                                                             >
                                                                                 {brand.status === 1 ? <FaToggleOn /> : <FaToggleOn />}
                                                                             </button>
@@ -227,7 +237,7 @@ export default function BrandIndex() {
                                                                             <Link to={"/admin/brand/show/" + brand.id} className="px-1 text-info">
                                                                                 <FaEye />
                                                                             </Link>
-                                                                            <button onClick={() => handleDelete(brand.id)} className="px-1 text-danger">
+                                                                            <button onClick={() => handleDelete(brand.id)} className="px-1 text-danger" style={{border: "none",backgroundColor: "transparent"}}>
                                                                                 <FaTrash />
                                                                             </button>
                                                                         </div>

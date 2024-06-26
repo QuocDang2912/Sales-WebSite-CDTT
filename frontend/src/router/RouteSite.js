@@ -10,6 +10,7 @@ import ProductBrand from "../pages/fronend/Product/ProductBrand/ProductBrand"
 import ProductCategory from "../pages/fronend/Product/ProductCategory/ProductCategory"
 import ProductDetail from "../pages/fronend/Product/ProductDetail/ProductDetail"
 import ProductSearch from "../pages/fronend/Product/ProductSearch/ProductSearch"
+import ActivaUser from "../pages/fronend/home/ActivaUser"
 
 import Home from "../pages/fronend/home/index"
 import Login from "../pages/fronend/login/Login"
@@ -17,6 +18,8 @@ import ChangePass from "../pages/fronend/profile/ChangePass"
 import Profile from "../pages/fronend/profile/Profile"
 import QuanLy_Order from "../pages/fronend/profile/QuanLy_Order"
 import Register from "../pages/fronend/register/Register"
+import ResetPassword from "../pages/fronend/resetPass/ResetPassword.jsx"
+import UserByEmail from "../pages/fronend/resetPass/UserByEmail.jsx"
 
 const RouteSite = [
     {
@@ -74,6 +77,18 @@ const RouteSite = [
     { path: "/product_search/:search", component: ProductSearch },
     {
         path: '/quanly_order', component: QuanLy_Order,
+    },
+    // kích hoạt tài khoảng
+    {
+        path: '/activaUser/:user_id', component: ActivaUser,
+    },
+    //UserByEmail
+    {
+        path: '/userByEmail', component: UserByEmail,
+    },
+    // reset pass
+    {
+        path: '/resetPass/:user_id', component: ResetPassword,
     },
 ]
 

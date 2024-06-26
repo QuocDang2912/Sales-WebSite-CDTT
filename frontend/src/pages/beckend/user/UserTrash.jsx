@@ -33,7 +33,7 @@ export default function UserTrash() {
             const updatedTopic = {
                 status: status1,
             };
-            const result = await UserServie .delete(updatedTopic, id);
+            const result = await UserServie.delete(updatedTopic, id);
             setReLoad(reload + 1); // Reload brands
             toast("Khoi phuc thanh cong");
         } catch (error) {
@@ -43,7 +43,7 @@ export default function UserTrash() {
     //
     const handleDelete = async (id) => {
         try {
-            const result = await UserServie .destroy(id);
+            const result = await UserServie.destroy(id);
             setReLoad(reload + 1); // Reload brands
             toast("Xoa thanh cong");
         } catch (error) {
@@ -57,14 +57,14 @@ export default function UserTrash() {
                 <div className="container-fluid">
                     <div className="row">
                         <ToastContainer />
-                        <div className="col-md-8">
+                        <div className="col-md-12">
                             {/*CONTENT  */}
                             <div className="content">
                                 <section className="content-header my-2">
-                                    <h1 className="d-inline">Thành viên</h1>
+                                    <h1 className="d-inline">Thùng rác thành viên</h1>
                                     <hr style={{ border: "none" }} />
                                 </section>
-                                <section className="content-body my-5">
+                                <section className="content-body">
                                     <div className="row">
                                         <div className="col-md-12">
                                             <div className="row mt-3 align-items-center">
@@ -103,8 +103,7 @@ export default function UserTrash() {
                                                             <input type="checkbox" id="checkboxAll" />
                                                         </th>
 
-                                                        <th>Tên thương hiệu</th>
-                                                        <th>Tên slug</th>
+                                                        <th>Tên khách hàng</th>
                                                         <th className="text-center" style={{ width: 30 }}>
                                                             ID
                                                         </th>
@@ -132,7 +131,6 @@ export default function UserTrash() {
                                                                             </Link>
                                                                         </div>
                                                                     </td>
-                                                                    <td>{brand.slug}</td>
                                                                     <td className="text-center">{brand.id}</td>
                                                                 </tr>
                                                             );

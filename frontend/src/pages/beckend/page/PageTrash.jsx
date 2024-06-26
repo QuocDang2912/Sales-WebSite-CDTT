@@ -72,14 +72,10 @@ export default function PageTrash() {
                                                 <div className="col-12">
                                                     <ul className="manager">
                                                         <li>
-                                                            <a href="brand_index.html">Tất cả (123)</a>
+                                                            <Link to='/admin/page/index'>Tất cả</Link>
+                                                            {/* <a href="brand_index.html"> (123)</a> */}
                                                         </li>
-                                                        <li>
-                                                            <a href="#">Xuất bản (12)</a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="brand_trash.html">Rác (12)</a>
-                                                        </li>
+
                                                     </ul>
                                                 </div>
                                             </div>

@@ -50,7 +50,7 @@ export default function OrderEdit() {
                 <h1 className="d-inline">Cập nhật đơn hàng</h1>
                 <div className="mt-1 text-end">
                     <Link className="btn btn-sm btn-primary" style={{ color: "white" }} to="/admin/order/index">
-                        Quay về
+                    <i class="fa fa-arrow-left"></i>Quay lại
                     </Link>
                 </div>
             </section>

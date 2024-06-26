@@ -31,7 +31,7 @@ export default function TopicShow() {
                 <div className="container-fluid">
                     <div className="row">
 
-                        <div className="col-md-10">
+                        <div className="col-md-12">
                             {/*CONTENT  */}
                             <div className="content">
                                 <section className="content-header my-2">
@@ -39,7 +39,7 @@ export default function TopicShow() {
                                     <div className="row mt-2 align-items-center">
                                         <div className="col-md-12 text-end">
 
-                                            <Link className="btn btn-primary btn-sm" to={'/admin/topic/index'} style={{ color: "white" }}>về trang chính</Link>
+                                            <Link className="btn btn-primary btn-sm" to={'/admin/topic/index'} style={{ color: "white" }}>Về trang chính</Link>
 
                                         </div>
                                     </div>

@@ -24,15 +24,21 @@ export default function BannerEdit() {
     useEffect(() => {
 
         const fetch = async () => {
-            const response = await BennerService.show(id)
-            console.log("🚀 ~ file: BannerEdit.jsx:16 ~ fetch ~ response:", response)
-            const banner = response.banner;
-            console.log("🚀 ~ file: BannerEdit.jsx:30 ~ fetch ~ banner:", banner.link)
-            setName(banner.name);
-            setDescription(banner.description);
-            setPosition(banner.position);
-            setStatus(banner.status);
-            setLink(banner.link);
+            try {
+                const response = await BennerService.show(id)
+                console.log("🚀 ~ file: BannerEdit.jsx:16 ~ fetch ~ response:", response)
+                const banner = response.banner;
+                console.log("🚀 ~ file: BannerEdit.jsx:30 ~ fetch ~ banner:", banner.link)
+                setName(banner.name);
+                setDescription(banner.description);
+                setPosition(banner.position);
+                setStatus(banner.status);
+                setLink(banner.link);
+            } catch (error) {
+                console.log("🚀 ~ fetch ~ error:", error)
+
+            }
+
         }
         fetch()
 
@@ -67,13 +73,13 @@ export default function BannerEdit() {
                     <div className="container-fluid">
                         <div className="row">
 
-                            <div className="col-md-10">
+                            <div className="col-md-12">
                                 {/*CONTENT  */}
                                 <div className="content">
                                     <section className="content-header my-2">
                                         <h1 className="d-inline">Cập nhật banner</h1>
                                         <div className="text-end">
-                                            <Link className="btn btn-primary btn-sm" to={'/admin/banner/index'} style={{ color: "white" }}>về trang chính</Link>
+                                            <Link className="btn btn-primary btn-sm" to={'/admin/banner/index'} style={{ color: "white" }}><i class="fa fa-arrow-left"></i>Quay lại</Link>
 
                                         </div>
                                     </section>
@@ -101,7 +107,7 @@ export default function BannerEdit() {
                                                 <div className="box-container mt-4 bg-white">
 
                                                     <div className="box-body p-2 border-bottom">
-                                                        <p>Chọn trạng thái đăng</p>
+                                                    <strong>Chọn trạng thái đăng</strong>
                                                         <select onChange={(e) => setStatus(e.target.value)}
                                                             value={status} name="status" className="form-select">
 

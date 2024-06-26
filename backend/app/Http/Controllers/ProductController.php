@@ -292,53 +292,7 @@ class ProductController extends Controller
         return response()->json($result, 200);
     }
 
-    //sản phẩm khuyến mãi
 
-    public function sale()
-    {
-        $products = Product::where('product.status', '!=', 0)
-            ->join('productsale', 'productsale.product_id', '=', 'product.id')
-            ->select(
-                'product.name',
-                'product.image',
-                'product.price',
-                'productsale.pricesale',
-                'productsale.date_begin',
-                'productsale.date_end'
-            )
-            ->get();
-        $result = [
-            'status' => true,
-            'products' => $products,
-            'message' => 'Tải dữ liệu thành công'
-        ];
-        return response()->json($result, 200);
-    }
-    public function storesale(Request $request)
-    {
-        $productsale = new ProductSale();
-        $productsale->product_id = $request->product_id;
-        $productsale->qty = 1;
-        $productsale->pricesale = $request->pricesale;
-        $productsale->date_begin = $request->date_begin;
-        $productsale->date_end = $request->date_end;
-        $productsale->created_at = date('Y-m-d H:i:s');
-        $productsale->created_by = 1;
-        if ($productsale->save()) {
-            $result = [
-                'status' => true,
-                'productsale' => $productsale,
-                'message' => 'Thêm dữ liệu vào bảng khuyến mãi thành công',
-            ];
-            return response()->json($result, 200);
-        }
-        $result = [
-            'status' => false,
-            'productsale' => null,
-            'message' => 'lỗi',
-        ];
-        return response()->json($result, 200);
-    }
 
     public function import()
     {
@@ -478,34 +432,7 @@ class ProductController extends Controller
     }
 
 
-    public function productnew($limit)
-    {
-        $productstore = ProductStore::select('product_id', DB::raw('SUM(qty) as total_qty'))
-            ->groupBy('product_id');
-        $products = Product::where('product.status', '=', 1)
 
-            ->joinSub($productstore, "productstore", function ($join) {
-                $join->on('productstore.product_id', '=', 'product.id');
-            })
-            ->orderBy('product.created_at', 'desc')
-            ->select(
-                "product.id",
-                "product.name",
-                "product.image",
-                "product.price",
-                "product.slug",
-                "product.detail",
-                'productstore.total_qty'
-            )
-            ->limit($limit)
-            ->get();
-        $result = [
-            'status' => true,
-            'product' => $products,
-            'message' => 'Tai du lieu thanh cong',
-        ];
-        return response()->json($result, 200);
-    }
     public function productsale($limit)
     {
         $productstore = ProductStore::select('product_id', DB::raw('SUM(qty) as total_qty'))
@@ -537,10 +464,38 @@ class ProductController extends Controller
         ];
         return response()->json($result, 200);
     }
-
+    public function productnew($limit)
+    {
+        $productstore = ProductStore::select('product_id', DB::raw('SUM(qty) as total_qty'))
+            ->groupBy('product_id');
+        $products = Product::where('product.status', '=', 1)
+            ->leftJoin("productsale", "productsale.product_id", "=", "product.id")
+            ->joinSub($productstore, "productstore", function ($join) {
+                $join->on('productstore.product_id', '=', 'product.id');
+            })
+            ->orderBy('product.created_at', 'desc')
+            ->select(
+                "product.id",
+                "product.name",
+                "product.image",
+                "product.price",
+                "product.slug",
+                "product.detail",
+                'productsale.pricesale', // Include sale information
+                'productstore.total_qty'
+            )
+            ->limit($limit)
+            ->get();
+        $result = [
+            'status' => true,
+            'product' => $products,
+            'message' => 'Tai du lieu thanh cong',
+        ];
+        return response()->json($result, 200);
+    }
     public function producthotbuy($limit)
     {
-        $productstore = ProductStore::select('product_id', DB::raw('SUM(qty) as sum_qty'))
+        $productstore = ProductStore::select('product_id', DB::raw('SUM(qty) as total_qty'))
             ->groupBy('product_id');
 
         $orderdetail = Orderdetail::select('product_id', DB::raw('SUM(qty) as order_qty'))
@@ -563,7 +518,7 @@ class ProductController extends Controller
                 'product.price',
                 'product.slug',
                 'productsale.pricesale', // Include sale information
-                'productstore.sum_qty'
+                'productstore.total_qty'
             )
             ->limit($limit)
             ->get();
@@ -584,7 +539,7 @@ class ProductController extends Controller
     public function product_detail($slug)
     {
         // Query to aggregate total quantity for each product
-        $productstore = ProductStore::select('product_id', DB::raw('SUM(qty) as total_sum'))
+        $productstore = ProductStore::select('product_id', DB::raw('SUM(qty) as total_qty'))
             ->groupBy('product_id');
 
         // Main query to fetch the product by slug and join related tables
@@ -597,7 +552,7 @@ class ProductController extends Controller
                     ->where('productsale.date_begin', '<=', Carbon::now())
                     ->where('productsale.date_end', '>=', Carbon::now());
             })
-            ->select('product.*', 'productsale.pricesale', 'productsale.date_begin', 'productsale.date_end', 'productstore.total_sum')
+            ->select('product.*', 'productsale.pricesale', 'productsale.date_begin', 'productsale.date_end', 'productstore.total_qty')
             ->first();
 
         if ($product == null) {
@@ -638,7 +593,7 @@ class ProductController extends Controller
             ->leftJoinSub($productstore, 'productstore', function ($join) {
                 $join->on('product.id', '=', 'productstore.product_id');
             })
-            ->select('product.*', 'productsale.pricesale', 'productsale.date_begin', 'productsale.date_end', 'productstore.total_sum')
+            ->select('product.*', 'productsale.pricesale', 'productsale.date_begin', 'productsale.date_end', 'productstore.total_qty')
             ->whereIn('product.category_id', $listcatid)
             ->orderBy('product.created_at', 'desc')
             ->get();
@@ -650,12 +605,6 @@ class ProductController extends Controller
             'message' => 'Lấy thông tin sản phẩm thành công',
         ], 200);
     }
-
-
-
-
-
-
 
 
     // code cũ chưa tích hợp lọc theo giá và sắp sếp
@@ -696,6 +645,7 @@ class ProductController extends Controller
             ->leftJoin('category', 'product.category_id', '=', 'category.id')
             ->select('product.*', 'productsale.pricesale', 'productsale.date_begin', 'productsale.date_end', 'brand.name as brand_name', 'category.name as category_name', 'total_qty')
             ->orderBy('product.created_at', 'desc')
+            ->take(12)
             ->get();
         $result = [
             'status' => true,
@@ -791,19 +741,32 @@ class ProductController extends Controller
     public function search(Request $request)
     {
         $query = $request->search;
-        $products = Product::where('product.status', '!=', 0)
-            ->where('product.name', 'like', '%' . $query . '%')
-            ->orderBy('created_at', 'desc')
 
-            ->get();
-        $resul = [
+        // Query để lấy tổng số lượng của từng sản phẩm trong ProductStore
+        $productstore = ProductStore::select('product_id', DB::raw('SUM(qty) as total_qty'))
+            ->groupBy('product_id');
+
+        // Main product query với lựa chọn trường rõ ràng
+        $productsQuery = Product::select('product.*', 'productsale.pricesale', 'productstore.total_qty')
+            ->where('product.status', '!=', 0)
+            ->where('product.name', 'like', '%' . $query . '%')
+            ->leftJoin('productsale', 'product.id', '=', 'productsale.product_id')
+            ->joinSub($productstore, 'productstore', function ($join) {
+                $join->on('product.id', '=', 'productstore.product_id');
+            })
+            ->orderBy('product.created_at', 'desc');
+
+        $products = $productsQuery->get();
+
+        $result = [
             'status' => true,
             'product' => $products,
-            'message' => 'Tai du lieu thanh cong',
-
+            'message' => 'Tải dữ liệu thành công',
         ];
-        return response()->json($resul, 200);
+
+        return response()->json($result, 200);
     }
+
 
 
 
@@ -887,7 +850,6 @@ class ProductController extends Controller
             ->JoinSub($productstore, "productstore", function ($join) {
                 $join->on('product.id', '=', 'productstore.product_id');
             });
-
         // Áp dụng điều kiện lọc theo khoảng giá
         if (!is_null($minPrice) && !is_null($maxPrice)) {
             $products->whereBetween('product.price', [$minPrice, $maxPrice]);
@@ -903,6 +865,7 @@ class ProductController extends Controller
         $result = [
             'status' => true,
             'products' => $products,
+            'category_name' => $cat->name,
             'message' => 'Tải dữ liệu thành công',
         ];
         return response()->json($result, 200);
@@ -950,7 +913,145 @@ class ProductController extends Controller
         $result = [
             'status' => true,
             'products' => $products,
+            'brand_name' => $brand->name,
             'message' => 'Tải dữ liệu thành công',
+        ];
+        return response()->json($result, 200);
+    }
+
+
+    ///
+    //sản phẩm khuyến mãi
+
+    public function sale()
+    {
+        $products = Product::where('product.status', '!=', 0)
+            ->join('productsale', 'productsale.product_id', '=', 'product.id')
+            ->select(
+                'productsale.id',
+                'product.name',
+                'product.image',
+                'product.price',
+                'productsale.pricesale',
+                'productsale.date_begin',
+                'productsale.date_end'
+            )
+            ->get();
+        $result = [
+            'status' => true,
+            'products' => $products,
+            'message' => 'Tải dữ liệu thành công'
+        ];
+        return response()->json($result, 200);
+    }
+    public function storesale(Request $request)
+    {
+        $productsale = new ProductSale();
+        $productsale->product_id = $request->product_id;
+        $productsale->qty = 1;
+        $productsale->pricesale = $request->pricesale;
+        $productsale->date_begin = $request->date_begin;
+        $productsale->date_end = $request->date_end;
+        $productsale->created_at = date('Y-m-d H:i:s');
+        $productsale->created_by = 1;
+        if ($productsale->save()) {
+            $result = [
+                'status' => true,
+                'productsale' => $productsale,
+                'message' => 'Thêm dữ liệu vào bảng khuyến mãi thành công',
+            ];
+            return response()->json($result, 200);
+        }
+        $result = [
+            'status' => false,
+            'productsale' => null,
+            'message' => 'lỗi',
+        ];
+        return response()->json($result, 200);
+    }
+
+    // show update 
+    public function showSale($id)
+    {
+        $productsale = ProductSale::join('product', 'product.id', '=', 'productsale.product_id')
+            ->where('productsale.id', $id)
+            ->select('productsale.*', 'product.name as product_name', 'product.price as product_price')
+            ->first();
+
+        if ($productsale) {
+            $result = [
+                'status' => true,
+                'productsale' => $productsale,
+                'message' => 'Lấy chi tiết sản phẩm khuyến mãi thành công',
+            ];
+            return response()->json($result, 200);
+        }
+
+        $result = [
+            'status' => false,
+            'productsale' => null,
+            'message' => 'Sản phẩm khuyến mãi không tồn tại',
+        ];
+        return response()->json($result, 404);
+    }
+
+    public function updateSale(Request $request, $id)
+    {
+        $productsale = ProductSale::find($id);
+        if ($productsale) {
+            $productsale->date_begin = $request->date_begin;
+            $productsale->date_end = $request->date_end;
+            $productsale->qty = $request->qty;
+            $productsale->pricesale = $request->pricesale;
+            if ($productsale->save()) {
+                $result = [
+                    'status' => true,
+                    'productsale' => $productsale,
+                    'message' => 'Cập nhật sản phẩm khuyến mãi thành công',
+                ];
+                return response()->json($result, 200);
+            }
+            $result = [
+                'status' => false,
+                'productsale' => null,
+                'message' => 'Cập nhật thất bại',
+            ];
+            return response()->json($result, 500);
+        }
+        $result = [
+            'status' => false,
+            'productsale' => null,
+            'message' => 'Sản phẩm khuyến mãi không tồn tại',
+        ];
+        return response()->json($result, 404);
+    }
+
+    function destroySale($id)
+    {
+        $product = ProductSale::find($id);
+        if ($product == null) {
+            $result = [
+                'status' => false,
+                'product' => null,
+                'message' => 'Khong tim thay du lieu'
+            ];
+            return response()->json($result, 404);
+        }
+
+        if ($product->delete()) {
+            $result = [
+                'status' => true,
+                'product' => $product,
+                'message' => 'Xoa du lieu thanh cong'
+            ];
+            return response()->json($result, 200);
+        }
+
+        // If delete fails
+        $result = [
+            'status' => false,
+            'product' => null,
+            'message' => 'Khong the xoa du lieu'
         ];
         return response()->json($result, 200);
     }

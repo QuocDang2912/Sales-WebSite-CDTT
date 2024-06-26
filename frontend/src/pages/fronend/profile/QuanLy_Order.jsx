@@ -93,7 +93,12 @@ export default function QuanLy_Order() {
             }
         })();
     };
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`;
+    };
 
+    document.title = "Quản lý đơn hàng"; 
 
     return (
         <div className="container">
@@ -130,17 +135,7 @@ export default function QuanLy_Order() {
                                 );
                                 UpdateButton = (
                                     <div style={{ marginTop: 10 }}>
-                                        {/* <button
-                                            className="btn btn-success"
-                                        // data-toggle="modal" data-target="#exampleModal"
-                                        // type="button"
-                                        // onClick={() => {
-                                        //     handleModalUpdate();
-                                        // }}
-                                        >
-                                            Cập nhập
-                                        </button> */}
-                                        <Button variant="primary" onClick={() => handleShow(order)}>
+                                        <Button onClick={() => handleShow(order)} style={{backgroundColor:"#006BA1"}}>
                                             Cập nhật
                                         </Button>
                                     </div>
@@ -222,7 +217,7 @@ export default function QuanLy_Order() {
                                         </strong>
                                     </div>
                                     <div className="col-3">
-                                        Ngày đặt: <strong>{order.created_at}</strong>
+                                        Ngày đặt: <strong>{formatDate(order.created_at)}</strong>
                                     </div>
                                     <div className="col-3">
                                         Trạng thái giao hàng: <strong>{statusText}</strong>

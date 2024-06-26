@@ -57,14 +57,14 @@ export default function ProductTrash() {
                 <div className="container-fluid">
                     <div className="row">
                         <ToastContainer />
-                        <div className="col-md-8">
+                        <div className="col-md-12">
                             {/*CONTENT  */}
                             <div className="content">
                                 <section className="content-header my-2">
-                                    <h1 className="d-inline">Sản phẩm</h1>
+                                    <h1 className="d-inline">Thùng rác sản phẩm</h1>
                                     <hr style={{ border: "none" }} />
                                 </section>
-                                <section className="content-body my-5">
+                                <section className="content-body">
                                     <div className="row">
                                         <div className="col-md-12">
                                             <div className="row mt-3 align-items-center">

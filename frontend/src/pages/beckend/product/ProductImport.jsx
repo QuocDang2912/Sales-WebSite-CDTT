@@ -153,7 +153,11 @@ const ProductImport = () => {
                                     </td>
                                     <td>
                                         {/* Input giá nhập*/}
-                                        <input type="number" min="1000" id={"price" + product.id} />
+                                        <input
+                                            className="form-control"
+                                            max={product.price}
+                                            type="number" min="1000" id={"price" + product.id}
+                                        />
                                     </td>
                                     <td>
                                         {/* Input số lươngj */}

@@ -1,31 +1,33 @@
-import React, { useEffect, useState } from 'react'
-import TopicServie from '../../../services/TopicService';
-import Loading from '../../../components/Loading';
+import React, { useEffect, useState } from "react";
+import TopicServie from "../../../services/TopicService";
+import Loading from "../../../components/Loading";
 import { MdDeleteForever } from "react-icons/md";
-import { Link } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css';
-import { FaEdit, FaEye, FaToggleOff, FaToggleOn, FaTrash } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import {
+  FaEdit,
+  FaEye,
+  FaToggleOff,
+  FaToggleOn,
+  FaTrash,
+} from "react-icons/fa";
 export default function TopicIndex() {
-
   const [status1, setStatus1] = useState(0);
 
   const [topics, setTopics] = useState([]);
   const [loading, setLoading] = useState(true);
   const [reload, setReLoad] = useState(0);
 
-
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [sort_order, setSortOrder] = useState(1);
   const [status, setStatus] = useState(1);
 
-
   useEffect(() => {
     (async () => {
-
       const result = await TopicServie.index();
-      console.log("🚀 ~ file: TopicIndex.jsx:26 ~ result:", result)
+      console.log("🚀 ~ file: TopicIndex.jsx:26 ~ result:", result);
       setTopics(result.topics);
       setLoading(false);
     })();
@@ -41,14 +43,14 @@ export default function TopicIndex() {
 
     (async () => {
       const result = await TopicServie.store(topic);
-      console.log("🚀 ~ file: TopicIndex.js:42 ~ result:", result)
+      console.log("🚀 ~ file: TopicIndex.js:42 ~ result:", result);
       alert(result.message);
       // Reset form fields
       setName("");
       setDescription("");
       setSortOrder(1);
       setStatus(1);
-      document.getElementById('idreset').reset();
+      document.getElementById("idreset").reset();
       setReLoad(result.topic.id);
     })();
   };
@@ -71,7 +73,6 @@ export default function TopicIndex() {
     })();
   };
 
-
   return (
     <div>
       <div className="content">
@@ -82,7 +83,11 @@ export default function TopicIndex() {
         <section className="content-body my-2">
           <div className="row">
             <div className="col-md-4">
-              <form onSubmit={handleSubmit} id="idreset" encType="multipart/form-data">
+              <form
+                onSubmit={handleSubmit}
+                id="idreset"
+                encType="multipart/form-data"
+              >
                 <div className="mb-3">
                   <label>
                     <strong>Tên chủ đề (*)</strong>
@@ -104,7 +109,7 @@ export default function TopicIndex() {
                     onChange={(e) => setDescription(e.target.value)}
                     value={description}
                     rows="4"
-                    placeholder="mô tả"
+                    placeholder="Mô tả"
                     className="form-control"
                     required
                   />
@@ -113,7 +118,11 @@ export default function TopicIndex() {
                   <label>
                     <strong>sort_order</strong>
                   </label>
-                  <select onChange={(e) => setSortOrder(e.target.value)} value={sort_order} className="form-select">
+                  <select
+                    onChange={(e) => setSortOrder(e.target.value)}
+                    value={sort_order}
+                    className="form-select"
+                  >
                     <option value={1}>1</option>
                     <option value={2}>2</option>
                   </select>
@@ -122,7 +131,11 @@ export default function TopicIndex() {
                   <label>
                     <strong>Trạng thái</strong>
                   </label>
-                  <select onChange={(e) => setStatus(e.target.value)} value={status} className="form-control">
+                  <select
+                    onChange={(e) => setStatus(e.target.value)}
+                    value={status}
+                    className="form-control"
+                  >
                     <option value={1}>Xuất bản</option>
                     <option value={2}>Chưa xuất bản</option>
                   </select>
@@ -178,9 +191,6 @@ export default function TopicIndex() {
                     <th className="text-center" style={{ width: 30 }}>
                       ID
                     </th>
-                    <th className="text-center" style={{ width: 30 }}>
-                      action
-                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -193,49 +203,56 @@ export default function TopicIndex() {
                           </td>
                           <td>
                             <a href="brand_index.html">{topic.name}</a>
+                            <div className="function_style">
+                              <button
+                                onClick={() => handleStatus(topic.id)}
+                                className={
+                                  topic.status === 1
+                                    ? "border-0 px-1 text-success"
+                                    : "border-0 px-1 text-danger"
+                                }
+                                style={{
+                                  border: "none",
+                                  backgroundColor: "transparent",
+                                }}
+                              >
+                                {topic.status === 1 ? (
+                                  <FaToggleOn />
+                                ) : (
+                                  <FaToggleOn />
+                                )}
+                              </button>
+                              <Link to={`/admin/topic/edit/${topic.id}`}>
+                                <FaEdit
+                                  style={{ color: "blue", fontSize: "16" }}
+                                />
+                              </Link>
+                              <Link
+                                to={`/admin/topic/show/${topic.id}`}
+                                className="px-1 text-info"
+                              >
+                                <FaEye />
+                              </Link>
+
+                              <button
+                                onClick={() => handleDelete(topic.id)}
+                                className="px-1 text-danger"
+                                style={{
+                                  border: "none",
+                                  backgroundColor: "transparent",
+                                }}
+                              >
+                                <FaTrash />
+                              </button>
+                            </div>
                           </td>
                           <td>
                             <div className="name">
                               <a href="brand_index.html">{topic.slug}</a>
                             </div>
-                            <div className="function_style">
-                              <a href="#" className="px-1 text-success">
-                                <i className="fa fa-toggle-on" />
-                              </a>
-                              <a href="topic_edit.html" className="px-1 text-primary">
-                                <i className="fa fa-edit" />
-                              </a>
-                              <a href="topic_show.html" className="px-1 text-info">
-                                <i className="fa fa-eye" />
-                              </a>
-                              <a href="#" className="px-1 text-danger">
-                                <i className="fa fa-trash" />
-                              </a>
-                            </div>
                           </td>
 
                           <td className="text-center">{topic.id}</td>
-                          <td className="text-center">
-                            <MdDeleteForever
-                              onClick={() => handleDelete(topic.id)}
-                              style={{ color: "red", fontSize: "20" }}
-                            />
-
-                            <Link to={`/admin/topic/edit/${topic.id}`}>
-                              <FaEdit style={{ color: "blue", fontSize: "20" }} />
-                            </Link>
-                            <Link to={`/admin/topic/show/${topic.id}`} className="px-1 text-info">
-                              <FaEye />
-                            </Link>
-                            <button
-                              onClick={() => handleStatus(topic.id)}
-                              className={
-                                topic.status === 1 ? "border-0 px-1 text-success" : "border-0 px-1 text-danger"
-                              }
-                            >
-                              {topic.status === 1 ? <FaToggleOn /> : <FaToggleOn />}
-                            </button>
-                          </td>
                         </tr>
                       );
                     })}
@@ -261,5 +278,5 @@ export default function TopicIndex() {
         <ToastContainer />
       </div>
     </div>
-  )
+  );
 }

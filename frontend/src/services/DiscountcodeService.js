@@ -14,5 +14,11 @@ const DiscountcodeService = {
     check: (data) => {
         return httpAxios.post(`discount_codes/check`, data);
     },
+    update: (data, id) => {
+        return httpAxios.post(`discount_codes/update/${id}`, data);
+    },
+    destroy: (id) => {
+        return httpAxios.delete(`discount_codes/destroy/${id}`);
+    },
 };
 export default DiscountcodeService;

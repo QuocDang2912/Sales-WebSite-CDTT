@@ -26,7 +26,9 @@ export default function PostDetail() {
                 console.log("🚀 ~ fetch ~ res:", res)
                 setPost(res.post)
                 setrelated_posts(res.related_posts)
-
+                if (post.title) {
+                    document.title = post.title;
+                }
 
                 // call comment
 
@@ -43,9 +45,6 @@ export default function PostDetail() {
         fetch()
 
     }, [slug, post.id, reload])
-
-
-    //  submit cmt
 
 
     let user = useSelector((state) => state.user.current);
@@ -89,7 +88,10 @@ export default function PostDetail() {
             setReLoad(result.comment.id);
         })();
     }
-
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`;
+    };
     function renderComments(comments, isChild = false, levelCount = 0) {
         // Mức độ thụt vào cho mỗi cấp (đơn vị: px)
         const indentationSize = 50;
@@ -114,7 +116,7 @@ export default function PostDetail() {
                                     </p>
                                     <div className='rep'>
                                         <b onClick={() => { handleClickRep(comment) }} style={{ fontSize: "20px", color: "#4267b2", marginRight: "7px" }} href="">Trả Lời</b>
-                                        <span>{comment.created_at}</span>
+                                        <span>{formatDate(comment.created_at)}</span>
                                     </div>
                                 </div>
                             </div>
@@ -162,7 +164,7 @@ export default function PostDetail() {
                                             onChange={handleChange} cols={30} rows={1} className="form-control" required defaultValue={""} style={{ border: "1px solid #ccc", borderRadius: "4px" }} />
                                     </div>
                                     <div className="form-footer my-0">
-                                        <button type="submit" className="btn btn-sm btn-primary">Đăng
+                                        <button type="submit" className="btn btn-sm" style={{backgroundColor:"#006BA1", color:"white"}}>Đăng
                                             Bình Luận</button>
                                     </div>
                                 </form>
@@ -186,7 +188,7 @@ export default function PostDetail() {
                                                             {post.title}
                                                         </p>
                                                     </h2>
-                                                    <p style={{ color: "black" }}>{post.detail}</p>
+                                                    <p style={{ color: "black" }}>{post.description}</p>
                                                 </Link>
                                             </div>
 

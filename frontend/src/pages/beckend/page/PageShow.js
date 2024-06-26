@@ -32,12 +32,7 @@ export default function PageShow() {
                         <a href="/admin/page/index" class="btn btn-primary btn-sm">
                             <i class="fa fa-arrow-left"></i> Về danh sách
                         </a>
-                        <a href="/admin/page/update" class="btn btn-success btn-sm">
-                            <i class="fa fa-edit"></i> Sửa
-                        </a>
-                        <a href="page_index.html" class="btn btn-danger btn-sm">
-                            <i class="fa fa-trash"></i> Xóa
-                        </a>
+
                     </div>
                 </div>
             </section>
@@ -46,8 +41,8 @@ export default function PageShow() {
                 <table class="table table-bordered">
                     <thead>
                         <tr>
-                            <th>Tên trường</th>
-                            <th>Giá trị</th>
+                            <th style={{ width:"30px" }}>Tên trường</th>
+                            <th style={{ textAlign: "center" }}>Giá trị</th>
                         </tr>
                     </thead>
                     <tbody>

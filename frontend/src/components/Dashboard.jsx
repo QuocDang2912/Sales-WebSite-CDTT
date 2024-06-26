@@ -10,13 +10,13 @@ export default function Dashboard() {
         <div class="col-md-2 bg-dark p-0 hdl-left">
             <div class="hdl-left">
                 <div class="dashboard-name">
-                    Bản điều khiển
+                    Bảng điều khiển
                 </div>
                 <nav class="m-2 mainmenu">
                     <ul class="main">
                         <li class="hdlitem item-sub" id="item1" onClick={() => handleItemClick('item1')} >
                             <FaProductHunt className="icon-left" />
-                            <a href="#st">Sản phẩm</a>
+                            <a href="#st">Quản lý sản phẩm</a>
                             <FaPlus className="icon-right" />
                             <ul class="submenu">
                                 <li>
@@ -24,34 +24,34 @@ export default function Dashboard() {
                                     <Link to='/admin/product/index'>Tất cả sản phẩm</Link>
                                 </li>
                                 <li>
-                                    <Link to='/admin/category/index'>Loại(category)</Link>
+                                    <Link to='/admin/category/index'>Quản lý danh mục</Link>
                                 </li>
                                 <li>
-                                    <Link to='/admin/brand/index'>Thương hiệu(brand)</Link>
+                                    <Link to='/admin/brand/index'>Quản lý thương hiệu</Link>
 
                                 </li>
 
                                 <li>
-                                    <Link to='/admin/product/productsale'>ProductSale</Link>
+                                    <Link to='/admin/product/productsale'>Sản phẩm khuyến mãi</Link>
                                 </li>
                                 <li>
-                                    <Link to='/admin/product/productImport'>productImport</Link>
+                                    <Link to='/admin/product/productImport'>Nhập hàng</Link>
                                 </li>
                             </ul>
                         </li>
                         <li class="hdlitem item-sub" id="item2" onClick={() => handleItemClick('item2')}>
                             <FaProductHunt className="icon-left" />
-                            <a href="#st">Bài viết</a>
+                            <a href="#st">Quản lý bài viết</a>
                             <FaPlus className="icon-right" />
                             <ul class="submenu">
                                 <li>
-                                    <Link to='/admin/post/index'>post</Link>
+                                    <Link to='/admin/post/index'>Tất cả bài viết</Link>
                                 </li>
                                 <li>
-                                    <Link to='/admin/topic/index'>chủ đề</Link>
+                                    <Link to='/admin/topic/index'>Chủ đề</Link>
                                 </li>
                                 <li>
-                                    <Link to='/admin/page/index'>trang đơn</Link>
+                                    <Link to='/admin/page/index'>Quản lý trang đơn</Link>
                                 </li>
                             </ul>
                         </li>
@@ -61,25 +61,27 @@ export default function Dashboard() {
                             <FaPlus className="icon-right" />
                             <ul class="submenu">
                                 <li>
-                                    <Link to='/admin/order/index'>tất cả đơn hàng</Link>
+                                    <Link to='/admin/order/index'>Tất cả đơn hàng</Link>
                                 </li>
                                 <li>
                                     <Link to='/admin/orderExport/index'>Xuất hàng</Link>
-                                    {/* <a href="order_export.html">Xuất hàng</a> */}
+                                </li>
+                                <li>
+                                    <Link to='/admin/order/thong-ke'>Báo cáo - Thống kê</Link>
                                 </li>
                             </ul>
                         </li>
                         <li class="hdlitem">
                             <FaProductHunt className="icon-left" />
-                            <Link to='/admin/customer/index'>customer</Link>
+                            <Link to='/admin/customer/index'>Quản lý thành viên</Link>
                         </li>
                         <li class="hdlitem">
                             <FaProductHunt className="icon-left" />
-                            <Link to='/admin/contact/index'>liên hệ(contact)</Link>
+                            <Link to='/admin/contact/index'>Quản lý liên hệ</Link>
                         </li>
                         <li class="hdlitem">
                             <FaProductHunt className="icon-left" />
-                            <Link to='/admin/discountcode/index'>Mã code</Link>
+                            <Link to='/admin/discountcode/index'>Mã giảm giá</Link>
                         </li>
                         <li class="hdlitem item-sub" id="item4" onClick={() => handleItemClick('item4')}>
                             <FaProductHunt className="icon-left" />
@@ -87,10 +89,10 @@ export default function Dashboard() {
                             <FaPlus className="icon-right" />
                             <ul class="submenu">
                                 <li>
-                                    <Link to='/admin/menu/index'>menu</Link>
+                                    <Link to='/admin/menu/index'>Menu</Link>
                                 </li>
                                 <li>
-                                    <Link to='/admin/banner/index'>Banner</Link>
+                                    <Link to='/admin/banner/index'>Quản lý Banner</Link>
                                 </li>
                             </ul>
                         </li>
@@ -100,7 +102,7 @@ export default function Dashboard() {
                             <FaPlus className="icon-right" />
                             <ul class="submenu">
                                 <li>
-                                    <Link to='/admin/user/index'>user</Link>
+                                    <Link to='/admin/user/index'>Quản trị viên</Link>
                                 </li>
                             </ul>
                         </li>

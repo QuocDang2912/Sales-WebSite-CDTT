@@ -10,7 +10,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import emailjs from "@emailjs/browser";
 
 import axios from "axios";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import DiscountcodeService from "../../../services/DiscountcodeService";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
@@ -19,6 +19,8 @@ import ProductServie from "../../../services/ProductService";
 export default function Checkout() {
     const location = useLocation();
     const dispatch = useDispatch();
+
+    const navi = useNavigate()
     // lấy thông tin user  trên redux
 
     let user = useSelector((state) => state.user.current);
@@ -33,6 +35,7 @@ export default function Checkout() {
         status: 1,
         delivery_address: "",
     });
+    console.log("inputs", inputs)
     // redux
 
     // state call api địa chỉ
@@ -102,13 +105,6 @@ export default function Checkout() {
                     setSelectedDistrict(savedInputs.selectedDistrict || "");
                     setSelectedWard(savedInputs.selectedWard || "");
                 }
-
-                const queryParams = new URLSearchParams(location.search);
-                const message = queryParams.get("message");
-                if (message === "Successful.") {
-                    const updatedInputs = { ...inputs, note: "Đã thanh toán" };
-                    setInputs(updatedInputs);
-                }
                 /// call mã code
                 const result = await DiscountcodeService.index();
                 setDiscountCodes(result.Discountcode)
@@ -119,6 +115,19 @@ export default function Checkout() {
             }
         };
         fetchCityData();
+    }, []);
+    useEffect(() => {
+        const queryParams = new URLSearchParams(location.search);
+        const message = queryParams.get("message");
+
+        if (message === "Successful.") {
+            const savedInputs = JSON.parse(localStorage.getItem("checkoutInputs"));
+            if (savedInputs) {
+                const updatedInputs = { ...savedInputs, note: "Đã thanh toán" };
+                setInputs(updatedInputs);
+                handleSubmitAfterMomo(updatedInputs);
+            }
+        }
     }, [location.search]);
 
     useEffect(() => {
@@ -232,26 +241,24 @@ export default function Checkout() {
 
     // test momo
     const handleSubmit1 = async (event) => {
-        console.log("test momo");
         event.preventDefault();
         try {
-            const total_momo = total + shippingFee;
-            // Save selections to localStorage
+            const total_momo = total - totalSale + shippingFee;
             const savedInputs = {
                 ...inputs,
-                selectedCity,
-                selectedDistrict,
-                selectedWard,
+                // selectedCity,
+                // selectedDistrict,
+                // selectedWard,
             };
             localStorage.setItem("checkoutInputs", JSON.stringify(savedInputs));
 
-            const response = await OrderServie.momo_pay({ total_momo: total_momo });
+            const response = await OrderServie.momo_pay({ total_momo });
             window.location.href = response.payUrl;
         } catch (error) {
             console.error("Error:", error);
-            // Xử lý lỗi nếu có
         }
     };
+
 
     // test mã giảm giá
 
@@ -383,6 +390,68 @@ export default function Checkout() {
         console.log(inputs);
     };
 
+
+    const [checkoutType, setCheckoutType] = useState(1);
+
+    const showbankinfo = (value) => {
+        setCheckoutType(Number(value));
+    };
+
+    const handleSubmitAfterMomo = async (updatedInputs) => {  // THAY ĐỔI 3: Hàm xử lý đơn hàng sau khi thanh toán Momo
+        console.log("🚀 ~ handleSubmitAfterMomo ~ updatedInputs:", updatedInputs)
+        try {
+            const dataOrder = {
+                ...updatedInputs,
+                total: total - totalSale + shippingFee,
+            };
+
+            const res = await OrderServie.store(dataOrder);
+
+            const form_orderDetail = {
+                order_id: res.order.id,
+                products: convert_arr_form_ordedetail,
+            };
+            const Call_Order_detail = await OrderDetailService.store(form_orderDetail);
+
+            await Promise.all(
+                convert_arr_form_ordedetail.map(async (item) => {
+                    const resultupdateProductStore = await ProductServie.updateProductStore(item.product_id, item.qty);
+                    console.log("🚀 ~ resultupdateProductStore after Momo:", resultupdateProductStore);
+                })
+            );
+
+            const amount = new Intl.NumberFormat("vi-VN", {
+                style: "currency",
+                currency: "VND",
+            }).format(total - totalSale + shippingFee);
+
+            await emailjs.send(
+                "service_gjtj4yf",
+                "template_4hu27vp",
+                {
+                    user_email: user.email,
+                    user_name: user.name,
+                    address: updatedInputs.delivery_address,
+                    result: amount,
+                },
+                {
+                    publicKey: "IMiWlEiyoza8USljv",
+                }
+            );
+
+            toast.success("Đặt Hàng Thành công");
+            localStorage.removeItem("cart");
+            localStorage.removeItem("checkoutInputs");
+            dispatch(reset());
+            navi("/")
+        } catch (error) {
+            console.log("🚀 ~ Error after Momo:", error);
+            toast.error("Đặt Hàng Thất Bại");
+        }
+    };
+
+    document.title = "Thanh toán";
+
     return (
         <div>
             <section className="bg-light">
@@ -405,134 +474,131 @@ export default function Checkout() {
                 <div className="container">
                     <div className="row">
                         <div className="col-md-5">
-                            <form onSubmit={handleSubmit}>
-                                <h2 className="fs-5 text-main">Thông tin giao hàng</h2>
-                                <p>
-                                    Bạn có tài khoản chưa? <a href="login.html">Đăng nhập</a>
-                                </p>
-                                <div className="card">
-                                    <div className="card-header text-main">Địa chỉ nhận hàng</div>
-                                    <div className="card-body">
-                                        <div className="mb-3">
-                                            <label htmlFor="address">Địa chỉ</label>
-                                            <input
-                                                type="text"
-                                                name="delivery_address"
-                                                value={inputs.delivery_address || ""}
-                                                onChange={handleChange}
-                                                id="address"
-                                                className="form-control"
-                                                placeholder="Nhập địa chỉ"
-                                            />
+                            <h2 className="fs-5 text-main">Thông tin giao hàng</h2>
+                            <p>
+                                Bạn có tài khoản chưa? <a href="login.html">Đăng nhập</a>
+                            </p>
+                            <div className="card">
+                                <div className="card-header text-main">Địa chỉ nhận hàng</div>
+                                <div className="card-body">
+                                    <div className="mb-3">
+                                        <label htmlFor="address">Địa chỉ</label>
+                                        <input
+                                            type="text"
+                                            name="delivery_address"
+                                            value={inputs.delivery_address || ""}
+                                            onChange={handleChange}
+                                            id="address"
+                                            className="form-control"
+                                            placeholder="Nhập địa chỉ"
+                                        />
+                                    </div>
+                                    <div className="row">
+                                        <div className="col-4">
+                                            <select
+                                                value={selectedCity}
+                                                onChange={handleCityChange}
+                                                className="form-select form-select-sm mb-3"
+                                                aria-label=".form-select-sm"
+                                            >
+                                                <option value="" selected>
+                                                    Chọn tỉnh thành
+                                                </option>
+                                                {cityData.map((city) => (
+                                                    <option key={city.Id} value={city.Id}>
+                                                        {city.Name}
+                                                    </option>
+                                                ))}
+                                            </select>
                                         </div>
-                                        <div className="row">
-                                            <div className="col-4">
-                                                <select
-                                                    value={selectedCity}
-                                                    onChange={handleCityChange}
-                                                    className="form-select form-select-sm mb-3"
-                                                    aria-label=".form-select-sm"
-                                                >
-                                                    <option value="" selected>
-                                                        Chọn tỉnh thành
-                                                    </option>
-                                                    {cityData.map((city) => (
-                                                        <option key={city.Id} value={city.Id}>
-                                                            {city.Name}
-                                                        </option>
-                                                    ))}
-                                                </select>
-                                            </div>
-                                            <div className="col-4">
-                                                <select
-                                                    value={selectedDistrict}
-                                                    onChange={handleDistrictChange}
-                                                    className="form-select form-select-sm mb-3"
-                                                    aria-label=".form-select-sm"
-                                                >
-                                                    <option value="" selected>
-                                                        Chọn quận huyện
-                                                    </option>
-                                                    {selectedCity &&
-                                                        cityData
-                                                            .find((city) => city.Id === selectedCity)
-                                                            ?.Districts.map((district) => (
-                                                                <option key={district.Id} value={district.Id}>
-                                                                    {district.Name}
-                                                                </option>
-                                                            ))}
-                                                </select>
-                                            </div>
-                                            <div className="col-4">
-                                                <select
-                                                    value={selectedWard}
-                                                    onChange={(event) =>
-                                                        setSelectedWard(event.target.value)
-                                                    }
-                                                    className="form-select form-select-sm"
-                                                    aria-label=".form-select-sm"
-                                                >
-                                                    <option value="" selected>
-                                                        Chọn phường xã
-                                                    </option>
-                                                    {selectedDistrict &&
-                                                        cityData
-                                                            .find((city) => city.Id === selectedCity)
-                                                            ?.Districts.find(
-                                                                (district) => district.Id === selectedDistrict
-                                                            )
-                                                            ?.Wards.map((ward) => (
-                                                                <option key={ward.Id} value={ward.Id}>
-                                                                    {ward.Name}
-                                                                </option>
-                                                            ))}
-                                                </select>
-                                            </div>
+                                        <div className="col-4">
+                                            <select
+                                                value={selectedDistrict}
+                                                onChange={handleDistrictChange}
+                                                className="form-select form-select-sm mb-3"
+                                                aria-label=".form-select-sm"
+                                            >
+                                                <option value="" selected>
+                                                    Chọn quận huyện
+                                                </option>
+                                                {selectedCity &&
+                                                    cityData
+                                                        .find((city) => city.Id === selectedCity)
+                                                        ?.Districts.map((district) => (
+                                                            <option key={district.Id} value={district.Id}>
+                                                                {district.Name}
+                                                            </option>
+                                                        ))}
+                                            </select>
+                                        </div>
+                                        <div className="col-4">
+                                            <select
+                                                value={selectedWard}
+                                                onChange={(event) =>
+                                                    setSelectedWard(event.target.value)
+                                                }
+                                                className="form-select form-select-sm"
+                                                aria-label=".form-select-sm"
+                                            >
+                                                <option value="" selected>
+                                                    Chọn phường xã
+                                                </option>
+                                                {selectedDistrict &&
+                                                    cityData
+                                                        .find((city) => city.Id === selectedCity)
+                                                        ?.Districts.find(
+                                                            (district) => district.Id === selectedDistrict
+                                                        )
+                                                        ?.Wards.map((ward) => (
+                                                            <option key={ward.Id} value={ward.Id}>
+                                                                {ward.Name}
+                                                            </option>
+                                                        ))}
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
-                                <h4 className="fs-6 text-main mt-4">Phương thức thanh toán</h4>
-                                <div className="thanhtoan mb-4">
-                                    <div className="p-4 border">
-                                        <input
-                                            name="typecheckout"
-                                            onchange="showbankinfo(this.value)"
-                                            type="radio"
-                                            defaultValue={1}
-                                            id="check1"
-                                        />
-                                        <label htmlFor="check1">Thanh toán khi giao hàng</label>
-                                    </div>
-                                    <div className="p-4 border">
-                                        <input
-                                            name="typecheckout"
-                                            onchange="showbankinfo(this.value)"
-                                            type="radio"
-                                            defaultValue={2}
-                                            id="check2"
-                                        />
-                                        <label htmlFor="check2">Chuyển khoản qua ngân hàng</label>
-                                    </div>
-                                    <div className="p-4 border bankinfo">
-                                        <form>
-                                            <input type="hidden" name="total_momo" />{" "}
-                                            {/* Set the value as per your requirement */}
-                                            <button onClick={handleSubmit1} type="submit">
+                            </div>
+                            <h4 className="fs-6 text-main mt-4">Phương thức thanh toán</h4>
+                            <div className="thanhtoan mb-4">
+                                <div className="p-4 border">
+                                    <input
+                                        name="typecheckout"
+                                        onChange={(e) => showbankinfo(e.target.value)}
+                                        type="radio"
+                                        value={1}
+                                        id="check1"
+                                        defaultChecked={checkoutType === 1}
+                                    />
+                                    <label htmlFor="check1">Thanh toán khi giao hàng</label>
+                                    {checkoutType === 1 && (
+                                        <div className="mt-2">
+                                            <button style={{ backgroundColor: "red", color: "white" }} className="btn btn-main px-4" onClick={handleSubmit} type="button">
+                                                Xác nhận Thanh toán khi giao hàng
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="p-4 border">
+                                    <input
+                                        name="typecheckout"
+                                        onChange={(e) => showbankinfo(e.target.value)}
+                                        type="radio"
+                                        value={2}
+                                        id="check2"
+                                        defaultChecked={checkoutType === 2}
+                                    />
+                                    <label htmlFor="check2">Chuyển khoản qua ngân hàng</label>
+                                    {checkoutType === 2 && (
+
+                                        <div className="mt-2">
+                                            <button style={{ backgroundColor: "red", color: "white" }} className="btn btn-main px-4" onClick={handleSubmit1} type="button">
                                                 Thanh toán Momo
                                             </button>
-                                        </form>
-                                    </div>
+                                        </div>
+                                    )}
                                 </div>
-                                <div className="text-end">
-                                    <button
-                                        style={{ backgroundColor: "red" }}
-                                        type="submit"
-                                        className="btn btn-main px-4"
-                                    >
-                                        XÁC NHẬN
-                                    </button>
-                                </div>
-                            </form>
+                            </div>
                         </div>
 
                         <div className="col-md-7">

@@ -1,5 +1,8 @@
 import { useState } from "react";
 import ContactServie from "../../../services/ContactService";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 export default function Contact() {
   const [inputs, setInputs] = useState({});
 
@@ -20,10 +23,11 @@ export default function Contact() {
     (async () => {
       const res = await ContactServie.store(inputs);
       console.log("🚀 ~ res:", res);
+      toast.success("Bạn đã gửi liên hệ thành công!");
     })();
     console.log(inputs);
   };
-
+  document.title = "Liên hệ";
   return (
     <div>
       <section className="bg-light">
@@ -135,7 +139,7 @@ export default function Contact() {
                 </div>
                 <div className="mb-3">
                   <button
-                    style={{ backgroundColor: "red" }}
+                    style={{ backgroundColor: "#006BA1", color:"white" }}
                     className="btn btn-main"
                   >
                     Gửi liên hệ

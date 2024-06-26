@@ -63,10 +63,7 @@ export default function UserEdit() {
                         <h1 className="d-inline">Cập nhật thành viên</h1>
                         <div className="row mt-2 align-items-center">
                             <div className="col-md-12 text-end">
-                                <button className="btn btn-success btn-sm" name="CAPNHAT">
-                                    <i className="fa fa-save" /> Lưu [Cập nhật]
-                                </button>
-                                <Link className="btn btn-primary btn-sm" style={{ color: "white" }} to='/admin/user/index'>quay về trang chủ </Link>
+                                <Link className="btn btn-primary btn-sm" style={{ color: "white" }} to='/admin/user/index'> <i class="fa fa-arrow-left"></i>Quay lại </Link>
 
                             </div>
                         </div>
@@ -116,6 +113,9 @@ export default function UserEdit() {
                                         <option value={2}>Chưa xuất bản</option>
                                     </select>
                                 </div>
+                                <button className="btn btn-success btn-sm" name="CAPNHAT" style={{marginTop:"25px",height:"35px",marginLeft:"525px"}}>
+                                    <i className="fa fa-save" /> Cập nhật
+                                </button>
                             </div>
                         </div>
                     </section>

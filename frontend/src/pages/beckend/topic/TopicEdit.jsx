@@ -53,7 +53,7 @@ export default function TopicEdit() {
                     <section className="content-header my-2">
                         <h1 className="d-inline">Cập nhật chủ đề</h1>
                         <div className="text-end">
-                            <Link className="btn btn-sm btn-primary" style={{ color: "white" }} to='/admin/topic/index'>quay về</Link>
+                            <Link className="btn btn-sm btn-primary" style={{ color: "white" }} to='/admin/topic/index'><i class="fa fa-arrow-left"></i>Quay lại</Link>
 
                         </div>
                     </section>

@@ -2,11 +2,14 @@ import React, { useEffect } from 'react'
 import { useState } from 'react'
 import { Link, useParams, useNavigate } from 'react-router-dom'
 import PostServie from '../../../services/PostService';
+import TopicServie from '../../../services/TopicService';
+
 export default function PostEdit() {
 
     const { id } = useParams()
     const navigate = useNavigate();
 
+    const [topic, setTopic] = useState([])
 
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
@@ -58,6 +61,17 @@ export default function PostEdit() {
     }
 
 
+    useEffect(() => {
+        // fetch topic
+        (
+            async () => {
+                const fetToptic = await TopicServie.index()
+                console.log("🚀 ~ file: ProductCreate.jsx:46 ~ fetChCategory:", fetToptic)
+                setTopic(fetToptic.topics)
+            }
+        )();
+
+    }, [])
 
     return (
         <div>
@@ -65,7 +79,7 @@ export default function PostEdit() {
                 <section class="content-header my-2">
                     <h1 class="d-inline">Cập nhật bài viết</h1>
                     <div class="text-end">
-                        <Link className="btn btn-primary btn-sm" to={'/admin/post/index'} style={{ color: "white" }}>về trang chính</Link>
+                        <Link className="btn btn-primary btn-sm" to={'/admin/post/index'} style={{ color: "white" }}><i class="fa fa-arrow-left"></i>Quay lại</Link>
 
                     </div>
                 </section>
@@ -83,7 +97,7 @@ export default function PostEdit() {
                                     <input onChange={(e) => setSlug(e.target.value)} value={slug} type="text" name="slug" class="form-control" placeholder="Slug" />
                                 </div>
                                 <div class="mb-3">
-                                    <label><strong>type (*)</strong></label>
+                                    <label><strong>Type (*)</strong></label>
                                     <input onChange={(e) => setType(e.target.value)} value={type} type="text" name="type" class="form-control" placeholder="Slug" />
                                 </div>
                                 <div class="mb-3">
@@ -115,9 +129,17 @@ export default function PostEdit() {
                                         <strong>Chủ đề (*)</strong>
                                     </div>
                                     <div class="box-body p-2 border-bottom">
-                                        <select onChange={(e) => setTopic_id(e.target.value)} value={topic_id} name="topic_id" class="form-select">
-                                            <option value="">None</option>
-                                            <option value="1">Tên chủ đề</option>
+                                        <select onChange={(e) => setTopic_id(e.target.value)} name="topic_id" class="form-select">
+                                            {/* <option value="">None</option>
+                                            <option value="1">Tên chủ đề</option> */}
+                                            {
+                                                topic && topic.length > 0 &&
+                                                topic.map((item, index) => {
+                                                    return (
+                                                        <option key={index} value={item.id}>{item.name}</option>
+                                                    )
+                                                })
+                                            }
                                         </select>
                                     </div>
                                 </div>

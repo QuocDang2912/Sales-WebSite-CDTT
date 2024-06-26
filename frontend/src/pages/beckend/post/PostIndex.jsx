@@ -48,9 +48,9 @@ export default function PortIndex() {
             <div className="content">
                 <section className="content-header my-2">
                     <h1 className="d-inline">Quản lý bài viết</h1>
-                    <Link className="btn btn-primary btn-sm" to={"/admin/post/create"} style={{ color: "white" }}>
+                    <Link className="btn btn-primary btn-sm" to={"/admin/post/create"} style={{ color: "white", marginLeft: "20px", marginTop: "-10px" }}>
                         {" "}
-                        them moi
+                        Thêm mới
                     </Link>
                     <div className="row mt-3 align-items-center">
                         <div className="col-6">
@@ -127,8 +127,8 @@ export default function PortIndex() {
                                 <th className="text-center" style={{ width: 130 }}>
                                     Hình ảnh
                                 </th>
-                                <th>Tiêu đề bài viết</th>
-                                <th>detail</th>
+                                <th style={{ width: 150 }}>Tiêu đề bài viết</th>
+                                <th className="text-center" >Mô tả bài viết</th>
                                 <th className="text-center" style={{ width: 30 }}>
                                     ID
                                 </th>
@@ -153,6 +153,7 @@ export default function PortIndex() {
                                                     <button
                                                         onClick={() => handleStatus(post.id)}
                                                         className={post.status === 1 ? "border-0 px-1 text-success" : "border-0 px-1 text-danger"}
+                                                        style={{border: "none", backgroundColor: "transparent"}}
                                                     >
                                                         {post.status === 1 ? <FaToggleOn /> : <FaToggleOn />}
                                                     </button>
@@ -162,12 +163,12 @@ export default function PortIndex() {
                                                     <Link to={`/admin/post/show/${post.id}`} className="px-1 text-info">
                                                         <FaEye />
                                                     </Link>
-                                                    <button onClick={() => handleDelete(post.id)} className="px-1 text-danger">
+                                                    <button onClick={() => handleDelete(post.id)} className="px-1 text-danger" style={{border: "none", backgroundColor: "transparent"}}>
                                                         <FaTrash />
                                                     </button>
                                                 </div>
                                             </td>
-                                            <td>{post.detail}</td>
+                                            <td>{post.description}</td>
                                             <td className="text-center">{post.id}</td>
                                         </tr>
                                     );

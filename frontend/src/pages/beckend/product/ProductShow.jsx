@@ -30,7 +30,7 @@ export default function ProductShow() {
                 <div className="container-fluid">
                     <div className="row">
 
-                        <div className="col-md-10">
+                        <div className="col-md-12">
                             {/*CONTENT  */}
                             <div className="content">
                                 <section className="content-header my-2">
@@ -38,7 +38,7 @@ export default function ProductShow() {
                                     <div className="row mt-2 align-items-center">
                                         <div className="col-md-12 text-end">
                                             {/* <a href="brand_index.html" className="btn btn-primary btn-sm"> */}
-                                            <Link className="btn btn-primary btn-sm" to={'/admin/product/index'} style={{ color: "white" }}>về trang chính</Link>
+                                            <Link className="btn btn-primary btn-sm" to={'/admin/product/index'} style={{ color: "white" }}>Về trang chính</Link>
                                             {/* </a> */}
                                             {/* <a href="brand_edit.html" className="btn btn-success btn-sm">
                                                     <i className="fa fa-edit" /> Sửa
@@ -79,7 +79,7 @@ export default function ProductShow() {
                                                 <td style={{ textAlign: "center" }}>{post.category_id}</td>
                                             </tr>
                                             <tr>
-                                                <td>imgae</td>
+                                                <td>image</td>
                                                 <td style={{ textAlign: "center", width: "200px" }}>
                                                     <img style={{ width: "200px", height: "200px" }} className="img-fluid" src={urlImage + "product/" + post.image} alt={post.image} />
                                                 </td>

@@ -24,5 +24,11 @@ const CustomerService = {
     thungrac: () => {
         return httpAxios.get("customer/thungrac");
     },
+    getUserByEmail: (data) => {
+        return httpAxios.post(`customer/getUserByEmail`, data);
+    },
+    resetPassword: (data) => {
+        return httpAxios.post(`customer/resetPassword`, data);
+    },
 }
 export default CustomerService;

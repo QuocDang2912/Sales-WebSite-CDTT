@@ -13,9 +13,15 @@ export default function BannerShow() {
     useEffect(() => {
 
         const fetch = async () => {
-            const response = await BennerService.show(id)
-            console.log("🚀 ~ file: BrandEdit.jsx:16 ~ fetch ~ response:", response)
-            setBanner(response.banner)
+            try {
+                const response = await BennerService.show(id)
+                console.log("🚀 ~ file: BrandEdit.jsx:16 ~ fetch ~ response:", response)
+                setBanner(response.banner)
+            } catch (error) {
+                console.log("🚀 ~ fetch ~ error:", error)
+
+            }
+
         }
         fetch()
 
@@ -27,7 +33,7 @@ export default function BannerShow() {
                 <div className="container-fluid">
                     <div className="row">
 
-                        <div className="col-md-10">
+                        <div className="col-md-12">
                             {/*CONTENT  */}
                             <div className="content">
                                 <section className="content-header my-2">
@@ -36,7 +42,7 @@ export default function BannerShow() {
                                         <div className="col-md-12 text-end">
 
                                             {/* <a href="banner_edit.html" className="btn btn-success btn-sm"> */}
-                                            <Link className="btn btn-primary btn-sm" to={'/admin/banner/index'} style={{ color: "white" }}>về trang chính</Link>
+                                            <Link className="btn btn-primary btn-sm" to={'/admin/banner/index'} style={{ color: "white" }}>Về trang chính</Link>
                                             {/* </a> */}
                                             {/* <a href="banner_index.html" className="btn btn-danger btn-sm">
                                                 <i className="fa fa-trash" /> Xóa
@@ -49,7 +55,7 @@ export default function BannerShow() {
                                         <thead>
                                             <tr>
                                                 <th style={{ width: 180 }}>Tên trường</th>
-                                                <th>Giá trị</th>
+                                                <th style={{ textAlign: "center" }}>Giá trị</th>
                                             </tr>
                                         </thead>
                                         <tbody>

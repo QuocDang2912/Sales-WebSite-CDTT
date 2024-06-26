@@ -90,8 +90,8 @@ export default function ProductEdit() {
                 <section class="content-header my-2">
                     <h1 class="d-inline">Cập nhập sản phẩm</h1>
                     <div class="mt-1 text-end">
-                        <Link className="btn btn-sm btn-primary" style={{ color: "white" }} to='/admin/product/index'>quay về</Link>
-
+                        <Link className="btn btn-sm btn-primary" style={{ color: "white" }} to='/admin/product/index'>
+                        <i class="fa fa-arrow-left"></i>Quay lại</Link>
                     </div>
                 </section>
                 <form onSubmit={handleSubmitEdit}>
@@ -144,7 +144,7 @@ export default function ProductEdit() {
                                                 categories && categories.length > 0 &&
                                                 categories.map((item, index) => {
                                                     return (
-                                                        <option key={index} value={item.id}>{item.name}</option>
+                                                        <option  key={index} value={item.id}>{item.name}</option>
                                                     )
                                                 })
                                             }

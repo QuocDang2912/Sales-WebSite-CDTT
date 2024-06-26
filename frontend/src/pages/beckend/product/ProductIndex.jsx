@@ -2,9 +2,15 @@ import React, { useEffect, useState } from "react";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import { FaEdit, FaEye, FaToggleOff, FaToggleOn, FaTrash } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify'
+import {
+  FaEdit,
+  FaEye,
+  FaToggleOff,
+  FaToggleOn,
+  FaTrash,
+} from "react-icons/fa";
+import { Link } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
 
 import ProductServie from "../../../services/ProductService";
 import Loading from "../../../components/Loading";
@@ -19,9 +25,8 @@ export default function ProductIndex() {
 
   useEffect(() => {
     (async () => {
-
       const result = await ProductServie.index();
-      console.log("🚀 ~ file: ProductIndex.jsx:19 ~ result sseps:", result)
+      console.log("🚀 ~ file: ProductIndex.jsx:19 ~ result sseps:", result);
       setproducts(result.products);
       setLoading(false);
     })();
@@ -50,10 +55,14 @@ export default function ProductIndex() {
   return (
     <div className="content">
       <section className="content-header my-2">
-        <h1 className="d-inline">Sản phẩm</h1>
-        <Link className="btn btn-primary btn-sm" to={"/admin/product/create"} style={{ color: "white" }}>
+        <h1 className="d-inline">Tất cả sản phẩm</h1>
+        <Link
+          className="btn btn-primary btn-sm"
+          to={"/admin/product/create"}
+          style={{ color: "white", marginLeft: "20px", marginTop: "-10px" }}
+        >
           {" "}
-          them moi
+          Thêm mới
         </Link>
         <div className="row mt-3 align-items-center">
           <div className="col-6">
@@ -134,9 +143,9 @@ export default function ProductIndex() {
                 Hình ảnh
               </th>
               <th>Tên sản phẩm</th>
-              <th>giá</th>
-              <th>category</th>
-              <th>brand</th>
+              <th>Giá</th>
+              <th>Danh mục</th>
+              <th>Thương hiệu</th>
               <th>ID</th>
             </tr>
           </thead>
@@ -149,31 +158,64 @@ export default function ProductIndex() {
                       <input type="checkbox" id="checkId" />
                     </td>
                     <td>
-                      <img className="img-fluid" src={urlImage + "product/" + product.image} alt={product.image} />
+                      <img
+                        className="img-fluid"
+                        src={urlImage + "product/" + product.image}
+                        alt={product.image}
+                      />
                     </td>
                     <td>
                       <div className="name">
-                        <a href="product_edit.html">{product.name}</a>
+                        <a href="#st">{product.name}</a>
                       </div>
                       <div className="function_style">
                         <button
                           onClick={() => handleStatus(product.id)}
-                          className={product.status === 1 ? "border-0 px-1 text-success" : "border-0 px-1 text-danger"}
+                          className={
+                            product.status === 1
+                              ? "border-0 px-1 text-success"
+                              : "border-0 px-1 text-danger"
+                          }
+                          style={{
+                            backgroundColor: "transparent",
+                          }}
                         >
-                          {product.status === 1 ? <FaToggleOn /> : <FaToggleOn />}
+                          {product.status === 1 ? (
+                            <FaToggleOn />
+                          ) : (
+                            <FaToggleOn />
+                          )}
                         </button>
-                        <Link to={"/admin/product/edit/" + product.id} className="px-1 text-primary">
+                        <Link
+                          to={"/admin/product/edit/" + product.id}
+                          className="px-1 text-primary"
+                        >
                           <FaEdit />
                         </Link>
-                        <Link to={"/admin/product/show/" + product.id} className="px-1 text-info">
+                        <Link
+                          to={"/admin/product/show/" + product.id}
+                          className="px-1 text-info"
+                        >
                           <FaEye />
                         </Link>
-                        <button onClick={() => handleDelete(product.id)} className="px-1 text-danger">
+                        <button
+                          onClick={() => handleDelete(product.id)}
+                          className="px-1 text-danger"
+                          style={{
+                            border: "none",
+                            backgroundColor: "transparent",
+                          }}
+                        >
                           <FaTrash />
                         </button>
                       </div>
                     </td>
-                    <td>{product.price}</td>
+                    <td>
+                      {new Intl.NumberFormat("vi-VN", {
+                        style: "currency",
+                        currency: "VND",
+                      }).format(product.price)}
+                    </td>
                     <td>{product.category_id}</td>
                     <td>{product.brand_id}</td>
                     <td className="text-center" style={{ width: 30 }}>
@@ -201,6 +243,5 @@ export default function ProductIndex() {
       {/* Same as */}
       <ToastContainer />
     </div>
-
   );
-};
+}

@@ -67,7 +67,6 @@ class OrderController extends Controller
                 ->select('order.*', 'user.name')
                 ->get();
         }
-
         $total = Order::count();
         $resul = [
             'status' => true,
@@ -422,37 +421,19 @@ class OrderController extends Controller
             ->orderBy('order.created_at', 'desc')
             ->select('order.*', 'user.name as user_name')
             ->get();
+        $count = $orders->count('id');
         $totalAmount = $orders->sum('total');
 
 
         return response()->json([
             'status' => true,
             'orders' => $orders,
+            'count' => $count,
             'total_amount' => $totalAmount,
             'message' => 'Data loaded successfully'
         ], 200);
     }
-    // 7 ngay
-    // public function filterLast7Days(Request $request)
-    // {
-    //     $endDate = Carbon::now();
-    //     $startDate = $endDate->copy()->subDays(7);
 
-    //     $orders = Order::whereBetween('order.created_at', [$startDate, $endDate])
-    //         ->join('user', 'user.id', '=', 'order.user_id')
-    //         ->orderBy('order.created_at', 'desc')
-    //         ->select('order.*', 'user.name as user_name')
-    //         ->get();
-
-    //     $totalAmount = $orders->sum('total');
-
-    //     return response()->json([
-    //         'status' => true,
-    //         'orders' => $orders,
-    //         'total_amount' => $totalAmount,
-    //         'message' => 'Data loaded successfully'
-    //     ], 200);
-    // }
 
     // thống kê lọc theo option tùy chọn
     public function filterByValue(Request $request)
